@@ -1,0 +1,55 @@
+{
+  "profile": {
+    "name": "Javier Jiménez Molina",
+    "role": "DevOps & Platform Engineer",
+    "tagline": "Bridging the gap between Code and Infrastructure.",
+    "status": "Operational",
+    "location": "Murcia, España",
+    "email": "jjime981@gmail.com",
+    "linkedin": "linkedin.com/in/javierjimenezmolina"
+  },
+  "summary": "Ingeniero DevOps con +4 años de experiencia y background sólido en desarrollo (Java/React). Especializado en reducir el Time-to-Market mediante pipelines de CI/CD avanzados y orquestación eficiente con Kubernetes.",
+  "metrics": [
+    { "label": "Reducción Deploy Time", "value": "80%", "trend": "up" },
+    { "label": "Disponibilidad K8s", "value": "99.9%", "trend": "stable" },
+    { "label": "Optimización CI/CD", "value": "High", "trend": "up" }
+  ],
+  "experience": [
+    {
+      "company": "Krimda",
+      "role": "Ingeniero DevOps",
+      "period": "Julio 2025 - Presente",
+      "achievements": [
+        "Diseño de Pipelines modulares en Jenkins usando Shared Libraries (Groovy).",
+        "Implementación de JFrog Artifactory integrado con Bitbucket.",
+        "Optimización de recursos en Kubernetes mediante scripting de auditoría.",
+        "Observabilidad completa con Grafana y Graylog."
+      ]
+    },
+    {
+      "company": "Capgemini",
+      "role": "DevOps Engineer (Evolución desde Dev)",
+      "period": "Feb 2021 - Jul 2025",
+      "achievements": [
+        "Reducción de tiempos de despliegue en un 80% mediante CI/CD.",
+        "Gestión de contenedores Docker y orquestación con Helm/Rancher.",
+        "Desarrollo previo de microservicios Java Spring Boot y React."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "Ingeniería Telemática",
+      "institution": "Universidad Politécnica de Cartagena (UPCT)",
+      "faculty": "Tecnologías de la Información y Telecomunicaciones",
+      "location": "Cartagena, Murcia, España",
+      "period": "Julio 2021"
+    }
+  ],
+  "skills": {
+    "core": ["Jenkins (Shared Libs)", "Kubernetes", "Docker", "Linux", "Git"],
+    "dev": ["Java Spring Boot", "TypeScript", "React", "Node.js"],
+    "observability": ["Grafana", "Graylog", "Prometheus"],
+    "learning": ["AWS (En progreso)", "Terraform (En progreso)"]
+  }
+}

@@ -1,0 +1,30 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Hero from "../components/terminal/Hero";
+import Metrics from "../components/dashboard/Metrics";
+import Experience from "../components/dashboard/Experience";
+import Education from "../components/dashboard/Education";
+import Skills from "../components/dashboard/Skills";
+---
+
+<Layout>
+  <section id="hero">
+    <Hero client:load />
+  </section>
+
+  <section id="metrics">
+    <Metrics client:visible />
+  </section>
+
+  <section id="experience">
+    <Experience client:visible />
+  </section>
+
+  <section id="education">
+    <Education client:visible />
+  </section>
+
+  <section id="skills">
+    <Skills client:visible />
+  </section>
+</Layout>

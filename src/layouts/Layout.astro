@@ -1,0 +1,150 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Javier Jiménez Molina | DevOps & Platform Engineer",
+  description = "Ingeniero DevOps con +4 años de experiencia y background sólido en desarrollo (Java/React). Especializado en reducir el Time-to-Market mediante pipelines de CI/CD avanzados y orquestación eficiente con Kubernetes.",
+} = Astro.props;
+
+const navLinks = [
+  { label: "Inicio", href: "#hero" },
+  { label: "Métricas", href: "#metrics" },
+  { label: "Experiencia", href: "#experience" },
+  { label: "Skills", href: "#skills" },
+];
+---
+
+<!doctype html>
+<html lang="es" data-theme="dark" style="color-scheme: dark;">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="supported-color-schemes" content="dark" />
+    <meta name="description" content={description} />
+    <meta name="author" content="Javier Jiménez Molina" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_ES" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+  </head>
+
+  <body class="min-h-screen flex flex-col" style="color-scheme: dark;">
+    <!-- ─── Navbar ─── -->
+    <nav
+      class="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-slate-950/70 backdrop-blur-xl"
+    >
+      <div
+        class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4"
+      >
+        <!-- Logo / Name -->
+        <a href="#hero" class="group flex items-center gap-3">
+          <div
+            class="flex h-8 w-8 items-center justify-center rounded-md border border-operational-500/30 bg-operational-500/10"
+          >
+            <span class="font-mono text-sm font-bold text-operational-400"
+              >&gt;_</span
+            >
+          </div>
+          <span class="font-mono text-sm font-medium text-slate-300 transition-colors group-hover:text-white">
+            jjimenez
+          </span>
+        </a>
+
+        <!-- Navigation Links (hidden on mobile) -->
+        <div class="hidden items-center gap-1 md:flex">
+          {
+            navLinks.map((link) => (
+              <a
+                href={link.href}
+                class="rounded-md px-3 py-2 font-mono text-xs text-slate-400 transition-all hover:bg-white/5 hover:text-white"
+              >
+                {link.label}
+              </a>
+            ))
+          }
+        </div>
+
+        <!-- Status Indicator -->
+        <div class="flex items-center gap-2">
+          <div class="h-2 w-2 animate-pulse rounded-full bg-operational-400 shadow-[0_0_6px] shadow-operational-400/50">
+          </div>
+          <span class="font-mono text-xs text-operational-400">Online</span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ─── Main Content ─── -->
+    <main class="flex-1 pt-20">
+      <slot />
+    </main>
+
+    <!-- ─── Footer: System Status Bar ─── -->
+    <footer class="border-t border-white/10 bg-slate-950/80 backdrop-blur-sm">
+      <div
+        class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-3"
+      >
+        <!-- Left: Status indicators -->
+        <div class="flex items-center gap-6">
+          <div class="flex items-center gap-2">
+            <div class="h-1.5 w-1.5 rounded-full bg-operational-400"></div>
+            <span class="font-mono text-[11px] text-slate-500"
+              >Status: <span class="text-operational-400">Online</span></span
+            >
+          </div>
+          <div class="flex items-center gap-2">
+            <svg
+              class="h-3 w-3 text-slate-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M6 3v12M18 9a3 3 0 1 0 0 6M6 15a3 3 0 1 0 0-6m12 6V3"
+              ></path>
+            </svg>
+            <span class="font-mono text-[11px] text-slate-500"
+              >Branch: <span class="text-slate-400">main</span></span
+            >
+          </div>
+          <div class="hidden items-center gap-2 sm:flex">
+            <svg
+              class="h-3 w-3 text-slate-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+            <span class="font-mono text-[11px] text-slate-500"
+              >Region: <span class="text-slate-400">EU-West</span></span
+            >
+          </div>
+        </div>
+
+        <!-- Right: Copyright -->
+        <span class="font-mono text-[11px] text-slate-600">
+          © {new Date().getFullYear()} Javier Jiménez Molina
+        </span>
+      </div>
+    </footer>
+  </body>
+</html>

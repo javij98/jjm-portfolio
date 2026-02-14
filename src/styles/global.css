@@ -1,0 +1,171 @@
+/* ─── Google Fonts ─── */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap");
+
+@import "tailwindcss";
+
+/* ─── Tailwind v4 Theme Configuration ─── */
+@theme {
+  /* Font families */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+
+  /* Override Tailwind v4 OKLCH: Slate palette (hex for cross-browser) */
+  --color-slate-50: #f8fafc;
+  --color-slate-100: #f1f5f9;
+  --color-slate-200: #e2e8f0;
+  --color-slate-300: #cbd5e1;
+  --color-slate-400: #94a3b8;
+  --color-slate-500: #64748b;
+  --color-slate-600: #475569;
+  --color-slate-700: #334155;
+  --color-slate-800: #1e293b;
+  --color-slate-900: #0f172a;
+  --color-slate-950: #020617;
+
+  /* Override: Red (used in terminal dots) */
+  --color-red-500: #ef4444;
+
+  /* Override: Yellow (used in terminal dots) */
+  --color-yellow-500: #eab308;
+
+  /* Override: Green (used in terminal dots) */
+  --color-green-500: #22c55e;
+
+  /* Override: Purple (used in observability skills) */
+  --color-purple-300: #d8b4fe;
+  --color-purple-400: #c084fc;
+  --color-purple-500: #a855f7;
+
+  /* Semantic colors: Operational / Success (Emerald) */
+  --color-operational-50: #ecfdf5;
+  --color-operational-100: #d1fae5;
+  --color-operational-200: #a7f3d0;
+  --color-operational-300: #6ee7b7;
+  --color-operational-400: #34d399;
+  --color-operational-500: #10b981;
+  --color-operational-600: #059669;
+  --color-operational-700: #047857;
+  --color-operational-800: #065f46;
+  --color-operational-900: #064e3b;
+
+  /* Semantic colors: Building / Processing (Amber) */
+  --color-building-50: #fffbeb;
+  --color-building-100: #fef3c7;
+  --color-building-200: #fde68a;
+  --color-building-300: #fcd34d;
+  --color-building-400: #fbbf24;
+  --color-building-500: #f59e0b;
+  --color-building-600: #d97706;
+  --color-building-700: #b45309;
+  --color-building-800: #92400e;
+  --color-building-900: #78350f;
+
+  /* Semantic colors: Interactive accent (Cyan) */
+  --color-accent-50: #ecfeff;
+  --color-accent-100: #cffafe;
+  --color-accent-200: #a5f3fc;
+  --color-accent-300: #67e8f9;
+  --color-accent-400: #22d3ee;
+  --color-accent-500: #06b6d4;
+  --color-accent-600: #0891b2;
+  --color-accent-700: #0e7490;
+  --color-accent-800: #155e75;
+  --color-accent-900: #164e63;
+
+  /* Custom animations */
+  --animate-blink: blink 1s step-end infinite;
+  --animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
+  --animate-typewriter: typewriter 3.5s steps(40, end);
+  --animate-fade-in: fade-in 0.5s ease-out;
+  --animate-slide-up: slide-up 0.6s ease-out;
+}
+
+/* ─── Keyframes ─── */
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(16, 185, 129, 0.4);
+  }
+  50% {
+    box-shadow:
+      0 0 20px rgba(16, 185, 129, 0.6),
+      0 0 40px rgba(16, 185, 129, 0.25);
+  }
+}
+
+@keyframes typewriter {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─── Base Styles ─── */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-slate-950 text-slate-100 font-sans;
+    background-image: radial-gradient(
+      ellipse 80% 50% at 50% -20%,
+      rgba(14, 116, 144, 0.12),
+      transparent
+    );
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-slate-900;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-700 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-600;
+  }
+
+  /* Selection */
+  ::selection {
+    @apply bg-accent-500/30 text-white;
+  }
+}
