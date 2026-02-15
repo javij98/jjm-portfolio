@@ -1,11 +1,40 @@
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
-import { Mail, Linkedin } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, useInView } from "framer-motion";
+import { Check, Mail, Linkedin } from "lucide-react";
 import resumeData from "../../data/resume.json";
 
 export default function Contact() {
   const ref = useRef<HTMLDivElement>(null);
+  const copyResetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const toastTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const [isCopied, setIsCopied] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (copyResetTimeoutRef.current) clearTimeout(copyResetTimeoutRef.current);
+      if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+    };
+  }, []);
+
+  const handleCopyEmail = useCallback(async () => {
+    const email = resumeData.profile.email;
+
+    try {
+      await navigator.clipboard.writeText(email);
+      setIsCopied(true);
+      setToastMessage(`Email copiado: ${email}`);
+
+      if (copyResetTimeoutRef.current) clearTimeout(copyResetTimeoutRef.current);
+      copyResetTimeoutRef.current = setTimeout(() => setIsCopied(false), 1800);
+    } catch {
+      setToastMessage("No se pudo copiar el email");
+    }
+
+    if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+    toastTimeoutRef.current = setTimeout(() => setToastMessage(null), 2400);
+  }, []);
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-24">
@@ -33,14 +62,20 @@ export default function Contact() {
         className="flex flex-col items-center justify-center gap-4 sm:flex-row"
       >
         {/* Email */}
-        <a
-          href={`mailto:${resumeData.profile.email}`}
+        <button
+          type="button"
+          onClick={() => void handleCopyEmail()}
           className="group relative inline-flex w-full items-center justify-center gap-3 overflow-hidden rounded-xl border border-accent-500/30 bg-accent-500/10 px-8 py-4 font-mono text-sm font-medium text-accent-300 transition-all duration-300 hover:border-accent-400/50 hover:bg-accent-500/20 hover:text-accent-200 hover:shadow-lg hover:shadow-accent-500/10 sm:w-auto"
+          aria-label={`Copiar email ${resumeData.profile.email}`}
         >
           <span className="absolute inset-0 -z-10 bg-linear-to-r from-accent-500/0 via-accent-500/10 to-accent-500/0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-          <Mail className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
-          <span>{resumeData.profile.email}</span>
-        </a>
+          {isCopied ? (
+            <Check className="h-5 w-5 text-operational-400" />
+          ) : (
+            <Mail className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
+          )}
+          <span>{isCopied ? "¡Copiado!" : resumeData.profile.email}</span>
+        </button>
 
         {/* LinkedIn */}
         <a
@@ -54,6 +89,22 @@ export default function Contact() {
           <span>LinkedIn</span>
         </a>
       </motion.div>
+
+      <AnimatePresence>
+        {toastMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: 12, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 12, scale: 0.98 }}
+            transition={{ duration: 0.2 }}
+            className="pointer-events-none fixed inset-x-4 bottom-6 z-50 mx-auto w-fit rounded-lg border border-operational-500/40 bg-slate-950/95 px-4 py-2 font-mono text-xs text-operational-300 shadow-lg shadow-black/30 backdrop-blur"
+            role="status"
+            aria-live="polite"
+          >
+            {toastMessage}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
