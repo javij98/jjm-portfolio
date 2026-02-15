@@ -127,7 +127,7 @@ function TerminalPrompt({
   showCursor: boolean;
 }) {
   return (
-    <div className="flex items-center gap-2 font-mono text-sm">
+    <div className="flex items-center gap-2 font-mono text-xs sm:text-sm">
       <span className="text-operational-400">❯</span>
       <span className="text-slate-300">{typed}</span>
       {showCursor && (
@@ -205,7 +205,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <div className="relative flex min-h-[calc(100vh-5rem)] items-center justify-center px-4 py-20 sm:px-6">
+    <div className="relative flex min-h-[calc(100svh-5rem)] items-center justify-center px-3 py-8 sm:min-h-[calc(100vh-5rem)] sm:px-6 sm:py-20">
       {/* Ambient background glow */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute left-1/2 top-1/3 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-500/3 blur-[150px]" />
@@ -217,28 +217,28 @@ export default function Hero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, ease: "easeOut" }}
-          className="mx-auto mb-8 max-w-3xl text-center"
+          className="mx-auto mb-5 max-w-3xl text-center sm:mb-8"
         >
-          <p className="font-mono text-xs uppercase tracking-wider text-operational-400">
+          <p className="font-mono text-[10px] uppercase tracking-wider text-operational-400 sm:text-xs">
             // DevOps & Platform Engineering
           </p>
-          <h1 className="mt-3 text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          <h1 className="mt-2 text-2xl font-bold tracking-tight text-white sm:mt-3 sm:text-4xl">
             {resumeData.profile.role}
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-300 sm:text-base">
+          <p className="mx-auto mt-2 max-w-2xl text-xs leading-relaxed text-slate-300 sm:mt-4 sm:text-base">
             {resumeData.summary}
           </p>
 
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-2.5">
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2 sm:mt-6 sm:gap-2.5">
             {heroKpis.map((kpi) => (
               <div
                 key={kpi.label}
-                className="rounded-full border border-white/10 bg-slate-900/70 px-3 py-1.5 backdrop-blur-sm"
+                className="rounded-full border border-white/10 bg-slate-900/70 px-2.5 py-1 backdrop-blur-sm sm:px-3 sm:py-1.5"
               >
-                <span className="font-mono text-[11px] text-slate-400">
+                <span className="font-mono text-[10px] text-slate-400 sm:text-[11px]">
                   {kpi.label}:{" "}
                 </span>
-                <span className="font-mono text-[11px] font-semibold text-accent-300">
+                <span className="font-mono text-[10px] font-semibold text-accent-300 sm:text-[11px]">
                   {kpi.value}
                 </span>
               </div>
@@ -290,7 +290,7 @@ export default function Hero() {
           </div>
 
           {/* Terminal body */}
-          <div className="min-h-[350px] p-5 font-mono">
+          <div className="min-h-[220px] p-3 font-mono sm:min-h-[350px] sm:p-5">
             {/* Command line */}
             <TerminalPrompt typed={typedCommand} showCursor={phase === "typing" || phase === "idle"} />
 
@@ -320,7 +320,7 @@ export default function Hero() {
                   transition={{ duration: 0.4, ease: "easeOut" }}
                   className="mt-4"
                 >
-                  <div className="mb-2 flex items-center justify-between text-xs text-slate-500">
+                  <div className="mb-2 flex items-center justify-between text-[11px] text-slate-500 sm:text-xs">
                     <span>─── profile summary ───</span>
                     <button
                       onClick={() => setShowRawJson((prev) => !prev)}
@@ -330,9 +330,12 @@ export default function Hero() {
                     </button>
                   </div>
                   <div className="overflow-x-auto rounded-lg border border-white/5 bg-slate-950/50 p-4">
-                    <ul className="space-y-2 text-[13px] leading-relaxed">
-                      {quickSummary.map((line) => (
-                        <li key={line} className="flex items-start gap-2 text-slate-300">
+                    <ul className="space-y-1.5 text-xs leading-relaxed sm:space-y-2 sm:text-[13px]">
+                      {quickSummary.map((line, index) => (
+                        <li
+                          key={line}
+                          className={`${index === 3 ? "hidden sm:flex" : "flex"} items-start gap-2 text-slate-300`}
+                        >
                           <span className="mt-[6px] h-1 w-1 shrink-0 rounded-full bg-operational-400" />
                           <span>{line}</span>
                         </li>
@@ -355,7 +358,7 @@ export default function Hero() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
-                className="mt-4"
+                className="mt-4 hidden sm:block"
               >
                 <div className="flex items-center gap-2 font-mono text-sm">
                   <span className="text-operational-400">❯</span>
@@ -371,12 +374,12 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.15 }}
-          className="mt-8 flex flex-col items-center gap-4"
+          className="mt-5 flex flex-col items-center gap-3 sm:mt-8 sm:gap-4"
         >
           <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <button
               onClick={handleScrollToMetrics}
-              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-lg border border-accent-500/30 bg-accent-500/10 px-6 py-3 font-mono text-sm font-medium text-accent-300 transition-all duration-300 hover:border-accent-400/50 hover:bg-accent-500/20 hover:text-accent-200 hover:shadow-lg hover:shadow-accent-500/10"
+              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-lg border border-accent-500/30 bg-accent-500/10 px-4 py-2.5 font-mono text-xs font-medium text-accent-300 transition-all duration-300 hover:border-accent-400/50 hover:bg-accent-500/20 hover:text-accent-200 hover:shadow-lg hover:shadow-accent-500/10 sm:px-6 sm:py-3 sm:text-sm"
             >
               <span className="absolute inset-0 -z-10 bg-linear-to-r from-accent-500/0 via-accent-500/10 to-accent-500/0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
               <ChevronRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
@@ -386,7 +389,7 @@ export default function Hero() {
             <a
               href="/JavierJimenezMolina_cv_es.pdf"
               download
-              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-lg border border-operational-500/30 bg-operational-500/10 px-6 py-3 font-mono text-sm font-medium text-operational-300 transition-all duration-300 hover:border-operational-400/50 hover:bg-operational-500/20 hover:text-operational-200 hover:shadow-lg hover:shadow-operational-500/10"
+              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-lg border border-operational-500/30 bg-operational-500/10 px-4 py-2.5 font-mono text-xs font-medium text-operational-300 transition-all duration-300 hover:border-operational-400/50 hover:bg-operational-500/20 hover:text-operational-200 hover:shadow-lg hover:shadow-operational-500/10 sm:px-6 sm:py-3 sm:text-sm"
             >
               <span className="absolute inset-0 -z-10 bg-linear-to-r from-operational-500/0 via-operational-500/10 to-operational-500/0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
               <Download className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
@@ -394,7 +397,7 @@ export default function Hero() {
             </a>
           </div>
 
-          <p className="font-mono text-xs text-slate-600">
+          <p className="hidden font-mono text-xs text-slate-600 sm:block">
             {resumeData.profile.tagline}
           </p>
         </motion.div>
