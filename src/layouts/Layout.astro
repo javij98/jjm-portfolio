@@ -51,9 +51,7 @@ const resumeDownloadHref = "/JavierJimenezMolina_cv_es.pdf";
     <!-- ─── Navbar ─── -->
     <nav
       id="sticky-recruiter-nav"
-      data-visible="false"
-      aria-hidden="true"
-      class="pointer-events-none fixed inset-x-0 top-0 z-50 -translate-y-4 border-b border-white/10 bg-slate-950/65 opacity-0 shadow-lg shadow-black/20 backdrop-blur-xl transition-all duration-300 ease-out supports-[backdrop-filter]:bg-slate-950/45 data-[visible=true]:pointer-events-auto data-[visible=true]:translate-y-0 data-[visible=true]:opacity-100"
+      class="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-slate-950/65 shadow-lg shadow-black/20 backdrop-blur-xl supports-[backdrop-filter]:bg-slate-950/45"
     >
       <div
         class="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6"
@@ -94,29 +92,36 @@ const resumeDownloadHref = "/JavierJimenezMolina_cv_es.pdf";
             <span class="font-mono text-xs text-operational-400">Online</span>
           </div>
 
-          <a
-            href={resumeDownloadHref}
-            download
-            class="inline-flex items-center gap-1.5 rounded-md border border-operational-500/40 bg-operational-500/15 px-3 py-1.5 font-mono text-[11px] font-semibold text-operational-300 transition-all hover:border-operational-300/70 hover:bg-operational-500/25 hover:text-operational-100"
+          <div
+            id="sticky-cv-cta-wrapper"
+            data-visible="false"
+            aria-hidden="true"
+            class="pointer-events-none max-w-0 translate-y-1 overflow-hidden opacity-0 transition-all duration-300 ease-out data-[visible=true]:pointer-events-auto data-[visible=true]:max-w-44 data-[visible=true]:translate-y-0 data-[visible=true]:opacity-100"
           >
-            <svg
-              class="h-3.5 w-3.5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
+            <a
+              href={resumeDownloadHref}
+              download
+              class="inline-flex items-center gap-1.5 rounded-md border border-operational-500/40 bg-operational-500/15 px-3 py-1.5 font-mono text-[11px] font-semibold whitespace-nowrap text-operational-300 transition-all hover:border-operational-300/70 hover:bg-operational-500/25 hover:text-operational-100"
             >
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0l4-4m-4 4l-4-4M4 19h16"></path>
-            </svg>
-            <span class="hidden sm:inline">Descargar CV</span>
-            <span class="sm:hidden">CV</span>
-          </a>
+              <svg
+                class="h-3.5 w-3.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0l4-4m-4 4l-4-4M4 19h16"></path>
+              </svg>
+              <span class="hidden sm:inline">Descargar CV</span>
+              <span class="sm:hidden">CV</span>
+            </a>
+          </div>
         </div>
       </div>
     </nav>
 
     <!-- ─── Main Content ─── -->
-    <main class="flex-1">
+    <main class="flex-1 pt-20">
       <slot />
     </main>
 
@@ -175,31 +180,31 @@ const resumeDownloadHref = "/JavierJimenezMolina_cv_es.pdf";
 
     <script is:inline>
       (() => {
-        const nav = document.getElementById("sticky-recruiter-nav");
+        const cta = document.getElementById("sticky-cv-cta-wrapper");
         const hero = document.getElementById("hero");
 
-        if (!(nav instanceof HTMLElement) || !(hero instanceof HTMLElement)) {
+        if (!(cta instanceof HTMLElement) || !(hero instanceof HTMLElement)) {
           return;
         }
 
-        const showNav = () => {
-          nav.dataset.visible = "true";
-          nav.setAttribute("aria-hidden", "false");
+        const showCta = () => {
+          cta.dataset.visible = "true";
+          cta.setAttribute("aria-hidden", "false");
         };
 
-        const hideNav = () => {
-          nav.dataset.visible = "false";
-          nav.setAttribute("aria-hidden", "true");
+        const hideCta = () => {
+          cta.dataset.visible = "false";
+          cta.setAttribute("aria-hidden", "true");
         };
 
         const observer = new IntersectionObserver(
           ([entry]) => {
             if (entry?.isIntersecting) {
-              hideNav();
+              hideCta();
               return;
             }
 
-            showNav();
+            showCta();
           },
           { threshold: 0.2 },
         );
@@ -207,9 +212,9 @@ const resumeDownloadHref = "/JavierJimenezMolina_cv_es.pdf";
         observer.observe(hero);
 
         if (hero.getBoundingClientRect().bottom <= 0) {
-          showNav();
+          showCta();
         } else {
-          hideNav();
+          hideCta();
         }
 
         window.addEventListener(
