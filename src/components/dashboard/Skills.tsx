@@ -11,6 +11,7 @@ interface CategoryConfig {
   borderColor: string;
   bgColor: string;
   badgeColor: string;
+  spotlightColor: string;
 }
 
 const categoryConfig: Record<string, CategoryConfig> = {
@@ -22,6 +23,7 @@ const categoryConfig: Record<string, CategoryConfig> = {
     bgColor: "bg-operational-500/10",
     badgeColor:
       "border-operational-500/30 bg-operational-500/10 text-operational-300",
+    spotlightColor: "rgba(52, 211, 153, 0.45)",
   },
   dev: {
     label: "Development",
@@ -30,6 +32,7 @@ const categoryConfig: Record<string, CategoryConfig> = {
     borderColor: "border-accent-500/20",
     bgColor: "bg-accent-500/10",
     badgeColor: "border-accent-500/30 bg-accent-500/10 text-accent-300",
+    spotlightColor: "rgba(34, 211, 238, 0.45)",
   },
   observability: {
     label: "Observability",
@@ -38,6 +41,7 @@ const categoryConfig: Record<string, CategoryConfig> = {
     borderColor: "border-purple-500/20",
     bgColor: "bg-purple-500/10",
     badgeColor: "border-purple-500/30 bg-purple-500/10 text-purple-300",
+    spotlightColor: "rgba(192, 132, 252, 0.45)",
   },
   learning: {
     label: "Learning Path",
@@ -46,6 +50,7 @@ const categoryConfig: Record<string, CategoryConfig> = {
     borderColor: "border-building-500/20",
     bgColor: "bg-building-500/10",
     badgeColor: "border-building-500/30 bg-building-500/10 text-building-300",
+    spotlightColor: "rgba(251, 191, 36, 0.5)",
   },
 };
 
@@ -101,82 +106,118 @@ function SkillCategory({
   const IconComponent = config.icon;
   const isLearning = categoryKey === "learning";
 
+  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    event.currentTarget.style.setProperty("--spotlight-x", `${x}px`);
+    event.currentTarget.style.setProperty("--spotlight-y", `${y}px`);
+  };
+
+  const handleMouseLeave = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.currentTarget.style.setProperty("--spotlight-x", "50%");
+    event.currentTarget.style.setProperty("--spotlight-y", "50%");
+  };
+
   return (
     <motion.div
       ref={ref}
       initial={{ opacity: 0, y: 20 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className={`rounded-xl border bg-slate-900/50 p-6 backdrop-blur-sm transition-all duration-300 hover:bg-slate-900/70 ${config.borderColor}`}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className={`group relative overflow-hidden rounded-xl border bg-slate-900/50 p-6 backdrop-blur-sm transition-all duration-300 hover:bg-slate-900/70 ${config.borderColor}`}
+      style={
+        {
+          "--spotlight-x": "50%",
+          "--spotlight-y": "50%",
+        } as React.CSSProperties
+      }
     >
-      {/* Category header */}
-      <div className="mb-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div
-            className={`flex h-8 w-8 items-center justify-center rounded-lg ${config.bgColor}`}
-          >
-            <IconComponent className={`h-4 w-4 ${config.color}`} />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        style={{
+          background: `radial-gradient(220px circle at var(--spotlight-x) var(--spotlight-y), ${config.spotlightColor}, transparent 70%)`,
+        }}
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-px rounded-[11px] bg-slate-900/85"
+      />
+
+      <div className="relative z-10">
+        {/* Category header */}
+        <div className="mb-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div
+              className={`flex h-8 w-8 items-center justify-center rounded-lg ${config.bgColor}`}
+            >
+              <IconComponent className={`h-4 w-4 ${config.color}`} />
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-white">{config.label}</h3>
+              <span className="font-mono text-[11px] text-slate-500">
+                {skills.length} {isLearning ? "in progress" : "skills"}
+              </span>
+            </div>
           </div>
-          <div>
-            <h3 className="text-sm font-semibold text-white">{config.label}</h3>
-            <span className="font-mono text-[11px] text-slate-500">
-              {skills.length} {isLearning ? "in progress" : "skills"}
+
+          {/* Status */}
+          {isLearning ? (
+            <span className="flex items-center gap-1.5 rounded-full border border-building-500/30 bg-building-500/10 px-2.5 py-1 font-mono text-[10px] font-medium text-building-400">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-building-400 opacity-75" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-building-400" />
+              </span>
+              COMPILING...
             </span>
-          </div>
+          ) : (
+            <span className="flex items-center gap-1.5 rounded-full border border-operational-500/30 bg-operational-500/10 px-2.5 py-1 font-mono text-[10px] font-medium text-operational-400">
+              <span className="h-1.5 w-1.5 rounded-full bg-operational-400" />
+              STABLE
+            </span>
+          )}
         </div>
 
-        {/* Status */}
-        {isLearning ? (
-          <span className="flex items-center gap-1.5 rounded-full border border-building-500/30 bg-building-500/10 px-2.5 py-1 font-mono text-[10px] font-medium text-building-400">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-building-400 opacity-75" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-building-400" />
-            </span>
-            COMPILING...
-          </span>
-        ) : (
-          <span className="flex items-center gap-1.5 rounded-full border border-operational-500/30 bg-operational-500/10 px-2.5 py-1 font-mono text-[10px] font-medium text-operational-400">
-            <span className="h-1.5 w-1.5 rounded-full bg-operational-400" />
-            STABLE
-          </span>
+        {/* Skills */}
+        <div className="flex flex-wrap gap-2">
+          {skills.map((skill, i) => (
+            <SkillBadge
+              key={skill}
+              skill={skill}
+              config={config}
+              index={i}
+              isLearning={isLearning}
+              isInView={isInView}
+            />
+          ))}
+        </div>
+
+        {/* Progress bar for learning */}
+        {isLearning && (
+          <div className="mt-4">
+            <div className="mb-1 flex justify-between">
+              <span className="font-mono text-[11px] text-slate-500">
+                Progress
+              </span>
+              <span className="font-mono text-[11px] text-building-400">
+                Building...
+              </span>
+            </div>
+            <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-800">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={isInView ? { width: "35%" } : {}}
+                transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
+                className="h-full rounded-full bg-linear-to-r from-building-600 to-building-400"
+              />
+            </div>
+          </div>
         )}
       </div>
-
-      {/* Skills */}
-      <div className="flex flex-wrap gap-2">
-        {skills.map((skill, i) => (
-          <SkillBadge
-            key={skill}
-            skill={skill}
-            config={config}
-            index={i}
-            isLearning={isLearning}
-            isInView={isInView}
-          />
-        ))}
-      </div>
-
-      {/* Progress bar for learning */}
-      {isLearning && (
-        <div className="mt-4">
-          <div className="mb-1 flex justify-between">
-            <span className="font-mono text-[11px] text-slate-500">
-              Progress
-            </span>
-            <span className="font-mono text-[11px] text-building-400">
-              Building...
-            </span>
-          </div>
-          <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-800">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={isInView ? { width: "35%" } : {}}
-              transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
-              className="h-full rounded-full bg-linear-to-r from-building-600 to-building-400"
-            />
-          </div>
-        </div>
-      )}
     </motion.div>
   );
 }
