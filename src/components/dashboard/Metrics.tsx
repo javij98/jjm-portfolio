@@ -140,10 +140,10 @@ function MetricCard({
           }}
           className={`h-full rounded-full ${
             trend === "up"
-              ? "bg-gradient-to-r from-operational-600 to-operational-400"
+              ? "bg-linear-to-r from-operational-600 to-operational-400"
               : trend === "stable"
-                ? "bg-gradient-to-r from-accent-600 to-accent-400"
-                : "bg-gradient-to-r from-building-600 to-building-400"
+                ? "bg-linear-to-r from-accent-600 to-accent-400"
+                : "bg-linear-to-r from-building-600 to-building-400"
           }`}
         />
       </div>
@@ -158,11 +158,11 @@ export default function Metrics() {
       {/* Section header */}
       <div className="mb-12">
         <div className="mb-3 flex items-center gap-3">
-          <div className="h-px flex-1 bg-gradient-to-r from-operational-500/50 to-transparent" />
+          <div className="h-px flex-1 bg-linear-to-r from-operational-500/50 to-transparent" />
           <span className="font-mono text-xs font-medium uppercase tracking-widest text-operational-400">
             // System Metrics
           </span>
-          <div className="h-px flex-1 bg-gradient-to-l from-operational-500/50 to-transparent" />
+          <div className="h-px flex-1 bg-linear-to-l from-operational-500/50 to-transparent" />
         </div>
         <h2 className="text-center text-3xl font-bold text-white">
           Impacto Medible

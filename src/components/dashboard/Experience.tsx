@@ -56,7 +56,7 @@ function PipelineStage({
             initial={{ height: 0 }}
             animate={isInView ? { height: "100%" } : {}}
             transition={{ duration: 0.6, delay: index * 0.2 + 0.2 }}
-            className="w-px bg-gradient-to-b from-slate-600 to-slate-800"
+            className="w-px bg-linear-to-b from-slate-600 to-slate-800"
           />
         )}
       </div>
@@ -121,11 +121,11 @@ export default function Experience() {
       {/* Section header */}
       <div className="mb-12">
         <div className="mb-3 flex items-center gap-3">
-          <div className="h-px flex-1 bg-gradient-to-r from-accent-500/50 to-transparent" />
+          <div className="h-px flex-1 bg-linear-to-r from-accent-500/50 to-transparent" />
           <span className="font-mono text-xs font-medium uppercase tracking-widest text-accent-400">
             // Deployment Pipeline
           </span>
-          <div className="h-px flex-1 bg-gradient-to-l from-accent-500/50 to-transparent" />
+          <div className="h-px flex-1 bg-linear-to-l from-accent-500/50 to-transparent" />
         </div>
         <h2 className="text-center text-3xl font-bold text-white">
           Experiencia Profesional

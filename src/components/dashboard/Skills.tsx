@@ -172,7 +172,7 @@ function SkillCategory({
               initial={{ width: 0 }}
               animate={isInView ? { width: "35%" } : {}}
               transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
-              className="h-full rounded-full bg-gradient-to-r from-building-600 to-building-400"
+              className="h-full rounded-full bg-linear-to-r from-building-600 to-building-400"
             />
           </div>
         </div>
@@ -190,11 +190,11 @@ export default function Skills() {
       {/* Section header */}
       <div className="mb-12">
         <div className="mb-3 flex items-center gap-3">
-          <div className="h-px flex-1 bg-gradient-to-r from-building-500/50 to-transparent" />
+          <div className="h-px flex-1 bg-linear-to-r from-building-500/50 to-transparent" />
           <span className="font-mono text-xs font-medium uppercase tracking-widest text-building-400">
             // Skill Matrix
           </span>
-          <div className="h-px flex-1 bg-gradient-to-l from-building-500/50 to-transparent" />
+          <div className="h-px flex-1 bg-linear-to-l from-building-500/50 to-transparent" />
         </div>
         <h2 className="text-center text-3xl font-bold text-white">
           Stack Tecnológico

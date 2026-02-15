@@ -12,7 +12,7 @@
   "metrics": [
     { "label": "Reducción Deploy Time", "value": "80%", "trend": "up" },
     { "label": "Disponibilidad K8s", "value": "99.9%", "trend": "stable" },
-    { "label": "Optimización CI/CD", "value": "High", "trend": "up" }
+    { "label": "Optimización CI/CD", "value": "Modular", "trend": "up" }
   ],
   "experience": [
     {

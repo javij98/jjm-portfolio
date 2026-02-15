@@ -72,11 +72,11 @@ export default function Education() {
       {/* Section header */}
       <div className="mb-12">
         <div className="mb-3 flex items-center gap-3">
-          <div className="h-px flex-1 bg-gradient-to-r from-accent-500/50 to-transparent" />
+          <div className="h-px flex-1 bg-linear-to-r from-accent-500/50 to-transparent" />
           <span className="font-mono text-xs font-medium uppercase tracking-widest text-accent-400">
             // Credentials
           </span>
-          <div className="h-px flex-1 bg-gradient-to-l from-accent-500/50 to-transparent" />
+          <div className="h-px flex-1 bg-linear-to-l from-accent-500/50 to-transparent" />
         </div>
         <h2 className="text-center text-3xl font-bold text-white">Educación</h2>
         <p className="mx-auto mt-3 max-w-lg text-center font-mono text-sm text-slate-500">
