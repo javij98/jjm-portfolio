@@ -18,8 +18,10 @@ type AnimationPhase = "idle" | "typing" | "executing" | "output" | "done";
 
 // ─── Constants ───
 const COMMAND = "./show-profile.sh";
-const TYPING_SPEED = 65;
-const EXECUTION_DELAY = 600;
+const TYPING_SPEED = 38;
+const EXECUTION_DELAY = 260;
+const EXECUTION_TIME = 760;
+const OUTPUT_SETTLE_DELAY = 280;
 
 const profileOutput: ProfileOutput = {
   name: resumeData.profile.name,
@@ -29,6 +31,31 @@ const profileOutput: ProfileOutput = {
   stack: resumeData.skills.core,
   tagline: resumeData.profile.tagline,
 };
+
+const yearsMatch = resumeData.summary.match(/\+(\d+)/);
+const yearsExperience = yearsMatch ? `+${yearsMatch[1]} años` : "+4 años";
+
+const heroKpis = [
+  {
+    label: resumeData.metrics[0]?.label ?? "Deploy Time",
+    value: resumeData.metrics[0]?.value ?? "80%",
+  },
+  {
+    label: resumeData.metrics[1]?.label ?? "Disponibilidad",
+    value: resumeData.metrics[1]?.value ?? "99.9%",
+  },
+  {
+    label: "Experiencia",
+    value: yearsExperience,
+  },
+];
+
+const quickSummary = [
+  `Rol: ${profileOutput.role}`,
+  `Impacto: ${resumeData.metrics[0]?.value ?? "80%"} de reducción en tiempos de despliegue`,
+  `Fiabilidad: ${resumeData.metrics[1]?.value ?? "99.9%"} de disponibilidad en Kubernetes`,
+  `Ubicación: ${profileOutput.location}`,
+];
 
 // ─── JSON Syntax Highlighting ───
 function JsonHighlight({ data }: { data: ProfileOutput }) {
@@ -93,11 +120,9 @@ function JsonHighlight({ data }: { data: ProfileOutput }) {
 
 // ─── Terminal Line ───
 function TerminalPrompt({
-  command,
   typed,
   showCursor,
 }: {
-  command: string;
   typed: string;
   showCursor: boolean;
 }) {
@@ -117,11 +142,12 @@ export default function Hero() {
   const [phase, setPhase] = useState<AnimationPhase>("idle");
   const [typedCommand, setTypedCommand] = useState("");
   const [copied, setCopied] = useState(false);
+  const [showRawJson, setShowRawJson] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
   // Start animation on mount
   useEffect(() => {
-    const timer = setTimeout(() => setPhase("typing"), 800);
+    const timer = setTimeout(() => setPhase("typing"), 320);
     return () => clearTimeout(timer);
   }, []);
 
@@ -151,14 +177,14 @@ export default function Hero() {
   // Execution → output
   useEffect(() => {
     if (phase !== "executing") return;
-    const timer = setTimeout(() => setPhase("output"), 1200);
+    const timer = setTimeout(() => setPhase("output"), EXECUTION_TIME);
     return () => clearTimeout(timer);
   }, [phase]);
 
   // Mark done after output renders
   useEffect(() => {
     if (phase !== "output") return;
-    const timer = setTimeout(() => setPhase("done"), 600);
+    const timer = setTimeout(() => setPhase("done"), OUTPUT_SETTLE_DELAY);
     return () => clearTimeout(timer);
   }, [phase]);
 
@@ -172,6 +198,12 @@ export default function Hero() {
     document.getElementById("metrics")?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
+  const handleSkipAnimation = useCallback(() => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setTypedCommand(COMMAND);
+    setPhase("done");
+  }, []);
+
   return (
     <div className="relative flex min-h-[calc(100vh-5rem)] items-center justify-center px-4 py-20 sm:px-6">
       {/* Ambient background glow */}
@@ -179,7 +211,41 @@ export default function Hero() {
         <div className="absolute left-1/2 top-1/3 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-500/3 blur-[150px]" />
       </div>
 
-      <div className="relative z-10 w-full max-w-2xl">
+      <div className="relative z-10 w-full max-w-4xl">
+        {/* ─── Value Proposition ─── */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, ease: "easeOut" }}
+          className="mx-auto mb-8 max-w-3xl text-center"
+        >
+          <p className="font-mono text-xs uppercase tracking-wider text-operational-400">
+            // DevOps & Platform Engineering
+          </p>
+          <h1 className="mt-3 text-3xl font-bold tracking-tight text-white sm:text-4xl">
+            {resumeData.profile.role}
+          </h1>
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-300 sm:text-base">
+            {resumeData.summary}
+          </p>
+
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-2.5">
+            {heroKpis.map((kpi) => (
+              <div
+                key={kpi.label}
+                className="rounded-full border border-white/10 bg-slate-900/70 px-3 py-1.5 backdrop-blur-sm"
+              >
+                <span className="font-mono text-[11px] text-slate-400">
+                  {kpi.label}:{" "}
+                </span>
+                <span className="font-mono text-[11px] font-semibold text-accent-300">
+                  {kpi.value}
+                </span>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
         {/* ─── Terminal Window ─── */}
         <motion.div
           initial={{ opacity: 0, y: 30, scale: 0.97 }}
@@ -200,27 +266,33 @@ export default function Hero() {
                 jjimenez@devops ~ $
               </span>
             </div>
-            <button
-              onClick={handleCopy}
-              className="flex items-center gap-1 rounded px-2 py-1 text-slate-500 transition-colors hover:bg-white/5 hover:text-slate-300"
-              aria-label="Copiar output"
-            >
-              {copied ? (
-                <Check className="h-3.5 w-3.5 text-operational-400" />
-              ) : (
-                <Copy className="h-3.5 w-3.5" />
+            <div className="flex items-center gap-1.5">
+              {phase !== "done" && (
+                <button
+                  onClick={handleSkipAnimation}
+                  className="rounded px-2 py-1 font-mono text-[11px] text-building-400 transition-colors hover:bg-white/5 hover:text-building-300"
+                >
+                  Saltar
+                </button>
               )}
-            </button>
+              <button
+                onClick={handleCopy}
+                className="flex items-center gap-1 rounded px-2 py-1 text-slate-500 transition-colors hover:bg-white/5 hover:text-slate-300"
+                aria-label="Copiar output"
+              >
+                {copied ? (
+                  <Check className="h-3.5 w-3.5 text-operational-400" />
+                ) : (
+                  <Copy className="h-3.5 w-3.5" />
+                )}
+              </button>
+            </div>
           </div>
 
           {/* Terminal body */}
           <div className="min-h-[350px] p-5 font-mono">
             {/* Command line */}
-            <TerminalPrompt
-              command={COMMAND}
-              typed={typedCommand}
-              showCursor={phase === "typing" || phase === "idle"}
-            />
+            <TerminalPrompt typed={typedCommand} showCursor={phase === "typing" || phase === "idle"} />
 
             {/* Execution indicator */}
             <AnimatePresence>
@@ -248,11 +320,30 @@ export default function Hero() {
                   transition={{ duration: 0.4, ease: "easeOut" }}
                   className="mt-4"
                 >
-                  <div className="mb-2 text-xs text-slate-500">
-                    ─── output ───
+                  <div className="mb-2 flex items-center justify-between text-xs text-slate-500">
+                    <span>─── profile summary ───</span>
+                    <button
+                      onClick={() => setShowRawJson((prev) => !prev)}
+                      className="rounded px-2 py-1 font-mono text-[11px] text-accent-300 transition-colors hover:bg-white/5 hover:text-accent-200"
+                    >
+                      {showRawJson ? "Ocultar JSON" : "Ver JSON"}
+                    </button>
                   </div>
-                  <div className="rounded-lg border border-white/5 bg-slate-950/50 p-4 overflow-x-auto">
-                    <JsonHighlight data={profileOutput} />
+                  <div className="overflow-x-auto rounded-lg border border-white/5 bg-slate-950/50 p-4">
+                    <ul className="space-y-2 text-[13px] leading-relaxed">
+                      {quickSummary.map((line) => (
+                        <li key={line} className="flex items-start gap-2 text-slate-300">
+                          <span className="mt-[6px] h-1 w-1 shrink-0 rounded-full bg-operational-400" />
+                          <span>{line}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {showRawJson && (
+                      <div className="mt-4 border-t border-white/5 pt-4">
+                        <JsonHighlight data={profileOutput} />
+                      </div>
+                    )}
                   </div>
                 </motion.div>
               )}
@@ -278,10 +369,8 @@ export default function Hero() {
         {/* ─── CTA Button ─── */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={
-            phase === "done" ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
-          }
-          transition={{ duration: 0.5, delay: 0.2 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
           className="mt-8 flex flex-col items-center gap-4"
         >
           <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
@@ -291,7 +380,7 @@ export default function Hero() {
             >
               <span className="absolute inset-0 -z-10 bg-linear-to-r from-accent-500/0 via-accent-500/10 to-accent-500/0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
               <ChevronRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
-              <span>Ver Arquitectura</span>
+              <span>Ver impacto</span>
             </button>
 
             <a
