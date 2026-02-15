@@ -18,6 +18,8 @@ const navLinks = [
   { label: "Skills", href: "#skills" },
   { label: "Contacto", href: "#contact" },
 ];
+
+const resumeDownloadHref = "/JavierJimenezMolina_cv_es.pdf";
 ---
 
 <!doctype html>
@@ -48,13 +50,16 @@ const navLinks = [
   <body class="min-h-screen flex flex-col" style="color-scheme: dark;">
     <!-- ─── Navbar ─── -->
     <nav
-      class="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-slate-950/70 backdrop-blur-xl"
+      id="sticky-recruiter-nav"
+      data-visible="false"
+      aria-hidden="true"
+      class="pointer-events-none fixed inset-x-0 top-0 z-50 -translate-y-4 border-b border-white/10 bg-slate-950/65 opacity-0 shadow-lg shadow-black/20 backdrop-blur-xl transition-all duration-300 ease-out supports-[backdrop-filter]:bg-slate-950/45 data-[visible=true]:pointer-events-auto data-[visible=true]:translate-y-0 data-[visible=true]:opacity-100"
     >
       <div
-        class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4"
+        class="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6"
       >
         <!-- Logo / Name -->
-        <a href="#hero" class="group flex items-center gap-3">
+        <a href="#hero" class="group flex shrink-0 items-center gap-3">
           <div
             class="flex h-8 w-8 items-center justify-center rounded-md border border-operational-500/30 bg-operational-500/10"
           >
@@ -62,13 +67,13 @@ const navLinks = [
               >&gt;_</span
             >
           </div>
-          <span class="font-mono text-sm font-medium text-slate-300 transition-colors group-hover:text-white">
+          <span class="hidden font-mono text-sm font-medium text-slate-300 transition-colors group-hover:text-white sm:inline">
             Javier Jiménez Molina
           </span>
         </a>
 
         <!-- Navigation Links (hidden on mobile) -->
-        <div class="hidden items-center gap-1 md:flex">
+        <div class="hidden items-center gap-1 lg:flex">
           {
             navLinks.map((link) => (
               <a
@@ -81,17 +86,37 @@ const navLinks = [
           }
         </div>
 
-        <!-- Status Indicator -->
-        <div class="flex items-center gap-2">
-          <div class="h-2 w-2 animate-pulse rounded-full bg-operational-400 shadow-[0_0_6px] shadow-operational-400/50">
+        <div class="flex items-center gap-3">
+          <!-- Status Indicator -->
+          <div class="hidden items-center gap-2 sm:flex">
+            <div class="h-2 w-2 animate-pulse rounded-full bg-operational-400 shadow-[0_0_6px] shadow-operational-400/50">
+            </div>
+            <span class="font-mono text-xs text-operational-400">Online</span>
           </div>
-          <span class="font-mono text-xs text-operational-400">Online</span>
+
+          <a
+            href={resumeDownloadHref}
+            download
+            class="inline-flex items-center gap-1.5 rounded-md border border-operational-500/40 bg-operational-500/15 px-3 py-1.5 font-mono text-[11px] font-semibold text-operational-300 transition-all hover:border-operational-300/70 hover:bg-operational-500/25 hover:text-operational-100"
+          >
+            <svg
+              class="h-3.5 w-3.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0l4-4m-4 4l-4-4M4 19h16"></path>
+            </svg>
+            <span class="hidden sm:inline">Descargar CV</span>
+            <span class="sm:hidden">CV</span>
+          </a>
         </div>
       </div>
     </nav>
 
     <!-- ─── Main Content ─── -->
-    <main class="flex-1 pt-20">
+    <main class="flex-1">
       <slot />
     </main>
 
@@ -147,5 +172,52 @@ const navLinks = [
         </span>
       </div>
     </footer>
+
+    <script is:inline>
+      (() => {
+        const nav = document.getElementById("sticky-recruiter-nav");
+        const hero = document.getElementById("hero");
+
+        if (!(nav instanceof HTMLElement) || !(hero instanceof HTMLElement)) {
+          return;
+        }
+
+        const showNav = () => {
+          nav.dataset.visible = "true";
+          nav.setAttribute("aria-hidden", "false");
+        };
+
+        const hideNav = () => {
+          nav.dataset.visible = "false";
+          nav.setAttribute("aria-hidden", "true");
+        };
+
+        const observer = new IntersectionObserver(
+          ([entry]) => {
+            if (entry?.isIntersecting) {
+              hideNav();
+              return;
+            }
+
+            showNav();
+          },
+          { threshold: 0.2 },
+        );
+
+        observer.observe(hero);
+
+        if (hero.getBoundingClientRect().bottom <= 0) {
+          showNav();
+        } else {
+          hideNav();
+        }
+
+        window.addEventListener(
+          "pagehide",
+          () => observer.disconnect(),
+          { once: true },
+        );
+      })();
+    </script>
   </body>
 </html>

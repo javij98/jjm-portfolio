@@ -168,4 +168,8 @@
   ::selection {
     @apply bg-accent-500/30 text-white;
   }
+
+  section[id] {
+    scroll-margin-top: 5.5rem;
+  }
 }
