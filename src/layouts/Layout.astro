@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import LanguagePicker from "../components/LanguagePicker.astro";
+import CommandMenu from "../components/CommandMenu";
 import type { Locale, UiLabels } from "../i18n/ui";
 
 export interface Props {
@@ -10,6 +11,9 @@ export interface Props {
   labels: UiLabels;
   resumeDownloadHref: string;
   currentPath: string;
+  email: string;
+  linkedin: string;
+  githubHref?: string;
 }
 
 const {
@@ -20,6 +24,9 @@ const {
   labels,
   resumeDownloadHref,
   currentPath,
+  email,
+  linkedin,
+  githubHref = "https://github.com/javij98",
 }: Props = Astro.props;
 
 const navLinks = [
@@ -89,6 +96,15 @@ const navLinks = [
         </div>
 
         <div class="flex items-center gap-3">
+          <CommandMenu
+            client:load
+            lang={lang}
+            currentPath={currentPath}
+            resumeDownloadHref={resumeDownloadHref}
+            email={email}
+            linkedin={linkedin}
+            githubHref={githubHref}
+          />
           <LanguagePicker currentLang={lang} pathname={currentPath} labels={labels.language} />
 
           <div class="hidden items-center gap-2 sm:flex">

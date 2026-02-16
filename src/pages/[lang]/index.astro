@@ -29,6 +29,7 @@ const data = RESUME_BY_LANG[lang];
 const labels = UI_LABELS[lang];
 const pageTitle = `${data.profile.name} | ${data.profile.role}`;
 const pageDescription = data.summary;
+const githubHref = "https://github.com/javij98";
 ---
 
 <Layout
@@ -38,6 +39,9 @@ const pageDescription = data.summary;
   labels={labels}
   resumeDownloadHref={data.assets.resumePdf}
   currentPath={Astro.url.pathname}
+  email={data.profile.email}
+  linkedin={data.profile.linkedin}
+  githubHref={githubHref}
 >
   <section id="hero">
     <Hero client:load data={data} labels={labels.hero} />
