@@ -3,13 +3,12 @@ import { AnimatePresence, motion, useInView } from "framer-motion";
 import { Check, Mail, Linkedin } from "lucide-react";
 import type { ResumeData, UiLabels } from "../../i18n/ui";
 
-export default function Contact({
-  data,
-  labels,
-}: {
+export interface ContactProps {
   data: ResumeData;
   labels: UiLabels["contact"];
-}) {
+}
+
+export default function Contact({ data, labels }: ContactProps) {
   const ref = useRef<HTMLDivElement>(null);
   const copyResetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const toastTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);

@@ -1,13 +1,13 @@
 ---
 import type { Locale, UiLabels } from "../i18n/ui";
 
-interface Props {
+export interface Props {
   currentLang: Locale;
   pathname: string;
   labels: UiLabels["language"];
 }
 
-const { currentLang, pathname, labels } = Astro.props;
+const { currentLang, pathname, labels }: Props = Astro.props;
 
 const getHrefForLang = (targetLang: Locale): string => {
   const segments = pathname.split("/").filter(Boolean);

@@ -61,14 +61,13 @@ function EducationCard({
   );
 }
 
-// ─── Main Component ───
-export default function Education({
-  data,
-  labels,
-}: {
+export interface EducationProps {
   data: ResumeData;
   labels: UiLabels["education"];
-}) {
+}
+
+// ─── Main Component ───
+export default function Education({ data, labels }: EducationProps) {
   return (
     <div className="mx-auto max-w-4xl px-6 py-24">
       <div className="mb-12">

@@ -221,13 +221,12 @@ function SkillCategory({
   );
 }
 
-export default function Skills({
-  data,
-  labels,
-}: {
+export interface SkillsProps {
   data: ResumeData;
   labels: UiLabels["skills"];
-}) {
+}
+
+export default function Skills({ data, labels }: SkillsProps) {
   const categoryConfig = buildCategoryConfig(labels);
   const categoryOrder: SkillCategoryKey[] = [
     "core",

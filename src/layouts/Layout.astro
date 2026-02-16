@@ -3,7 +3,7 @@ import "../styles/global.css";
 import LanguagePicker from "../components/LanguagePicker.astro";
 import type { Locale, UiLabels } from "../i18n/ui";
 
-interface Props {
+export interface Props {
   title?: string;
   description?: string;
   lang: Locale;
@@ -20,7 +20,7 @@ const {
   labels,
   resumeDownloadHref,
   currentPath,
-} = Astro.props;
+}: Props = Astro.props;
 
 const navLinks = [
   { label: labels.nav.home, href: "#hero" },

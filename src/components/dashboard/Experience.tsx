@@ -109,14 +109,13 @@ function PipelineStage({
   );
 }
 
-// ─── Main Component ───
-export default function Experience({
-  data,
-  labels,
-}: {
+export interface ExperienceProps {
   data: ResumeData;
   labels: UiLabels["experience"];
-}) {
+}
+
+// ─── Main Component ───
+export default function Experience({ data, labels }: ExperienceProps) {
   return (
     <div className="mx-auto max-w-4xl px-6 py-24">
       <div className="mb-12">

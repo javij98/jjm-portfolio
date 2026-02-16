@@ -99,13 +99,12 @@ function TerminalPrompt({
   );
 }
 
-export default function Hero({
-  data,
-  labels,
-}: {
+export interface HeroProps {
   data: ResumeData;
   labels: UiLabels["hero"];
-}) {
+}
+
+export default function Hero({ data, labels }: HeroProps) {
   const [phase, setPhase] = useState<AnimationPhase>("idle");
   const [typedCommand, setTypedCommand] = useState("");
   const [copied, setCopied] = useState(false);
