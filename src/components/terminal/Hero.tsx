@@ -205,6 +205,8 @@ export default function Hero({ data, labels }: HeroProps) {
     setPhase("done");
   }, []);
 
+  const showMobileActions = phase === "done";
+
   return (
     <div className="relative flex min-h-[calc(100svh-5rem)] items-center justify-center px-3 py-4 sm:min-h-[calc(100dvh-5rem)] sm:items-start sm:px-6 sm:py-8 lg:items-center lg:py-10">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -371,12 +373,12 @@ export default function Hero({ data, labels }: HeroProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.15 }}
-          className="mt-6 flex flex-col items-center gap-2.5 sm:mt-5 sm:gap-3"
+          className="mt-5 hidden flex-col items-center gap-3 sm:flex"
         >
-          <div className="grid w-full max-w-sm grid-cols-2 gap-2 sm:flex sm:max-w-none sm:flex-row sm:justify-center sm:gap-3 sm:flex-wrap">
+          <div className="flex flex-row flex-wrap justify-center gap-3">
             <button
               onClick={handleScrollToMetrics}
-              className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-lg border border-accent-500/30 bg-accent-500/10 px-3 py-2 font-mono text-xs font-medium text-accent-300 transition-all duration-300 hover:border-accent-400/50 hover:bg-accent-500/20 hover:text-accent-200 hover:shadow-lg hover:shadow-accent-500/10 sm:w-auto sm:px-5 sm:py-2.5 sm:text-xs lg:px-6 lg:py-3 lg:text-sm"
+              className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-lg border border-accent-500/30 bg-accent-500/10 px-5 py-2.5 font-mono text-xs font-medium text-accent-300 transition-all duration-300 hover:border-accent-400/50 hover:bg-accent-500/20 hover:text-accent-200 hover:shadow-lg hover:shadow-accent-500/10 lg:px-6 lg:py-3 lg:text-sm"
             >
               <span className="absolute inset-0 -z-10 bg-linear-to-r from-accent-500/0 via-accent-500/10 to-accent-500/0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
               <ChevronRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
@@ -385,7 +387,7 @@ export default function Hero({ data, labels }: HeroProps) {
 
             <button
               onClick={handleScrollToContact}
-              className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-lg border border-operational-500/30 bg-operational-500/10 px-3 py-2 font-mono text-xs font-medium text-operational-300 transition-all duration-300 hover:border-operational-400/50 hover:bg-operational-500/20 hover:text-operational-200 hover:shadow-lg hover:shadow-operational-500/10 sm:w-auto sm:px-5 sm:py-2.5 sm:text-xs lg:px-6 lg:py-3 lg:text-sm"
+              className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-lg border border-operational-500/30 bg-operational-500/10 px-5 py-2.5 font-mono text-xs font-medium text-operational-300 transition-all duration-300 hover:border-operational-400/50 hover:bg-operational-500/20 hover:text-operational-200 hover:shadow-lg hover:shadow-operational-500/10 lg:px-6 lg:py-3 lg:text-sm"
             >
               <span className="absolute inset-0 -z-10 bg-linear-to-r from-operational-500/0 via-operational-500/10 to-operational-500/0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
               <Mail className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
@@ -395,7 +397,7 @@ export default function Hero({ data, labels }: HeroProps) {
             <a
               href={data.assets.resumePdf}
               download
-              className="group relative col-span-2 inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-lg border border-white/20 bg-white/5 px-3 py-2 font-mono text-xs font-medium text-slate-200 transition-all duration-300 hover:border-white/35 hover:bg-white/10 hover:text-white hover:shadow-lg hover:shadow-black/20 sm:col-span-1 sm:w-auto sm:px-5 sm:py-2.5 sm:text-xs lg:px-6 lg:py-3 lg:text-sm"
+              className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-lg border border-white/20 bg-white/5 px-5 py-2.5 font-mono text-xs font-medium text-slate-200 transition-all duration-300 hover:border-white/35 hover:bg-white/10 hover:text-white hover:shadow-lg hover:shadow-black/20 lg:px-6 lg:py-3 lg:text-sm"
             >
               <span className="absolute inset-0 -z-10 bg-linear-to-r from-white/0 via-white/5 to-white/0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
               <Download className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
@@ -407,6 +409,48 @@ export default function Hero({ data, labels }: HeroProps) {
             {data.profile.tagline}
           </p>
         </motion.div>
+
+        <AnimatePresence>
+          {showMobileActions && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 12 }}
+              transition={{ duration: 0.45, ease: "easeOut" }}
+              className="mt-6 flex flex-col items-center gap-2.5 sm:hidden"
+            >
+              <div className="grid w-full max-w-sm grid-cols-2 gap-2">
+                <button
+                  onClick={handleScrollToMetrics}
+                  className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-lg border border-accent-500/30 bg-accent-500/10 px-3 py-2 font-mono text-xs font-medium text-accent-300 transition-all duration-300 hover:border-accent-400/50 hover:bg-accent-500/20 hover:text-accent-200 hover:shadow-lg hover:shadow-accent-500/10"
+                >
+                  <span className="absolute inset-0 -z-10 bg-linear-to-r from-accent-500/0 via-accent-500/10 to-accent-500/0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                  <ChevronRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+                  <span>{labels.viewImpact}</span>
+                </button>
+
+                <button
+                  onClick={handleScrollToContact}
+                  className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-lg border border-operational-500/30 bg-operational-500/10 px-3 py-2 font-mono text-xs font-medium text-operational-300 transition-all duration-300 hover:border-operational-400/50 hover:bg-operational-500/20 hover:text-operational-200 hover:shadow-lg hover:shadow-operational-500/10"
+                >
+                  <span className="absolute inset-0 -z-10 bg-linear-to-r from-operational-500/0 via-operational-500/10 to-operational-500/0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                  <Mail className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
+                  <span>{labels.contactCta}</span>
+                </button>
+
+                <a
+                  href={data.assets.resumePdf}
+                  download
+                  className="group relative col-span-2 inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-lg border border-white/20 bg-white/5 px-3 py-2 font-mono text-xs font-medium text-slate-200 transition-all duration-300 hover:border-white/35 hover:bg-white/10 hover:text-white hover:shadow-lg hover:shadow-black/20"
+                >
+                  <span className="absolute inset-0 -z-10 bg-linear-to-r from-white/0 via-white/5 to-white/0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                  <Download className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
+                  <span>{labels.downloadCv}</span>
+                </a>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
