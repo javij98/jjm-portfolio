@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Command } from "cmdk";
 import {
   Briefcase,
+  ExternalLink,
   FolderKanban,
   Github,
   Home,
@@ -20,6 +21,7 @@ interface CommandMenuProps {
   currentPath: string;
   email: string;
   linkedin: string;
+  servicesHref: string;
   githubHref?: string;
 }
 
@@ -40,6 +42,7 @@ export default function CommandMenu({
   currentPath,
   email,
   linkedin,
+  servicesHref,
   githubHref = "https://github.com/javij98",
 }: CommandMenuProps) {
   const [open, setOpen] = useState(false);
@@ -64,6 +67,7 @@ export default function CommandMenu({
           impact: "Ir a Impacto",
           skills: "Ir a Skills",
           contact: "Ir a Contacto",
+          services: "Abrir Servicios",
           github: "Abrir GitHub",
           linkedin: "Abrir LinkedIn",
           email: "Enviar Email",
@@ -87,6 +91,7 @@ export default function CommandMenu({
           impact: "Go to Impact",
           skills: "Go to Skills",
           contact: "Go to Contact",
+          services: "Open Services",
           github: "Open GitHub",
           linkedin: "Open LinkedIn",
           email: "Send Email",
@@ -175,6 +180,14 @@ export default function CommandMenu({
         action: () => navigateToSection("contact"),
       },
       {
+        id: "nav-services",
+        group: "navigation",
+        label: t.items.services,
+        keywords: "services servicios consulting consultoria freelance",
+        icon: ExternalLink,
+        action: () => openExternal(servicesHref),
+      },
+      {
         id: "social-github",
         group: "social",
         label: t.items.github,
@@ -215,7 +228,7 @@ export default function CommandMenu({
         action: () => switchLocale("en"),
       },
     ],
-    [email, githubHref, linkedin, navigateToSection, openExternal, switchLocale, t.items],
+    [email, githubHref, linkedin, navigateToSection, openExternal, servicesHref, switchLocale, t.items],
   );
 
   const groupedItems = useMemo(
