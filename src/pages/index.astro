@@ -1,35 +1,23 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import Hero from "../components/terminal/Hero";
-import Metrics from "../components/dashboard/Metrics";
-import Experience from "../components/dashboard/Experience";
-import Education from "../components/dashboard/Education";
-import Skills from "../components/dashboard/Skills";
-import Contact from "../components/dashboard/Contact";
+const fallbackLocalePath = "/es";
 ---
 
-<Layout>
-  <section id="hero">
-    <Hero client:load />
-  </section>
-
-  <section id="metrics">
-    <Metrics client:visible />
-  </section>
-
-  <section id="experience">
-    <Experience client:visible />
-  </section>
-
-  <section id="education">
-    <Education client:visible />
-  </section>
-
-  <section id="skills">
-    <Skills client:visible />
-  </section>
-
-  <section id="contact">
-    <Contact client:visible />
-  </section>
-</Layout>
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="refresh" content={`0;url=${fallbackLocalePath}`} />
+    <script is:inline>
+      (() => {
+        const browserLang = (navigator.language || "es").toLowerCase();
+        const preferredLocale = browserLang.startsWith("en") ? "en" : "es";
+        window.location.replace(`/${preferredLocale}`);
+      })();
+    </script>
+    <title>Redirecting...</title>
+  </head>
+  <body>
+    <a href={fallbackLocalePath}>Go to {fallbackLocalePath}</a>
+  </body>
+</html>

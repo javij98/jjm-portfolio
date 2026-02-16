@@ -1,29 +1,38 @@
 ---
 import "../styles/global.css";
+import LanguagePicker from "../components/LanguagePicker.astro";
+import type { Locale, UiLabels } from "../i18n/ui";
 
 interface Props {
   title?: string;
   description?: string;
+  lang: Locale;
+  labels: UiLabels;
+  resumeDownloadHref: string;
+  currentPath: string;
 }
 
 const {
   title = "Javier Jiménez Molina | DevOps & Platform Engineer",
-  description = "Ingeniero DevOps con +4 años de experiencia y background sólido en desarrollo (Java/React). Especializado en reducir el Time-to-Market mediante pipelines de CI/CD avanzados y orquestación eficiente con Kubernetes.",
+  description =
+    "Ingeniero DevOps con +4 años de experiencia y background sólido en desarrollo (Java/React). Especializado en reducir el Time-to-Market mediante pipelines de CI/CD avanzados y orquestación eficiente con Kubernetes.",
+  lang,
+  labels,
+  resumeDownloadHref,
+  currentPath,
 } = Astro.props;
 
 const navLinks = [
-  { label: "Inicio", href: "#hero" },
-  { label: "Métricas", href: "#metrics" },
-  { label: "Experiencia", href: "#experience" },
-  { label: "Skills", href: "#skills" },
-  { label: "Contacto", href: "#contact" },
+  { label: labels.nav.home, href: "#hero" },
+  { label: labels.nav.metrics, href: "#metrics" },
+  { label: labels.nav.experience, href: "#experience" },
+  { label: labels.nav.skills, href: "#skills" },
+  { label: labels.nav.contact, href: "#contact" },
 ];
-
-const resumeDownloadHref = "/JavierJimenezMolina_cv_es.pdf";
 ---
 
 <!doctype html>
-<html lang="es" data-theme="dark" style="color-scheme: dark;">
+<html lang={lang} data-theme="dark" style="color-scheme: dark;">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -32,13 +41,11 @@ const resumeDownloadHref = "/JavierJimenezMolina_cv_es.pdf";
     <meta name="description" content={description} />
     <meta name="author" content="Javier Jiménez Molina" />
 
-    <!-- Open Graph -->
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="es_ES" />
+    <meta property="og:locale" content={labels.meta.ogLocale} />
 
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
@@ -48,7 +55,6 @@ const resumeDownloadHref = "/JavierJimenezMolina_cv_es.pdf";
   </head>
 
   <body class="min-h-screen flex flex-col" style="color-scheme: dark;">
-    <!-- ─── Navbar ─── -->
     <nav
       id="sticky-recruiter-nav"
       class="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-slate-950/65 shadow-lg shadow-black/20 backdrop-blur-xl supports-[backdrop-filter]:bg-slate-950/45"
@@ -56,7 +62,6 @@ const resumeDownloadHref = "/JavierJimenezMolina_cv_es.pdf";
       <div
         class="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6"
       >
-        <!-- Logo / Name -->
         <a href="#hero" class="group flex shrink-0 items-center gap-3">
           <div
             class="flex h-8 w-8 items-center justify-center rounded-md border border-operational-500/30 bg-operational-500/10"
@@ -70,7 +75,6 @@ const resumeDownloadHref = "/JavierJimenezMolina_cv_es.pdf";
           </span>
         </a>
 
-        <!-- Navigation Links (hidden on mobile) -->
         <div class="hidden items-center gap-1 lg:flex">
           {
             navLinks.map((link) => (
@@ -85,11 +89,12 @@ const resumeDownloadHref = "/JavierJimenezMolina_cv_es.pdf";
         </div>
 
         <div class="flex items-center gap-3">
-          <!-- Status Indicator -->
+          <LanguagePicker currentLang={lang} pathname={currentPath} labels={labels.language} />
+
           <div class="hidden items-center gap-2 sm:flex">
             <div class="h-2 w-2 animate-pulse rounded-full bg-operational-400 shadow-[0_0_6px] shadow-operational-400/50">
             </div>
-            <span class="font-mono text-xs text-operational-400">Online</span>
+            <span class="font-mono text-xs text-operational-400">{labels.nav.online}</span>
           </div>
 
           <div
@@ -112,30 +117,27 @@ const resumeDownloadHref = "/JavierJimenezMolina_cv_es.pdf";
               >
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0l4-4m-4 4l-4-4M4 19h16"></path>
               </svg>
-              <span class="hidden sm:inline">Descargar CV</span>
-              <span class="sm:hidden">CV</span>
+              <span class="hidden sm:inline">{labels.nav.downloadCv}</span>
+              <span class="sm:hidden">{labels.nav.cvShort}</span>
             </a>
           </div>
         </div>
       </div>
     </nav>
 
-    <!-- ─── Main Content ─── -->
     <main class="flex-1 pt-20">
       <slot />
     </main>
 
-    <!-- ─── Footer: System Status Bar ─── -->
     <footer class="border-t border-white/10 bg-slate-950/80 backdrop-blur-sm">
       <div
         class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-3"
       >
-        <!-- Left: Status indicators -->
         <div class="flex items-center gap-6">
           <div class="flex items-center gap-2">
             <div class="h-1.5 w-1.5 rounded-full bg-operational-400"></div>
             <span class="font-mono text-[11px] text-slate-500"
-              >Status: <span class="text-operational-400">Online</span></span
+              >{labels.footer.status}: <span class="text-operational-400">{labels.footer.online}</span></span
             >
           </div>
           <div class="flex items-center gap-2">
@@ -151,7 +153,7 @@ const resumeDownloadHref = "/JavierJimenezMolina_cv_es.pdf";
               ></path>
             </svg>
             <span class="font-mono text-[11px] text-slate-500"
-              >Branch: <span class="text-slate-400">main</span></span
+              >{labels.footer.branch}: <span class="text-slate-400">{labels.footer.branchValue}</span></span
             >
           </div>
           <div class="hidden items-center gap-2 sm:flex">
@@ -166,12 +168,11 @@ const resumeDownloadHref = "/JavierJimenezMolina_cv_es.pdf";
               <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
             </svg>
             <span class="font-mono text-[11px] text-slate-500"
-              >Region: <span class="text-slate-400">EU-West</span></span
+              >{labels.footer.region}: <span class="text-slate-400">{labels.footer.regionValue}</span></span
             >
           </div>
         </div>
 
-        <!-- Right: Copyright -->
         <span class="font-mono text-[11px] text-slate-600">
           © {new Date().getFullYear()} Javier Jiménez Molina
         </span>

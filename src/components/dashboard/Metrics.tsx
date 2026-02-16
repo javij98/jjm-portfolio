@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { TrendingUp, Minus, ArrowUpRight } from "lucide-react";
-import resumeData from "../../data/resume.json";
+import type { ResumeData, UiLabels } from "../../i18n/ui";
 
 // ─── Counter Animation Hook ───
 function useCountUp(
@@ -14,7 +14,6 @@ function useCountUp(
   useEffect(() => {
     if (!isInView) return;
 
-    // Extract numeric value
     const numericMatch = target.match(/[\d.]+/);
     if (!numericMatch) {
       setDisplay(target);
@@ -34,8 +33,6 @@ function useCountUp(
     const animate = (currentTime: number) => {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
-
-      // Ease out cubic
       const eased = 1 - Math.pow(1 - progress, 3);
       const currentValue = numericTarget * eased;
 
@@ -53,7 +50,7 @@ function useCountUp(
 }
 
 // ─── Trend Icon ───
-function TrendIcon({ trend }: { trend: string }) {
+function TrendIcon({ trend }: { trend: ResumeData["metrics"][number]["trend"] }) {
   if (trend === "up") {
     return <TrendingUp className="h-4 w-4 text-operational-400" />;
   }
@@ -69,11 +66,13 @@ function MetricCard({
   value,
   trend,
   index,
+  labels,
 }: {
   label: string;
   value: string;
-  trend: string;
+  trend: ResumeData["metrics"][number]["trend"];
   index: number;
+  labels: UiLabels["metrics"];
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
@@ -81,10 +80,10 @@ function MetricCard({
 
   const trendLabel =
     trend === "up"
-      ? "Trending Up"
+      ? labels.trendUp
       : trend === "stable"
-        ? "Stable"
-        : "Processing";
+        ? labels.trendStable
+        : labels.trendProcessing;
 
   const trendColor =
     trend === "up"
@@ -108,7 +107,6 @@ function MetricCard({
       transition={{ duration: 0.5, delay: index * 0.15 }}
       className={`group relative rounded-xl border bg-slate-900/50 p-6 backdrop-blur-sm transition-all duration-300 ${borderColor}`}
     >
-      {/* Status dot */}
       <div className="mb-4 flex items-center justify-between">
         <span className="font-mono text-[11px] uppercase tracking-wider text-slate-500">
           {label}
@@ -121,14 +119,12 @@ function MetricCard({
         </div>
       </div>
 
-      {/* Value */}
       <div className="mb-3">
         <span className="font-mono text-4xl font-bold tracking-tight text-white">
           {displayValue}
         </span>
       </div>
 
-      {/* Sparkline placeholder bar */}
       <div className="h-1 w-full overflow-hidden rounded-full bg-slate-800">
         <motion.div
           initial={{ width: 0 }}
@@ -152,36 +148,40 @@ function MetricCard({
 }
 
 // ─── Main Component ───
-export default function Metrics() {
+export default function Metrics({
+  data,
+  labels,
+}: {
+  data: ResumeData;
+  labels: UiLabels["metrics"];
+}) {
   return (
     <div className="mx-auto max-w-6xl px-6 py-24">
-      {/* Section header */}
       <div className="mb-12">
         <div className="mb-3 flex items-center gap-3">
           <div className="h-px flex-1 bg-linear-to-r from-operational-500/50 to-transparent" />
           <span className="font-mono text-xs font-medium uppercase tracking-widest text-operational-400">
-            // System Metrics
+            {labels.eyebrow}
           </span>
           <div className="h-px flex-1 bg-linear-to-l from-operational-500/50 to-transparent" />
         </div>
         <h2 className="text-center text-3xl font-bold text-white">
-          Impacto Medible
+          {labels.title}
         </h2>
         <p className="mx-auto mt-3 max-w-lg text-center font-mono text-sm text-slate-500">
-          Métricas reales de reducción de tiempos, disponibilidad y optimización
-          en entornos productivos.
+          {labels.description}
         </p>
       </div>
 
-      {/* Metrics grid */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {resumeData.metrics.map((metric, index) => (
+        {data.metrics.map((metric, index) => (
           <MetricCard
             key={metric.label}
             label={metric.label}
             value={metric.value}
             trend={metric.trend}
             index={index}
+            labels={labels}
           />
         ))}
       </div>

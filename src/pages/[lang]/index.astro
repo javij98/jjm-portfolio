@@ -1,0 +1,65 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Hero from "../../components/terminal/Hero";
+import Metrics from "../../components/dashboard/Metrics";
+import Experience from "../../components/dashboard/Experience";
+import Education from "../../components/dashboard/Education";
+import Skills from "../../components/dashboard/Skills";
+import Contact from "../../components/dashboard/Contact";
+import {
+  LOCALES,
+  RESUME_BY_LANG,
+  UI_LABELS,
+  isLocale,
+  type Locale,
+} from "../../i18n/ui";
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const langParam = Astro.params.lang ?? "es";
+
+if (!isLocale(langParam)) {
+  throw new Error(`Unsupported locale: ${langParam}`);
+}
+
+const lang: Locale = langParam;
+const data = RESUME_BY_LANG[lang];
+const labels = UI_LABELS[lang];
+const pageTitle = `${data.profile.name} | ${data.profile.role}`;
+const pageDescription = data.summary;
+---
+
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  lang={lang}
+  labels={labels}
+  resumeDownloadHref={data.assets.resumePdf}
+  currentPath={Astro.url.pathname}
+>
+  <section id="hero">
+    <Hero client:load data={data} labels={labels.hero} />
+  </section>
+
+  <section id="metrics">
+    <Metrics client:visible data={data} labels={labels.metrics} />
+  </section>
+
+  <section id="experience">
+    <Experience client:visible data={data} labels={labels.experience} />
+  </section>
+
+  <section id="education">
+    <Education client:visible data={data} labels={labels.education} />
+  </section>
+
+  <section id="skills">
+    <Skills client:visible data={data} labels={labels.skills} />
+  </section>
+
+  <section id="contact">
+    <Contact client:visible data={data} labels={labels.contact} />
+  </section>
+</Layout>

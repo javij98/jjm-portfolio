@@ -1,9 +1,10 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Shield, Code2, BarChart3, Rocket } from "lucide-react";
-import resumeData from "../../data/resume.json";
+import type { ResumeData, UiLabels } from "../../i18n/ui";
 
-// ─── Category Config ───
+type SkillCategoryKey = keyof ResumeData["skills"];
+
 interface CategoryConfig {
   label: string;
   icon: React.ComponentType<{ className?: string }>;
@@ -14,47 +15,48 @@ interface CategoryConfig {
   spotlightColor: string;
 }
 
-const categoryConfig: Record<string, CategoryConfig> = {
-  core: {
-    label: "Core Infrastructure",
-    icon: Shield,
-    color: "text-operational-400",
-    borderColor: "border-operational-500/20",
-    bgColor: "bg-operational-500/10",
-    badgeColor:
-      "border-operational-500/30 bg-operational-500/10 text-operational-300",
-    spotlightColor: "rgba(52, 211, 153, 0.45)",
-  },
-  dev: {
-    label: "Development",
-    icon: Code2,
-    color: "text-accent-400",
-    borderColor: "border-accent-500/20",
-    bgColor: "bg-accent-500/10",
-    badgeColor: "border-accent-500/30 bg-accent-500/10 text-accent-300",
-    spotlightColor: "rgba(34, 211, 238, 0.45)",
-  },
-  observability: {
-    label: "Observability",
-    icon: BarChart3,
-    color: "text-purple-400",
-    borderColor: "border-purple-500/20",
-    bgColor: "bg-purple-500/10",
-    badgeColor: "border-purple-500/30 bg-purple-500/10 text-purple-300",
-    spotlightColor: "rgba(192, 132, 252, 0.45)",
-  },
-  learning: {
-    label: "Learning Path",
-    icon: Rocket,
-    color: "text-building-400",
-    borderColor: "border-building-500/20",
-    bgColor: "bg-building-500/10",
-    badgeColor: "border-building-500/30 bg-building-500/10 text-building-300",
-    spotlightColor: "rgba(251, 191, 36, 0.5)",
-  },
-};
+function buildCategoryConfig(labels: UiLabels["skills"]): Record<SkillCategoryKey, CategoryConfig> {
+  return {
+    core: {
+      label: labels.categories.core,
+      icon: Shield,
+      color: "text-operational-400",
+      borderColor: "border-operational-500/20",
+      bgColor: "bg-operational-500/10",
+      badgeColor:
+        "border-operational-500/30 bg-operational-500/10 text-operational-300",
+      spotlightColor: "rgba(52, 211, 153, 0.45)",
+    },
+    dev: {
+      label: labels.categories.dev,
+      icon: Code2,
+      color: "text-accent-400",
+      borderColor: "border-accent-500/20",
+      bgColor: "bg-accent-500/10",
+      badgeColor: "border-accent-500/30 bg-accent-500/10 text-accent-300",
+      spotlightColor: "rgba(34, 211, 238, 0.45)",
+    },
+    observability: {
+      label: labels.categories.observability,
+      icon: BarChart3,
+      color: "text-purple-400",
+      borderColor: "border-purple-500/20",
+      bgColor: "bg-purple-500/10",
+      badgeColor: "border-purple-500/30 bg-purple-500/10 text-purple-300",
+      spotlightColor: "rgba(192, 132, 252, 0.45)",
+    },
+    learning: {
+      label: labels.categories.learning,
+      icon: Rocket,
+      color: "text-building-400",
+      borderColor: "border-building-500/20",
+      bgColor: "bg-building-500/10",
+      badgeColor: "border-building-500/30 bg-building-500/10 text-building-300",
+      spotlightColor: "rgba(251, 191, 36, 0.5)",
+    },
+  };
+}
 
-// ─── Skill Badge ───
 function SkillBadge({
   skill,
   config,
@@ -75,7 +77,7 @@ function SkillBadge({
       transition={{ duration: 0.3, delay: index * 0.06 }}
       className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 font-mono text-sm transition-all duration-300 hover:scale-105 ${config.badgeColor}`}
     >
-      <span>{skill.replace(" (En progreso)", "")}</span>
+      <span>{skill.replace(/\s\((En progreso|In progress)\)$/i, "")}</span>
       {isLearning && (
         <span className="flex items-center gap-1">
           <span className="relative flex h-2 w-2">
@@ -88,20 +90,21 @@ function SkillBadge({
   );
 }
 
-// ─── Skill Category Card ───
 function SkillCategory({
   categoryKey,
   skills,
   index,
+  labels,
+  config,
 }: {
-  categoryKey: string;
+  categoryKey: SkillCategoryKey;
   skills: string[];
   index: number;
+  labels: UiLabels["skills"];
+  config: CategoryConfig;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
-  const config = categoryConfig[categoryKey];
-  if (!config) return null;
 
   const IconComponent = config.icon;
   const isLearning = categoryKey === "learning";
@@ -149,7 +152,6 @@ function SkillCategory({
       />
 
       <div className="relative z-10">
-        {/* Category header */}
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div
@@ -160,29 +162,27 @@ function SkillCategory({
             <div>
               <h3 className="text-sm font-semibold text-white">{config.label}</h3>
               <span className="font-mono text-[11px] text-slate-500">
-                {skills.length} {isLearning ? "in progress" : "skills"}
+                {skills.length} {isLearning ? labels.inProgress : labels.skillsWord}
               </span>
             </div>
           </div>
 
-          {/* Status */}
           {isLearning ? (
             <span className="flex items-center gap-1.5 rounded-full border border-building-500/30 bg-building-500/10 px-2.5 py-1 font-mono text-[10px] font-medium text-building-400">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-building-400 opacity-75" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-building-400" />
               </span>
-              COMPILING...
+              {labels.compiling}
             </span>
           ) : (
             <span className="flex items-center gap-1.5 rounded-full border border-operational-500/30 bg-operational-500/10 px-2.5 py-1 font-mono text-[10px] font-medium text-operational-400">
               <span className="h-1.5 w-1.5 rounded-full bg-operational-400" />
-              STABLE
+              {labels.stable}
             </span>
           )}
         </div>
 
-        {/* Skills */}
         <div className="flex flex-wrap gap-2">
           {skills.map((skill, i) => (
             <SkillBadge
@@ -196,15 +196,14 @@ function SkillCategory({
           ))}
         </div>
 
-        {/* Progress bar for learning */}
         {isLearning && (
           <div className="mt-4">
             <div className="mb-1 flex justify-between">
               <span className="font-mono text-[11px] text-slate-500">
-                Progress
+                {labels.progress}
               </span>
               <span className="font-mono text-[11px] text-building-400">
-                Building...
+                {labels.building}
               </span>
             </div>
             <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-800">
@@ -222,38 +221,48 @@ function SkillCategory({
   );
 }
 
-// ─── Main Component ───
-export default function Skills() {
-  const categories = Object.entries(resumeData.skills);
+export default function Skills({
+  data,
+  labels,
+}: {
+  data: ResumeData;
+  labels: UiLabels["skills"];
+}) {
+  const categoryConfig = buildCategoryConfig(labels);
+  const categoryOrder: SkillCategoryKey[] = [
+    "core",
+    "dev",
+    "observability",
+    "learning",
+  ];
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-24">
-      {/* Section header */}
       <div className="mb-12">
         <div className="mb-3 flex items-center gap-3">
           <div className="h-px flex-1 bg-linear-to-r from-building-500/50 to-transparent" />
           <span className="font-mono text-xs font-medium uppercase tracking-widest text-building-400">
-            // Skill Matrix
+            {labels.eyebrow}
           </span>
           <div className="h-px flex-1 bg-linear-to-l from-building-500/50 to-transparent" />
         </div>
         <h2 className="text-center text-3xl font-bold text-white">
-          Stack Tecnológico
+          {labels.title}
         </h2>
         <p className="mx-auto mt-3 max-w-lg text-center font-mono text-sm text-slate-500">
-          Competencias core sólidas y tecnologías en proceso de adopción,
-          diferenciadas por estado operativo.
+          {labels.description}
         </p>
       </div>
 
-      {/* Skills grid */}
       <div className="grid gap-6 md:grid-cols-2">
-        {categories.map(([key, skills], index) => (
+        {categoryOrder.map((key, index) => (
           <SkillCategory
             key={key}
             categoryKey={key}
-            skills={skills}
+            skills={data.skills[key]}
             index={index}
+            labels={labels}
+            config={categoryConfig[key]}
           />
         ))}
       </div>

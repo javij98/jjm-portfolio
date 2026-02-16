@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { GitCommitHorizontal, CheckCircle2, Briefcase } from "lucide-react";
-import resumeData from "../../data/resume.json";
+import type { ResumeData, UiLabels } from "../../i18n/ui";
 
 // ─── Single Pipeline Stage ───
 function PipelineStage({
@@ -9,48 +9,46 @@ function PipelineStage({
   role,
   period,
   achievements,
+  isCurrent,
   index,
   isLast,
+  labels,
 }: {
   company: string;
   role: string;
   period: string;
   achievements: string[];
+  isCurrent: boolean;
   index: number;
   isLast: boolean;
+  labels: UiLabels["experience"];
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
-  const isPresent = period.toLowerCase().includes("presente");
-
   return (
     <div ref={ref} className="relative flex gap-6">
-      {/* Pipeline line + node */}
       <div className="flex flex-col items-center">
-        {/* Node */}
         <motion.div
           initial={{ scale: 0, opacity: 0 }}
           animate={isInView ? { scale: 1, opacity: 1 } : {}}
           transition={{ duration: 0.4, delay: index * 0.2 }}
           className={`relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border ${
-            isPresent
+            isCurrent
               ? "border-operational-500/50 bg-operational-500/10"
               : "border-accent-500/30 bg-accent-500/10"
           }`}
         >
-          {isPresent ? (
+          {isCurrent ? (
             <GitCommitHorizontal className="h-5 w-5 text-operational-400" />
           ) : (
             <CheckCircle2 className="h-5 w-5 text-accent-400" />
           )}
-          {/* Pulse for current job */}
-          {isPresent && (
+          {isCurrent && (
             <span className="absolute inset-0 animate-ping rounded-full border border-operational-400/20" />
           )}
         </motion.div>
 
-        {/* Connecting line */}
         {!isLast && (
           <motion.div
             initial={{ height: 0 }}
@@ -61,26 +59,24 @@ function PipelineStage({
         )}
       </div>
 
-      {/* Content card */}
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={isInView ? { opacity: 1, x: 0 } : {}}
         transition={{ duration: 0.5, delay: index * 0.2 + 0.1 }}
         className={`mb-10 flex-1 rounded-xl border bg-slate-900/50 p-6 backdrop-blur-sm transition-all duration-300 ${
-          isPresent
+          isCurrent
             ? "border-operational-500/20 hover:border-operational-500/40"
             : "border-white/10 hover:border-white/20"
         }`}
       >
-        {/* Header */}
         <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
               <Briefcase className="h-4 w-4 text-slate-500" />
               <h3 className="text-lg font-semibold text-white">{company}</h3>
-              {isPresent && (
+              {isCurrent && (
                 <span className="rounded-full border border-operational-500/30 bg-operational-500/10 px-2 py-0.5 font-mono text-[10px] font-medium text-operational-400">
-                  ACTIVE
+                  {labels.active}
                 </span>
               )}
             </div>
@@ -91,7 +87,6 @@ function PipelineStage({
           </span>
         </div>
 
-        {/* Achievements */}
         <ul className="space-y-2">
           {achievements.map((achievement, i) => (
             <motion.li
@@ -115,38 +110,43 @@ function PipelineStage({
 }
 
 // ─── Main Component ───
-export default function Experience() {
+export default function Experience({
+  data,
+  labels,
+}: {
+  data: ResumeData;
+  labels: UiLabels["experience"];
+}) {
   return (
     <div className="mx-auto max-w-4xl px-6 py-24">
-      {/* Section header */}
       <div className="mb-12">
         <div className="mb-3 flex items-center gap-3">
           <div className="h-px flex-1 bg-linear-to-r from-accent-500/50 to-transparent" />
           <span className="font-mono text-xs font-medium uppercase tracking-widest text-accent-400">
-            // Deployment Pipeline
+            {labels.eyebrow}
           </span>
           <div className="h-px flex-1 bg-linear-to-l from-accent-500/50 to-transparent" />
         </div>
         <h2 className="text-center text-3xl font-bold text-white">
-          Experiencia Profesional
+          {labels.title}
         </h2>
         <p className="mx-auto mt-3 max-w-lg text-center font-mono text-sm text-slate-500">
-          Trayectoria desde desarrollo de software hasta ingeniería de
-          plataformas y DevOps.
+          {labels.description}
         </p>
       </div>
 
-      {/* Pipeline timeline */}
       <div>
-        {resumeData.experience.map((exp, index) => (
+        {data.experience.map((exp, index) => (
           <PipelineStage
-            key={exp.company}
+            key={`${exp.company}-${exp.period}`}
             company={exp.company}
             role={exp.role}
             period={exp.period}
             achievements={exp.achievements}
+            isCurrent={exp.isCurrent}
             index={index}
-            isLast={index === resumeData.experience.length - 1}
+            isLast={index === data.experience.length - 1}
+            labels={labels}
           />
         ))}
       </div>

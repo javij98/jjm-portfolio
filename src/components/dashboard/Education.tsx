@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { GraduationCap, MapPin, Calendar } from "lucide-react";
-import resumeData from "../../data/resume.json";
+import type { ResumeData, UiLabels } from "../../i18n/ui";
 
 // ─── Education Card ───
 function EducationCard({
@@ -30,9 +30,7 @@ function EducationCard({
       transition={{ duration: 0.5, delay: index * 0.15 }}
       className="group rounded-xl border border-white/10 bg-slate-900/50 p-6 backdrop-blur-sm transition-all duration-300 hover:border-accent-500/30"
     >
-      {/* Header */}
       <div className="mb-4 flex items-start gap-4">
-        {/* Icon */}
         <motion.div
           initial={{ scale: 0 }}
           animate={isInView ? { scale: 1 } : {}}
@@ -42,7 +40,6 @@ function EducationCard({
           <GraduationCap className="h-6 w-6 text-accent-400" />
         </motion.div>
 
-        {/* Degree + Institution */}
         <div className="min-w-0 flex-1">
           <h3 className="text-lg font-semibold text-white">{degree}</h3>
           <p className="mt-0.5 text-sm text-accent-300">{institution}</p>
@@ -50,7 +47,6 @@ function EducationCard({
         </div>
       </div>
 
-      {/* Meta */}
       <div className="flex flex-wrap items-center gap-4 border-t border-white/5 pt-4">
         <div className="flex items-center gap-1.5 text-xs text-slate-400">
           <MapPin className="h-3.5 w-3.5 text-slate-500" />
@@ -66,29 +62,33 @@ function EducationCard({
 }
 
 // ─── Main Component ───
-export default function Education() {
+export default function Education({
+  data,
+  labels,
+}: {
+  data: ResumeData;
+  labels: UiLabels["education"];
+}) {
   return (
     <div className="mx-auto max-w-4xl px-6 py-24">
-      {/* Section header */}
       <div className="mb-12">
         <div className="mb-3 flex items-center gap-3">
           <div className="h-px flex-1 bg-linear-to-r from-accent-500/50 to-transparent" />
           <span className="font-mono text-xs font-medium uppercase tracking-widest text-accent-400">
-            // Credentials
+            {labels.eyebrow}
           </span>
           <div className="h-px flex-1 bg-linear-to-l from-accent-500/50 to-transparent" />
         </div>
-        <h2 className="text-center text-3xl font-bold text-white">Educación</h2>
+        <h2 className="text-center text-3xl font-bold text-white">{labels.title}</h2>
         <p className="mx-auto mt-3 max-w-lg text-center font-mono text-sm text-slate-500">
-          Formación académica en ingeniería y telecomunicaciones.
+          {labels.description}
         </p>
       </div>
 
-      {/* Education cards */}
       <div className="grid gap-6">
-        {resumeData.education.map((edu, index) => (
+        {data.education.map((edu, index) => (
           <EducationCard
-            key={edu.institution}
+            key={`${edu.institution}-${edu.period}`}
             degree={edu.degree}
             institution={edu.institution}
             faculty={edu.faculty}
