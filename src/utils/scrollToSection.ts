@@ -2,14 +2,12 @@ interface ScrollToSectionOptions {
   behavior?: ScrollBehavior;
   mobileExtraOffset?: number;
   desktopExtraOffset?: number;
-  correctionDelayMs?: number;
 }
 
 const DEFAULT_OPTIONS: Required<ScrollToSectionOptions> = {
   behavior: "smooth",
   mobileExtraOffset: 8,
   desktopExtraOffset: 16,
-  correctionDelayMs: 380,
 };
 
 export function scrollToSectionById(
@@ -25,7 +23,6 @@ export function scrollToSectionById(
     behavior,
     mobileExtraOffset,
     desktopExtraOffset,
-    correctionDelayMs,
   } = { ...DEFAULT_OPTIONS, ...options };
 
   const computeTargetTop = () => {
@@ -40,15 +37,6 @@ export function scrollToSectionById(
     top: computeTargetTop(),
     behavior,
   });
-
-  // Mobile browsers can shift viewport chrome during smooth scroll; correct once it settles.
-  window.setTimeout(() => {
-    const root = document.documentElement;
-    const previousScrollBehavior = root.style.scrollBehavior;
-    root.style.scrollBehavior = "auto";
-    window.scrollTo({ top: computeTargetTop() });
-    root.style.scrollBehavior = previousScrollBehavior;
-  }, correctionDelayMs);
 
   return true;
 }
