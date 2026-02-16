@@ -206,7 +206,7 @@ export default function Hero({ data, labels }: HeroProps) {
   }, []);
 
   return (
-    <div className="relative flex min-h-[calc(100svh-5rem)] items-center justify-center px-3 py-8 sm:min-h-[calc(100dvh-5rem)] sm:items-start sm:px-6 sm:py-8 lg:items-center lg:py-10">
+    <div className="relative flex min-h-[calc(100svh-5rem)] items-center justify-center px-3 py-4 sm:min-h-[calc(100dvh-5rem)] sm:items-start sm:px-6 sm:py-8 lg:items-center lg:py-10">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute left-1/2 top-1/3 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-500/3 blur-[150px]" />
       </div>
@@ -216,7 +216,7 @@ export default function Hero({ data, labels }: HeroProps) {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, ease: "easeOut" }}
-          className="mx-auto mb-4 max-w-3xl text-center sm:mb-5"
+          className="mx-auto mb-3 max-w-3xl text-center sm:mb-5"
         >
           <p className="font-mono text-[10px] uppercase tracking-wider text-operational-400 sm:text-xs">
             {labels.eyebrow}
@@ -224,15 +224,15 @@ export default function Hero({ data, labels }: HeroProps) {
           <h1 className="mt-2 text-2xl font-bold tracking-tight text-white sm:mt-2.5 sm:text-3xl lg:text-4xl">
             {data.profile.role}
           </h1>
-          <p className="mx-auto mt-2 max-w-2xl text-xs leading-relaxed text-slate-300 sm:mt-3 sm:text-sm lg:text-base">
+          <p className="mx-auto mt-1.5 max-w-2xl text-[11px] leading-relaxed text-slate-300 sm:mt-3 sm:text-sm lg:text-base">
             {data.summary}
           </p>
 
-          <div className="mt-3.5 flex flex-wrap items-center justify-center gap-2 sm:mt-4 sm:gap-2">
-            {heroKpis.map((kpi) => (
+          <div className="mt-3 flex flex-wrap items-center justify-center gap-2 sm:mt-4 sm:gap-2">
+            {heroKpis.map((kpi, index) => (
               <div
                 key={kpi.label}
-                className="rounded-full border border-white/10 bg-slate-900/70 px-2.5 py-1 backdrop-blur-sm sm:px-2.5 sm:py-1"
+                className={`${index === 2 ? "hidden sm:block" : "block"} rounded-full border border-white/10 bg-slate-900/70 px-2.5 py-1 backdrop-blur-sm sm:px-2.5 sm:py-1`}
               >
                 <span className="font-mono text-[10px] text-slate-400 sm:text-[10px] lg:text-[11px]">
                   {kpi.label}: {" "}
@@ -251,7 +251,7 @@ export default function Hero({ data, labels }: HeroProps) {
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           className="overflow-hidden rounded-xl border border-white/10 bg-slate-900/80 shadow-2xl shadow-black/40 backdrop-blur-sm"
         >
-          <div className="flex items-center justify-between border-b border-white/5 bg-slate-900/60 px-3 py-2.5 sm:px-4 sm:py-3">
+          <div className="flex items-center justify-between border-b border-white/5 bg-slate-900/60 px-2.5 py-2 sm:px-4 sm:py-3">
             <div className="flex items-center gap-2">
               <div className="h-3 w-3 rounded-full bg-red-500/80" />
               <div className="h-3 w-3 rounded-full bg-yellow-500/80" />
@@ -286,7 +286,7 @@ export default function Hero({ data, labels }: HeroProps) {
             </div>
           </div>
 
-          <div className="min-h-[210px] p-3 font-mono sm:min-h-[250px] sm:p-4 lg:min-h-[300px]">
+          <div className="min-h-[170px] p-2.5 font-mono sm:min-h-[250px] sm:p-4 lg:min-h-[300px]">
             <TerminalPrompt typed={typedCommand} showCursor={phase === "typing" || phase === "idle"} />
 
             <AnimatePresence>
@@ -311,7 +311,7 @@ export default function Hero({ data, labels }: HeroProps) {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, ease: "easeOut" }}
-                  className="mt-4"
+                  className="mt-3 sm:mt-4"
                 >
                   <div className="mb-2 flex items-center justify-between text-[11px] text-slate-500 sm:text-xs">
                     <span>{`─── ${labels.profileSummary} ───`}</span>
@@ -323,11 +323,17 @@ export default function Hero({ data, labels }: HeroProps) {
                     </button>
                   </div>
                   <div className="overflow-x-auto rounded-lg border border-white/5 bg-slate-950/50 p-3 sm:p-4">
-                    <ul className="space-y-1.5 text-xs leading-relaxed sm:space-y-1.5 sm:text-xs lg:text-[13px]">
+                    <ul className="space-y-1.5 text-[11px] leading-relaxed sm:space-y-1.5 sm:text-xs lg:text-[13px]">
                       {quickSummary.map((line, index) => (
                         <li
                           key={line}
-                          className={`${index === 3 ? "hidden lg:flex" : "flex"} items-start gap-2 text-slate-300`}
+                          className={`${
+                            index <= 1
+                              ? "flex"
+                              : index === 2
+                                ? "hidden sm:flex"
+                                : "hidden lg:flex"
+                          } items-start gap-2 text-slate-300`}
                         >
                           <span className="mt-[6px] h-1 w-1 shrink-0 rounded-full bg-operational-400" />
                           <span>{line}</span>
@@ -365,12 +371,12 @@ export default function Hero({ data, labels }: HeroProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.15 }}
-          className="mt-4 flex flex-col items-center gap-3 sm:mt-5 sm:gap-3"
+          className="mt-6 flex flex-col items-center gap-2.5 sm:mt-5 sm:gap-3"
         >
-          <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:flex-wrap">
+          <div className="grid w-full max-w-sm grid-cols-2 gap-2 sm:flex sm:max-w-none sm:flex-row sm:justify-center sm:gap-3 sm:flex-wrap">
             <button
               onClick={handleScrollToMetrics}
-              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-lg border border-accent-500/30 bg-accent-500/10 px-4 py-2.5 font-mono text-xs font-medium text-accent-300 transition-all duration-300 hover:border-accent-400/50 hover:bg-accent-500/20 hover:text-accent-200 hover:shadow-lg hover:shadow-accent-500/10 sm:px-5 sm:py-2.5 sm:text-xs lg:px-6 lg:py-3 lg:text-sm"
+              className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-lg border border-accent-500/30 bg-accent-500/10 px-3 py-2 font-mono text-xs font-medium text-accent-300 transition-all duration-300 hover:border-accent-400/50 hover:bg-accent-500/20 hover:text-accent-200 hover:shadow-lg hover:shadow-accent-500/10 sm:w-auto sm:px-5 sm:py-2.5 sm:text-xs lg:px-6 lg:py-3 lg:text-sm"
             >
               <span className="absolute inset-0 -z-10 bg-linear-to-r from-accent-500/0 via-accent-500/10 to-accent-500/0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
               <ChevronRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
@@ -379,7 +385,7 @@ export default function Hero({ data, labels }: HeroProps) {
 
             <button
               onClick={handleScrollToContact}
-              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-lg border border-operational-500/30 bg-operational-500/10 px-4 py-2.5 font-mono text-xs font-medium text-operational-300 transition-all duration-300 hover:border-operational-400/50 hover:bg-operational-500/20 hover:text-operational-200 hover:shadow-lg hover:shadow-operational-500/10 sm:px-5 sm:py-2.5 sm:text-xs lg:px-6 lg:py-3 lg:text-sm"
+              className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-lg border border-operational-500/30 bg-operational-500/10 px-3 py-2 font-mono text-xs font-medium text-operational-300 transition-all duration-300 hover:border-operational-400/50 hover:bg-operational-500/20 hover:text-operational-200 hover:shadow-lg hover:shadow-operational-500/10 sm:w-auto sm:px-5 sm:py-2.5 sm:text-xs lg:px-6 lg:py-3 lg:text-sm"
             >
               <span className="absolute inset-0 -z-10 bg-linear-to-r from-operational-500/0 via-operational-500/10 to-operational-500/0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
               <Mail className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
@@ -389,7 +395,7 @@ export default function Hero({ data, labels }: HeroProps) {
             <a
               href={data.assets.resumePdf}
               download
-              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-lg border border-white/20 bg-white/5 px-4 py-2.5 font-mono text-xs font-medium text-slate-200 transition-all duration-300 hover:border-white/35 hover:bg-white/10 hover:text-white hover:shadow-lg hover:shadow-black/20 sm:px-5 sm:py-2.5 sm:text-xs lg:px-6 lg:py-3 lg:text-sm"
+              className="group relative col-span-2 inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-lg border border-white/20 bg-white/5 px-3 py-2 font-mono text-xs font-medium text-slate-200 transition-all duration-300 hover:border-white/35 hover:bg-white/10 hover:text-white hover:shadow-lg hover:shadow-black/20 sm:col-span-1 sm:w-auto sm:px-5 sm:py-2.5 sm:text-xs lg:px-6 lg:py-3 lg:text-sm"
             >
               <span className="absolute inset-0 -z-10 bg-linear-to-r from-white/0 via-white/5 to-white/0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
               <Download className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
