@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Command } from "cmdk";
 import {
   Briefcase,
-  Download,
   FolderKanban,
   Github,
   Home,
@@ -19,7 +18,6 @@ import { scrollToSectionById } from "../utils/scrollToSection";
 interface CommandMenuProps {
   lang: Locale;
   currentPath: string;
-  resumeDownloadHref: string;
   email: string;
   linkedin: string;
   githubHref?: string;
@@ -40,7 +38,6 @@ interface CommandItemConfig {
 export default function CommandMenu({
   lang,
   currentPath,
-  resumeDownloadHref,
   email,
   linkedin,
   githubHref = "https://github.com/javij98",
@@ -72,7 +69,6 @@ export default function CommandMenu({
           email: "Enviar Email",
           langEs: "Cambiar a Español",
           langEn: "Switch to English",
-          downloadCv: "Descargar CV",
         },
       }
     : {
@@ -96,7 +92,6 @@ export default function CommandMenu({
           email: "Send Email",
           langEs: "Cambiar a español",
           langEn: "Switch to English",
-          downloadCv: "Download CV",
         },
       };
 
@@ -132,15 +127,6 @@ export default function CommandMenu({
     },
     [currentPath],
   );
-
-  const downloadResume = useCallback(() => {
-    const anchor = document.createElement("a");
-    anchor.href = resumeDownloadHref;
-    anchor.download = "";
-    document.body.append(anchor);
-    anchor.click();
-    anchor.remove();
-  }, [resumeDownloadHref]);
 
   const openExternal = useCallback((url: string) => {
     window.open(normalizeUrl(url), "_blank", "noopener,noreferrer");
@@ -228,16 +214,8 @@ export default function CommandMenu({
         icon: Languages,
         action: () => switchLocale("en"),
       },
-      {
-        id: "system-cv",
-        group: "system",
-        label: t.items.downloadCv,
-        keywords: "cv resume download",
-        icon: Download,
-        action: downloadResume,
-      },
     ],
-    [downloadResume, email, githubHref, linkedin, navigateToSection, openExternal, switchLocale, t.items],
+    [email, githubHref, linkedin, navigateToSection, openExternal, switchLocale, t.items],
   );
 
   const groupedItems = useMemo(

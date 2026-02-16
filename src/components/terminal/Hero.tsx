@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, Terminal, Copy, Check, Download, Mail } from "lucide-react";
+import { ChevronRight, Terminal, Copy, Check, Mail } from "lucide-react";
 import type { ResumeData, UiLabels } from "../../i18n/ui";
 import { scrollToSectionById } from "../../utils/scrollToSection";
 
@@ -394,15 +394,6 @@ export default function Hero({ data, labels }: HeroProps) {
               <span>{labels.contactCta}</span>
             </button>
 
-            <a
-              href={data.assets.resumePdf}
-              download
-              className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-lg border border-white/20 bg-white/5 px-5 py-2.5 font-mono text-xs font-medium text-slate-200 transition-all duration-300 hover:border-white/35 hover:bg-white/10 hover:text-white hover:shadow-lg hover:shadow-black/20 lg:px-6 lg:py-3 lg:text-sm"
-            >
-              <span className="absolute inset-0 -z-10 bg-linear-to-r from-white/0 via-white/5 to-white/0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-              <Download className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
-              <span>{labels.downloadCv}</span>
-            </a>
           </div>
 
           <p className="hidden font-mono text-xs text-slate-600 lg:block">
@@ -438,15 +429,6 @@ export default function Hero({ data, labels }: HeroProps) {
                   <span>{labels.contactCta}</span>
                 </button>
 
-                <a
-                  href={data.assets.resumePdf}
-                  download
-                  className="group relative col-span-2 inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-lg border border-white/20 bg-white/5 px-3 py-2 font-mono text-xs font-medium text-slate-200 transition-all duration-300 hover:border-white/35 hover:bg-white/10 hover:text-white hover:shadow-lg hover:shadow-black/20"
-                >
-                  <span className="absolute inset-0 -z-10 bg-linear-to-r from-white/0 via-white/5 to-white/0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-                  <Download className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
-                  <span>{labels.downloadCv}</span>
-                </a>
               </div>
             </motion.div>
           )}

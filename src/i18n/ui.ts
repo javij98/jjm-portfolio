@@ -58,9 +58,6 @@ export interface ResumeData {
   experience: ResumeExperienceItem[];
   education: ResumeEducationItem[];
   skills: ResumeSkills;
-  assets: {
-    resumePdf: string;
-  };
 }
 
 export interface UiLabels {
@@ -78,8 +75,6 @@ export interface UiLabels {
     skills: string;
     contact: string;
     online: string;
-    downloadCv: string;
-    cvShort: string;
   };
   footer: {
     status: string;
@@ -98,7 +93,6 @@ export interface UiLabels {
     hideJson: string;
     viewImpact: string;
     contactCta: string;
-    downloadCv: string;
     recruiterCommand: string;
     latestImpact: string;
     coreStack: string;
@@ -245,9 +239,6 @@ export const RESUME_ES: ResumeData = {
     observability: ["Grafana", "Graylog", "Prometheus"],
     learning: ["AWS (En progreso)", "Terraform (En progreso)"],
   },
-  assets: {
-    resumePdf: "/JavierJimenezMolina_cv_es.pdf",
-  },
 };
 
 export const RESUME_EN: ResumeData = {
@@ -331,9 +322,6 @@ export const RESUME_EN: ResumeData = {
     observability: ["Grafana", "Graylog", "Prometheus"],
     learning: ["AWS (In progress)", "Terraform (In progress)"],
   },
-  assets: {
-    resumePdf: "/JavierJimenezMolina_cv_es.pdf",
-  },
 };
 
 export const UI_LABELS: Record<Locale, UiLabels> = {
@@ -352,8 +340,6 @@ export const UI_LABELS: Record<Locale, UiLabels> = {
       skills: "Skills",
       contact: "Contacto",
       online: "Online",
-      downloadCv: "Descargar CV",
-      cvShort: "CV",
     },
     footer: {
       status: "Status",
@@ -372,7 +358,6 @@ export const UI_LABELS: Record<Locale, UiLabels> = {
       hideJson: "Ocultar JSON",
       viewImpact: "Ver impacto",
       contactCta: "Contactar",
-      downloadCv: "Descargar CV",
       recruiterCommand: "recruiter-summary --quick",
       latestImpact: "Último impacto",
       coreStack: "Stack core",
@@ -456,8 +441,6 @@ export const UI_LABELS: Record<Locale, UiLabels> = {
       skills: "Skills",
       contact: "Contact",
       online: "Online",
-      downloadCv: "Download CV",
-      cvShort: "CV",
     },
     footer: {
       status: "Status",
@@ -476,7 +459,6 @@ export const UI_LABELS: Record<Locale, UiLabels> = {
       hideJson: "Hide JSON",
       viewImpact: "See impact",
       contactCta: "Contact",
-      downloadCv: "Download CV",
       recruiterCommand: "recruiter-summary --quick",
       latestImpact: "Latest impact",
       coreStack: "Core stack",

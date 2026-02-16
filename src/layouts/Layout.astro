@@ -9,7 +9,6 @@ export interface Props {
   description?: string;
   lang: Locale;
   labels: UiLabels;
-  resumeDownloadHref: string;
   currentPath: string;
   email: string;
   linkedin: string;
@@ -22,7 +21,6 @@ const {
     "Ingeniero DevOps con +4 años de experiencia y background sólido en desarrollo (Java/React). Especializado en reducir el Time-to-Market mediante pipelines de CI/CD avanzados y orquestación eficiente con Kubernetes.",
   lang,
   labels,
-  resumeDownloadHref,
   currentPath,
   email,
   linkedin,
@@ -36,6 +34,12 @@ const navLinks = [
   { label: labels.nav.skills, href: "#skills" },
   { label: labels.nav.contact, href: "#contact" },
 ];
+
+const servicesBase = (import.meta.env.PUBLIC_SERVICES_URL ?? "https://services-site-ten.vercel.app")
+  .trim()
+  .replace(/\/$/, "");
+const servicesHref = `${servicesBase}/${lang}`;
+const servicesLabel = lang === "es" ? "Servicios" : "Services";
 ---
 
 <!doctype html>
@@ -93,6 +97,15 @@ const navLinks = [
               </a>
             ))
           }
+          <a
+            href={servicesHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="ml-2 inline-flex items-center gap-1 rounded-md border border-operational-500/45 bg-operational-500/12 px-3 py-2 font-mono text-xs font-semibold text-operational-300 transition-all hover:border-operational-300/80 hover:bg-operational-500/24 hover:text-operational-100"
+          >
+            {servicesLabel}
+            <span aria-hidden="true">↗</span>
+          </a>
         </div>
 
         <div class="flex items-center gap-3">
@@ -100,7 +113,6 @@ const navLinks = [
             client:load
             lang={lang}
             currentPath={currentPath}
-            resumeDownloadHref={resumeDownloadHref}
             email={email}
             linkedin={linkedin}
             githubHref={githubHref}
@@ -111,31 +123,6 @@ const navLinks = [
             <div class="h-2 w-2 animate-pulse rounded-full bg-operational-400 shadow-[0_0_6px] shadow-operational-400/50">
             </div>
             <span class="font-mono text-xs text-operational-400">{labels.nav.online}</span>
-          </div>
-
-          <div
-            id="sticky-cv-cta-wrapper"
-            data-visible="false"
-            aria-hidden="true"
-            class="pointer-events-none max-w-0 translate-y-1 overflow-hidden opacity-0 transition-all duration-300 ease-out data-[visible=true]:pointer-events-auto data-[visible=true]:max-w-44 data-[visible=true]:translate-y-0 data-[visible=true]:opacity-100"
-          >
-            <a
-              href={resumeDownloadHref}
-              download
-              class="inline-flex items-center gap-1.5 rounded-md border border-operational-500/40 bg-operational-500/15 px-3 py-1.5 font-mono text-[11px] font-semibold whitespace-nowrap text-operational-300 transition-all hover:border-operational-300/70 hover:bg-operational-500/25 hover:text-operational-100"
-            >
-              <svg
-                class="h-3.5 w-3.5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0l4-4m-4 4l-4-4M4 19h16"></path>
-              </svg>
-              <span class="hidden sm:inline">{labels.nav.downloadCv}</span>
-              <span class="sm:hidden">{labels.nav.cvShort}</span>
-            </a>
           </div>
         </div>
       </div>
@@ -195,51 +182,5 @@ const navLinks = [
       </div>
     </footer>
 
-    <script is:inline>
-      (() => {
-        const cta = document.getElementById("sticky-cv-cta-wrapper");
-        const hero = document.getElementById("hero");
-
-        if (!(cta instanceof HTMLElement) || !(hero instanceof HTMLElement)) {
-          return;
-        }
-
-        const showCta = () => {
-          cta.dataset.visible = "true";
-          cta.setAttribute("aria-hidden", "false");
-        };
-
-        const hideCta = () => {
-          cta.dataset.visible = "false";
-          cta.setAttribute("aria-hidden", "true");
-        };
-
-        const observer = new IntersectionObserver(
-          ([entry]) => {
-            if (entry?.isIntersecting) {
-              hideCta();
-              return;
-            }
-
-            showCta();
-          },
-          { threshold: 0.2 },
-        );
-
-        observer.observe(hero);
-
-        if (hero.getBoundingClientRect().bottom <= 0) {
-          showCta();
-        } else {
-          hideCta();
-        }
-
-        window.addEventListener(
-          "pagehide",
-          () => observer.disconnect(),
-          { once: true },
-        );
-      })();
-    </script>
   </body>
 </html>
