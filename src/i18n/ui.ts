@@ -33,6 +33,15 @@ export interface ResumeSkills {
   learning: string[];
 }
 
+export interface ResumeImpactCase {
+  title: string;
+  context: string;
+  challenge: string;
+  action: string;
+  result: string;
+  stack: string[];
+}
+
 export interface ResumeData {
   profile: {
     name: string;
@@ -45,6 +54,7 @@ export interface ResumeData {
   };
   summary: string;
   metrics: ResumeMetric[];
+  impactCases: ResumeImpactCase[];
   experience: ResumeExperienceItem[];
   education: ResumeEducationItem[];
   skills: ResumeSkills;
@@ -87,7 +97,11 @@ export interface UiLabels {
     showJson: string;
     hideJson: string;
     viewImpact: string;
+    contactCta: string;
     downloadCv: string;
+    recruiterCommand: string;
+    latestImpact: string;
+    coreStack: string;
     quickRole: string;
     quickImpact: string;
     quickReliability: string;
@@ -100,6 +114,12 @@ export interface UiLabels {
     eyebrow: string;
     title: string;
     description: string;
+    caseStudiesTitle: string;
+    caseStudiesDescription: string;
+    challengeLabel: string;
+    actionLabel: string;
+    resultLabel: string;
+    stackLabel: string;
     trendUp: string;
     trendStable: string;
     trendProcessing: string;
@@ -160,6 +180,30 @@ export const RESUME_ES: ResumeData = {
     { label: "Reducción Deploy Time", value: "80%", trend: "up" },
     { label: "Disponibilidad K8s", value: "99.9%", trend: "stable" },
     { label: "Optimización CI/CD", value: "Escalable", trend: "up" },
+  ],
+  impactCases: [
+    {
+      title: "Reducción del ciclo de entrega CI/CD",
+      context: "Capgemini · Entorno enterprise",
+      challenge:
+        "Despliegues lentos y parcialmente manuales entre equipos de desarrollo y operación.",
+      action:
+        "Diseño de pipelines CI/CD automatizados y estandarización de releases con contenedores.",
+      result:
+        "Reducción del Deploy Time en un 80% y aumento de frecuencia de entrega con menos fricción operativa.",
+      stack: ["Jenkins", "Docker", "Helm", "Rancher"],
+    },
+    {
+      title: "Observabilidad y estabilidad en Kubernetes",
+      context: "Krimda · Plataforma productiva",
+      challenge:
+        "Falta de visibilidad en rendimiento y consumo de recursos sobre clústeres críticos.",
+      action:
+        "Automatización de auditorías y despliegue de dashboards/alertas con observabilidad centralizada.",
+      result:
+        "Disponibilidad K8s del 99.9% y detección proactiva de cuellos de botella en producción.",
+      stack: ["Kubernetes", "Grafana", "Graylog", "Linux"],
+    },
   ],
   experience: [
     {
@@ -222,6 +266,30 @@ export const RESUME_EN: ResumeData = {
     { label: "Deployment Time Reduction", value: "80%", trend: "up" },
     { label: "K8s Availability", value: "99.9%", trend: "stable" },
     { label: "CI/CD Optimization", value: "Scalable", trend: "up" },
+  ],
+  impactCases: [
+    {
+      title: "CI/CD delivery cycle reduction",
+      context: "Capgemini · Enterprise environment",
+      challenge:
+        "Slow and partially manual deployments across development and operations teams.",
+      action:
+        "Designed automated CI/CD pipelines and standardized release workflows with containers.",
+      result:
+        "Achieved an 80% deployment time reduction and increased delivery frequency with less operational friction.",
+      stack: ["Jenkins", "Docker", "Helm", "Rancher"],
+    },
+    {
+      title: "Kubernetes reliability and observability",
+      context: "Krimda · Production platform",
+      challenge:
+        "Limited visibility into performance and resource usage across critical clusters.",
+      action:
+        "Implemented audit automation plus centralized dashboards/alerts for proactive monitoring.",
+      result:
+        "Reached 99.9% K8s availability and enabled earlier bottleneck detection in production.",
+      stack: ["Kubernetes", "Grafana", "Graylog", "Linux"],
+    },
   ],
   experience: [
     {
@@ -303,7 +371,11 @@ export const UI_LABELS: Record<Locale, UiLabels> = {
       showJson: "Ver JSON",
       hideJson: "Ocultar JSON",
       viewImpact: "Ver impacto",
+      contactCta: "Contactar",
       downloadCv: "Descargar CV",
+      recruiterCommand: "recruiter-summary --quick",
+      latestImpact: "Último impacto",
+      coreStack: "Stack core",
       quickRole: "Rol",
       quickImpact: "Impacto",
       quickReliability: "Fiabilidad",
@@ -317,6 +389,13 @@ export const UI_LABELS: Record<Locale, UiLabels> = {
       title: "Impacto Medible",
       description:
         "Métricas reales de reducción de tiempos, disponibilidad y optimización en entornos productivos.",
+      caseStudiesTitle: "Impacto",
+      caseStudiesDescription:
+        "Ejemplos de proyectos donde se aplicó enfoque DevOps con resultados cuantificables.",
+      challengeLabel: "Reto",
+      actionLabel: "Acción",
+      resultLabel: "Resultado",
+      stackLabel: "Tecnologías",
       trendUp: "Trending Up",
       trendStable: "Stable",
       trendProcessing: "Processing",
@@ -396,7 +475,11 @@ export const UI_LABELS: Record<Locale, UiLabels> = {
       showJson: "Show JSON",
       hideJson: "Hide JSON",
       viewImpact: "See impact",
+      contactCta: "Contact",
       downloadCv: "Download CV",
+      recruiterCommand: "recruiter-summary --quick",
+      latestImpact: "Latest impact",
+      coreStack: "Core stack",
       quickRole: "Role",
       quickImpact: "Impact",
       quickReliability: "Reliability",
@@ -410,6 +493,13 @@ export const UI_LABELS: Record<Locale, UiLabels> = {
       title: "Measured Impact",
       description:
         "Real-world metrics on delivery speed, reliability, and optimization in production environments.",
+      caseStudiesTitle: "Impact",
+      caseStudiesDescription:
+        "Selected projects showing DevOps execution with measurable business and platform outcomes.",
+      challengeLabel: "Challenge",
+      actionLabel: "Action",
+      resultLabel: "Result",
+      stackLabel: "Stack",
       trendUp: "Trending Up",
       trendStable: "Stable",
       trendProcessing: "Processing",

@@ -1,9 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
-import { TrendingUp, Minus, ArrowUpRight } from "lucide-react";
-import type { ResumeData, UiLabels } from "../../i18n/ui";
+import {
+  ArrowUpRight,
+  Minus,
+  Target,
+  TrendingUp,
+  Wrench,
+  Award,
+} from "lucide-react";
+import type { ResumeData, ResumeImpactCase, UiLabels } from "../../i18n/ui";
 
-// ─── Counter Animation Hook ───
 function useCountUp(
   target: string,
   isInView: boolean,
@@ -49,7 +55,6 @@ function useCountUp(
   return display;
 }
 
-// ─── Trend Icon ───
 function TrendIcon({ trend }: { trend: ResumeData["metrics"][number]["trend"] }) {
   if (trend === "up") {
     return <TrendingUp className="h-4 w-4 text-operational-400" />;
@@ -60,7 +65,6 @@ function TrendIcon({ trend }: { trend: ResumeData["metrics"][number]["trend"] })
   return <ArrowUpRight className="h-4 w-4 text-building-400" />;
 }
 
-// ─── Single Metric Card ───
 function MetricCard({
   label,
   value,
@@ -104,18 +108,16 @@ function MetricCard({
       ref={ref}
       initial={{ opacity: 0, y: 20 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5, delay: index * 0.15 }}
-      className={`group relative rounded-xl border bg-slate-900/50 p-6 backdrop-blur-sm transition-all duration-300 ${borderColor}`}
+      transition={{ duration: 0.45, delay: index * 0.12 }}
+      className={`group relative rounded-xl border bg-slate-900/50 p-5 backdrop-blur-sm transition-all duration-300 ${borderColor}`}
     >
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-3 flex items-center justify-between">
         <span className="font-mono text-[11px] uppercase tracking-wider text-slate-500">
           {label}
         </span>
         <div className="flex items-center gap-1.5">
           <TrendIcon trend={trend} />
-          <span className={`font-mono text-[11px] ${trendColor}`}>
-            {trendLabel}
-          </span>
+          <span className={`font-mono text-[11px] ${trendColor}`}>{trendLabel}</span>
         </div>
       </div>
 
@@ -129,11 +131,7 @@ function MetricCard({
         <motion.div
           initial={{ width: 0 }}
           animate={isInView ? { width: "100%" } : {}}
-          transition={{
-            duration: 1.5,
-            delay: index * 0.15 + 0.3,
-            ease: "easeOut",
-          }}
+          transition={{ duration: 1.1, delay: index * 0.12 + 0.25, ease: "easeOut" }}
           className={`h-full rounded-full ${
             trend === "up"
               ? "bg-linear-to-r from-operational-600 to-operational-400"
@@ -147,16 +145,92 @@ function MetricCard({
   );
 }
 
+function CaseCard({
+  impactCase,
+  labels,
+  index,
+}: {
+  impactCase: ResumeImpactCase;
+  labels: UiLabels["metrics"];
+  index: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-60px" });
+
+  return (
+    <motion.article
+      ref={ref}
+      initial={{ opacity: 0, y: 20 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.45, delay: index * 0.12 }}
+      className="rounded-xl border border-white/10 bg-slate-900/45 p-5 backdrop-blur-sm"
+    >
+      <div className="mb-4 flex items-start justify-between gap-3">
+        <div>
+          <h3 className="text-lg font-semibold text-white">{impactCase.title}</h3>
+          <p className="mt-1 font-mono text-[11px] uppercase tracking-wider text-slate-500">
+            {impactCase.context}
+          </p>
+        </div>
+        <span className="inline-flex items-center rounded-full border border-operational-500/30 bg-operational-500/10 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wide text-operational-300">
+          {labels.resultLabel}
+        </span>
+      </div>
+
+      <div className="space-y-3">
+        <div className="rounded-lg border border-white/10 bg-slate-950/60 p-3">
+          <p className="mb-1.5 flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-slate-500">
+            <Target className="h-3.5 w-3.5 text-building-300" />
+            {labels.challengeLabel}
+          </p>
+          <p className="text-sm leading-relaxed text-slate-300">{impactCase.challenge}</p>
+        </div>
+
+        <div className="rounded-lg border border-white/10 bg-slate-950/60 p-3">
+          <p className="mb-1.5 flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-slate-500">
+            <Wrench className="h-3.5 w-3.5 text-accent-300" />
+            {labels.actionLabel}
+          </p>
+          <p className="text-sm leading-relaxed text-slate-300">{impactCase.action}</p>
+        </div>
+
+        <div className="rounded-lg border border-operational-500/30 bg-operational-500/8 p-3">
+          <p className="mb-1.5 flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-operational-300">
+            <Award className="h-3.5 w-3.5" />
+            {labels.resultLabel}
+          </p>
+          <p className="text-sm leading-relaxed text-slate-200">{impactCase.result}</p>
+        </div>
+      </div>
+
+      <div className="mt-4">
+        <p className="mb-2 font-mono text-[11px] uppercase tracking-wider text-slate-500">
+          {labels.stackLabel}
+        </p>
+        <div className="flex flex-wrap gap-1.5">
+          {impactCase.stack.map((item) => (
+            <span
+              key={`${impactCase.title}-${item}`}
+              className="rounded-md border border-white/10 bg-slate-950/65 px-2 py-1 font-mono text-[10px] text-slate-300"
+            >
+              {item}
+            </span>
+          ))}
+        </div>
+      </div>
+    </motion.article>
+  );
+}
+
 export interface MetricsProps {
   data: ResumeData;
   labels: UiLabels["metrics"];
 }
 
-// ─── Main Component ───
 export default function Metrics({ data, labels }: MetricsProps) {
   return (
-    <div className="mx-auto max-w-6xl px-6 py-24">
-      <div className="mb-12">
+    <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
+      <div className="mb-10">
         <div className="mb-3 flex items-center gap-3">
           <div className="h-px flex-1 bg-linear-to-r from-operational-500/50 to-transparent" />
           <span className="font-mono text-xs font-medium uppercase tracking-widest text-operational-400">
@@ -164,15 +238,13 @@ export default function Metrics({ data, labels }: MetricsProps) {
           </span>
           <div className="h-px flex-1 bg-linear-to-l from-operational-500/50 to-transparent" />
         </div>
-        <h2 className="text-center text-3xl font-bold text-white">
-          {labels.title}
-        </h2>
-        <p className="mx-auto mt-3 max-w-lg text-center font-mono text-sm text-slate-500">
+        <h2 className="text-center text-3xl font-bold text-white">{labels.title}</h2>
+        <p className="mx-auto mt-3 max-w-xl text-center font-mono text-sm text-slate-500">
           {labels.description}
         </p>
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {data.metrics.map((metric, index) => (
           <MetricCard
             key={metric.label}
@@ -183,6 +255,26 @@ export default function Metrics({ data, labels }: MetricsProps) {
             labels={labels}
           />
         ))}
+      </div>
+
+      <div id="impact" className="mt-10">
+        <div className="mb-5">
+          <h3 className="text-2xl font-semibold text-white">{labels.caseStudiesTitle}</h3>
+          <p className="mt-2 max-w-2xl font-mono text-sm text-slate-500">
+            {labels.caseStudiesDescription}
+          </p>
+        </div>
+
+        <div className="grid gap-4 lg:grid-cols-2">
+          {data.impactCases.map((impactCase, index) => (
+            <CaseCard
+              key={`${impactCase.title}-${index}`}
+              impactCase={impactCase}
+              labels={labels}
+              index={index}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

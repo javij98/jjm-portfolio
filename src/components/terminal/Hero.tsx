@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, Terminal, Copy, Check, Download } from "lucide-react";
+import { ChevronRight, Terminal, Copy, Check, Download, Mail } from "lucide-react";
 import type { ResumeData, UiLabels } from "../../i18n/ui";
 import { scrollToSectionById } from "../../utils/scrollToSection";
 
@@ -195,6 +195,10 @@ export default function Hero({ data, labels }: HeroProps) {
     scrollToSectionById("metrics");
   }, []);
 
+  const handleScrollToContact = useCallback(() => {
+    scrollToSectionById("contact");
+  }, []);
+
   const handleSkipAnimation = useCallback(() => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setTypedCommand(COMMAND);
@@ -363,7 +367,7 @@ export default function Hero({ data, labels }: HeroProps) {
           transition={{ duration: 0.5, delay: 0.15 }}
           className="mt-4 flex flex-col items-center gap-3 sm:mt-5 sm:gap-3"
         >
-          <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+          <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:flex-wrap">
             <button
               onClick={handleScrollToMetrics}
               className="group relative inline-flex items-center gap-2 overflow-hidden rounded-lg border border-accent-500/30 bg-accent-500/10 px-4 py-2.5 font-mono text-xs font-medium text-accent-300 transition-all duration-300 hover:border-accent-400/50 hover:bg-accent-500/20 hover:text-accent-200 hover:shadow-lg hover:shadow-accent-500/10 sm:px-5 sm:py-2.5 sm:text-xs lg:px-6 lg:py-3 lg:text-sm"
@@ -373,12 +377,21 @@ export default function Hero({ data, labels }: HeroProps) {
               <span>{labels.viewImpact}</span>
             </button>
 
-            <a
-              href={data.assets.resumePdf}
-              download
+            <button
+              onClick={handleScrollToContact}
               className="group relative inline-flex items-center gap-2 overflow-hidden rounded-lg border border-operational-500/30 bg-operational-500/10 px-4 py-2.5 font-mono text-xs font-medium text-operational-300 transition-all duration-300 hover:border-operational-400/50 hover:bg-operational-500/20 hover:text-operational-200 hover:shadow-lg hover:shadow-operational-500/10 sm:px-5 sm:py-2.5 sm:text-xs lg:px-6 lg:py-3 lg:text-sm"
             >
               <span className="absolute inset-0 -z-10 bg-linear-to-r from-operational-500/0 via-operational-500/10 to-operational-500/0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+              <Mail className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
+              <span>{labels.contactCta}</span>
+            </button>
+
+            <a
+              href={data.assets.resumePdf}
+              download
+              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-lg border border-white/20 bg-white/5 px-4 py-2.5 font-mono text-xs font-medium text-slate-200 transition-all duration-300 hover:border-white/35 hover:bg-white/10 hover:text-white hover:shadow-lg hover:shadow-black/20 sm:px-5 sm:py-2.5 sm:text-xs lg:px-6 lg:py-3 lg:text-sm"
+            >
+              <span className="absolute inset-0 -z-10 bg-linear-to-r from-white/0 via-white/5 to-white/0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
               <Download className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
               <span>{labels.downloadCv}</span>
             </a>
