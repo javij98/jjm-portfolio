@@ -143,7 +143,7 @@ export default function Hero() {
   const [typedCommand, setTypedCommand] = useState("");
   const [copied, setCopied] = useState(false);
   const [showRawJson, setShowRawJson] = useState(false);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Start animation on mount
   useEffect(() => {
