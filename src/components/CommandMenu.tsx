@@ -155,20 +155,20 @@ export default function CommandMenu({
         action: () => navigateToSection("hero"),
       },
       {
-        id: "nav-experience",
-        group: "navigation",
-        label: t.items.experience,
-        keywords: "experience experiencia",
-        icon: Briefcase,
-        action: () => navigateToSection("experience"),
-      },
-      {
         id: "nav-metrics",
         group: "navigation",
         label: t.items.projects,
         keywords: "metrics metricas",
         icon: FolderKanban,
         action: () => navigateToSection("metrics"),
+      },
+      {
+        id: "nav-experience",
+        group: "navigation",
+        label: t.items.experience,
+        keywords: "experience experiencia",
+        icon: Briefcase,
+        action: () => navigateToSection("experience"),
       },
       {
         id: "nav-skills",

@@ -170,6 +170,13 @@
   }
 
   section[id] {
-    scroll-margin-top: 5.5rem;
+    /* Mobile: keep anchor jumps tight so section headers don't land too low */
+    scroll-margin-top: 1.25rem;
+  }
+
+  @media (min-width: 640px) {
+    section[id] {
+      scroll-margin-top: 5.5rem;
+    }
   }
 }
