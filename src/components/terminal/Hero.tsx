@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight, Terminal, Copy, Check, Download } from "lucide-react";
 import type { ResumeData, UiLabels } from "../../i18n/ui";
+import { scrollToSectionById } from "../../utils/scrollToSection";
 
 interface ProfileOutput {
   name: string;
@@ -191,7 +192,7 @@ export default function Hero({ data, labels }: HeroProps) {
   }, [profileOutput]);
 
   const handleScrollToMetrics = useCallback(() => {
-    document.getElementById("metrics")?.scrollIntoView({ behavior: "smooth" });
+    scrollToSectionById("metrics");
   }, []);
 
   const handleSkipAnimation = useCallback(() => {

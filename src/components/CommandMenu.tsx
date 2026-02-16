@@ -14,6 +14,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import type { Locale } from "../i18n/ui";
+import { scrollToSectionById } from "../utils/scrollToSection";
 
 interface CommandMenuProps {
   lang: Locale;
@@ -104,9 +105,8 @@ export default function CommandMenu({
 
   const navigateToSection = useCallback(
     (sectionId: string) => {
-      const element = document.getElementById(sectionId);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "start" });
+      const didNavigate = scrollToSectionById(sectionId);
+      if (didNavigate) {
         window.history.replaceState(null, "", `${window.location.pathname}#${sectionId}`);
         return;
       }
