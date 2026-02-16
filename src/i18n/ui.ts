@@ -159,7 +159,7 @@ export const RESUME_ES: ResumeData = {
   metrics: [
     { label: "Reducción Deploy Time", value: "80%", trend: "up" },
     { label: "Disponibilidad K8s", value: "99.9%", trend: "stable" },
-    { label: "Optimización CI/CD", value: "Modular", trend: "up" },
+    { label: "Optimización CI/CD", value: "Escalable", trend: "up" },
   ],
   experience: [
     {
@@ -221,7 +221,7 @@ export const RESUME_EN: ResumeData = {
   metrics: [
     { label: "Deployment Time Reduction", value: "80%", trend: "up" },
     { label: "K8s Availability", value: "99.9%", trend: "stable" },
-    { label: "CI/CD Optimization", value: "Modular", trend: "up" },
+    { label: "CI/CD Optimization", value: "Scalable", trend: "up" },
   ],
   experience: [
     {
