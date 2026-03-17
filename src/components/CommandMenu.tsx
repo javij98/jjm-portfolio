@@ -23,6 +23,7 @@ interface CommandMenuProps {
   linkedin: string;
   servicesHref: string;
   githubHref?: string;
+  showServices?: boolean;
 }
 
 type CommandGroupId = "navigation" | "social" | "system";
@@ -44,6 +45,7 @@ export default function CommandMenu({
   linkedin,
   servicesHref,
   githubHref = "https://github.com/javij98",
+  showServices = false,
 }: CommandMenuProps) {
   const [open, setOpen] = useState(false);
   const [modifierLabel, setModifierLabel] = useState("Ctrl");
@@ -179,14 +181,14 @@ export default function CommandMenu({
         icon: Mail,
         action: () => navigateToSection("contact"),
       },
-      {
+      ...(showServices ? [{
         id: "nav-services",
         group: "navigation",
         label: t.items.services,
         keywords: "services servicios consulting consultoria freelance",
         icon: ExternalLink,
         action: () => openExternal(servicesHref),
-      },
+      } as CommandItemConfig] : []),
       {
         id: "social-github",
         group: "social",
@@ -228,7 +230,7 @@ export default function CommandMenu({
         action: () => switchLocale("en"),
       },
     ],
-    [email, githubHref, linkedin, navigateToSection, openExternal, servicesHref, switchLocale, t.items],
+    [email, githubHref, linkedin, navigateToSection, openExternal, servicesHref, showServices, switchLocale, t.items],
   );
 
   const groupedItems = useMemo(
