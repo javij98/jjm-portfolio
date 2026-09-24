@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-labelledby="title">
+  <title id="title">Ilustración conceptual de un entorno de agentes con herramientas y contexto</title>
+  <defs><radialGradient id="bg"><stop stop-color="#252543"/><stop offset="1" stop-color="#0e1728"/></radialGradient><pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#c4b5fd" stroke-opacity=".07"/></pattern><filter id="glow"><feGaussianBlur stdDeviation="20"/></filter></defs>
+  <rect width="800" height="450" fill="url(#bg)"/><rect width="800" height="450" fill="url(#grid)"/>
+  <circle cx="400" cy="224" r="135" fill="none" stroke="#c4b5fd" stroke-opacity=".23" stroke-width="2" stroke-dasharray="6 10"/>
+  <circle cx="400" cy="224" r="95" fill="#a78bfa" opacity=".13" filter="url(#glow)"/>
+  <g stroke="#9b8fca" stroke-opacity=".63" stroke-width="2" fill="none"><path d="M333 195L197 127M333 246L202 324M467 195l139-68M467 247l132 78M400 150V75M400 299v78"/></g>
+  <g fill="#17253a" stroke="#c4b5fd" stroke-opacity=".62" stroke-width="2"><rect x="333" y="156" width="134" height="136" rx="20"/><rect x="119" y="92" width="157" height="68" rx="12"/><rect x="118" y="289" width="157" height="68" rx="12"/><rect x="524" y="92" width="157" height="68" rx="12"/><rect x="524" y="289" width="157" height="68" rx="12"/><rect x="347" y="39" width="106" height="55" rx="12"/><rect x="347" y="356" width="106" height="55" rx="12"/></g>
+  <path d="M400 187l33 19v37l-33 19-33-19v-37z" fill="#493e72" stroke="#ddd6fe" stroke-width="2"/>
+  <circle cx="400" cy="224" r="11" fill="#c4b5fd"/><circle cx="400" cy="224" r="5" fill="#fff"/>
+  <g fill="#c4b5fd"><circle cx="151" cy="126" r="8"/><circle cx="151" cy="323" r="8"/><circle cx="557" cy="126" r="8"/><circle cx="557" cy="323" r="8"/><circle cx="376" cy="66" r="7"/><circle cx="376" cy="383" r="7"/></g>
+  <g stroke="#7775a9" stroke-width="5" stroke-linecap="round"><path d="M174 119h72m-72 15h47M174 316h66m-66 15h48M580 119h72m-72 15h47M580 316h66m-66 15h48M393 66h32M393 383h32"/></g>
+  <g fill="#6ee7b7"><circle cx="333" cy="195" r="4"/><circle cx="467" cy="195" r="4"/><circle cx="333" cy="246" r="4"/><circle cx="467" cy="247" r="4"/></g>
+</svg>

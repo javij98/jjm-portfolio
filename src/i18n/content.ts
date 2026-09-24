@@ -15,6 +15,7 @@ export interface Project {
   category: ProjectCategory;
   visual: string;
   description: string;
+  detailParagraphs: string[];
   highlights: string[];
   stack: string[];
 }
@@ -82,6 +83,7 @@ export interface SiteContent {
     filters: Record<ProjectCategory | "all", string>;
     filterLabel: string;
     detailsLabel: string;
+    closeLabel: string;
     viewAllLabel: string;
     backLabel: string;
     items: Project[];
@@ -207,6 +209,7 @@ export const SITE_ES: SiteContent = {
     filters: { all: "Todos", product: "Producto", platform: "Plataforma", automation: "Automatización", web: "Web" },
     filterLabel: "Filtrar proyectos por tipo",
     detailsLabel: "Detalles",
+    closeLabel: "Cerrar",
     viewAllLabel: "Ver todos los proyectos",
     backLabel: "Volver a la portada",
     items: [
@@ -217,6 +220,10 @@ export const SITE_ES: SiteContent = {
         kind: "Producto web y móvil",
         description:
           "Aplicación personal de finanzas con clientes web y React Native. Comparte lógica en un monorepo y utiliza Supabase como backend.",
+        detailParagraphs: [
+          "La web y la app móvil comparten lógica en un paquete core dentro de un monorepo, evitando duplicar las reglas del producto entre interfaces.",
+          "Supabase aporta autenticación, PostgreSQL y Edge Functions. El producto incluye cuentas, movimientos, transferencias, operaciones recurrentes y paneles de análisis; Gemini asiste la entrada en lenguaje natural.",
+        ],
         highlights: [
           "Web con React y aplicación móvil con React Native",
           "Paquete core compartido en un monorepo",
@@ -232,6 +239,10 @@ export const SITE_ES: SiteContent = {
         kind: "Plataforma autoalojada",
         description:
           "Plataforma de documentación basada en Outline, con extensiones propias y una infraestructura operada sobre Linux y contenedores.",
+        detailParagraphs: [
+          "Proyecto autoalojado basado en Outline: proxy inverso, aplicación, PostgreSQL y Redis operados en contenedores sobre Linux.",
+          "Además de mantener el despliegue, desarrollo extensiones propias y su flujo de cambios y CI/CD. Print Studio forma parte de este mismo ecosistema.",
+        ],
         highlights: [
           "Despliegue con Docker y proxy inverso",
           "PostgreSQL y Redis",
@@ -246,6 +257,10 @@ export const SITE_ES: SiteContent = {
         kind: "Extensión de producto",
         description:
           "Extensión integrada en la plataforma de conocimiento para dar formato a documentos y prepararlos para impresión o exportación.",
+        detailParagraphs: [
+          "Extensión integrada en la plataforma de conocimiento para preparar y dar formato a documentos antes de imprimirlos o exportarlos.",
+          "Se desarrolla junto a la aplicación autoalojada y comparte su forma de trabajo: cambios de código, despliegue en contenedores y CI/CD.",
+        ],
         highlights: [
           "Personalización de la aplicación",
           "Despliegue en contenedores",
@@ -260,6 +275,10 @@ export const SITE_ES: SiteContent = {
         kind: "Automatización personal · en evolución",
         description:
           "Entorno personal para trabajar con agentes de IA: perfiles persistentes, habilidades, memoria de tareas e integraciones con herramientas.",
+        detailParagraphs: [
+          "Laboratorio personal para experimentar con agentes: perfiles, contexto persistente, habilidades y registro de tareas.",
+          "Exploro integraciones con APIs y herramientas MCP, validación local y límites explícitos antes de acciones externas. Sigue en desarrollo; no es una plataforma de producción.",
+        ],
         highlights: [
           "Organización del contexto y registro de trabajo",
           "Integraciones mediante APIs y herramientas MCP",
@@ -273,6 +292,10 @@ export const SITE_ES: SiteContent = {
         visual: "JJM",
         kind: "Web personal",
         description: "Esta web bilingüe presenta mi trayectoria, proyectos y competencias con una arquitectura Astro y componentes interactivos en React.",
+        detailParagraphs: [
+          "Este sitio organiza contenido bilingüe y componentes reutilizables. Astro genera las páginas y React se reserva para las interacciones que lo necesitan.",
+          "Incluye navegación accesible, un menú de comandos y metadatos por idioma; la galería de proyectos y el blog tienen rutas propias.",
+        ],
         highlights: [
           "Rutas en español e inglés con metadatos propios",
           "Navegación accesible y menú de comandos",
@@ -286,6 +309,10 @@ export const SITE_ES: SiteContent = {
         visual: "ES/EN",
         kind: "Web de servicios",
         description: "Landing bilingüe de servicios tecnológicos centrada en una estructura reutilizable y en fundamentos de internacionalización y SEO.",
+        detailParagraphs: [
+          "Landing en español e inglés orientada a presentar servicios tecnológicos con una estructura compartida entre idiomas.",
+          "La base cubre SEO técnico con OpenGraph, canonical, hreflang, sitemap y robots.txt, además de componentes reutilizables y configuración por entorno.",
+        ],
         highlights: [
           "Contenido en español e inglés",
           "OpenGraph, canonical, hreflang y sitemap",
@@ -319,10 +346,11 @@ export const SITE_ES: SiteContent = {
         summary:
           "CI/CD y operación de entornos Kubernetes, con foco en automatización, estandarización de despliegues y resolución de incidencias en producción.",
         achievements: [
-          "Desarrollo de pipelines Jenkins y Shared Libraries en Groovy.",
-          "Administración y diagnóstico de Kubernetes con Docker y Helm.",
-          "Herramientas de auditoría de consumo de recursos para apoyar su optimización.",
-          "Trabajo con Artifactory, Bitbucket, Grafana, Prometheus y Graylog.",
+          "Diseño y mantenimiento de pipelines modulares con Jenkins Shared Libraries (Groovy) para estandarizar despliegues y reducir duplicación.",
+          "Administración y diagnóstico de Kubernetes; despliegues con Docker y Helm y resolución de incidencias de producción.",
+          "Desarrollo de scripts para auditar recursos por microservicio y fundamentar propuestas de optimización.",
+          "Gestión de binarios y dependencias con JFrog Artifactory integrado en el flujo de Bitbucket.",
+          "Dashboards, métricas y logs con Grafana, Prometheus y Graylog para mejorar la visibilidad operativa.",
         ],
         current: true,
       },
@@ -334,8 +362,10 @@ export const SITE_ES: SiteContent = {
           "Comencé en desarrollo Full-Stack y fui orientando mi trabajo hacia automatización, CI/CD y DevOps.",
         evolution: ["Desarrollo", "Automatización", "CI/CD", "DevOps"],
         achievements: [
-          "Desarrollo con Java, Spring Boot, React y Node.js.",
-          "Trabajo posterior con Jenkins, Docker, Kubernetes, Helm y Rancher.",
+          "Desarrollo de microservicios con Java y Spring Boot, y aplicaciones con React, Node.js y APIs REST.",
+          "Creación de pipelines con Jenkins y GitHub Actions durante la transición hacia automatización y CI/CD.",
+          "Trabajo con Docker, Kubernetes y Helm; supervisión de entornos con Rancher y Lens.",
+          "Despliegues y gestión de recursos en OVHCloud.",
           "Mejoras de CI/CD que redujeron los tiempos de despliegue en más de un 80 %.",
         ],
       },
@@ -531,6 +561,7 @@ export const SITE_EN: SiteContent = {
     filters: { all: "All", product: "Product", platform: "Platform", automation: "Automation", web: "Web" },
     filterLabel: "Filter projects by type",
     detailsLabel: "Details",
+    closeLabel: "Close",
     viewAllLabel: "View all projects",
     backLabel: "Back to home",
     items: [
@@ -541,6 +572,10 @@ export const SITE_EN: SiteContent = {
         kind: "Web and mobile product",
         description:
           "A personal finance app with web and React Native clients. They share logic in a monorepo and use Supabase as the backend.",
+        detailParagraphs: [
+          "The web and mobile clients share logic in a core package within a monorepo, so product rules do not have to be duplicated across interfaces.",
+          "Supabase provides authentication, PostgreSQL and Edge Functions. The product includes accounts, transactions, transfers, recurring entries and analytics dashboards; Gemini assists natural-language entry.",
+        ],
         highlights: [
           "React web app and React Native mobile app",
           "Shared core package in a monorepo",
@@ -556,6 +591,10 @@ export const SITE_EN: SiteContent = {
         kind: "Self-hosted platform",
         description:
           "An Outline-based documentation platform with custom extensions, operated on Linux and container infrastructure.",
+        detailParagraphs: [
+          "An Outline-based self-hosted project: reverse proxy, application, PostgreSQL and Redis run in containers on Linux.",
+          "Alongside the deployment, I work on custom extensions and their change and CI/CD workflow. Print Studio belongs to the same ecosystem.",
+        ],
         highlights: [
           "Docker deployment and reverse proxy",
           "PostgreSQL and Redis",
@@ -570,6 +609,10 @@ export const SITE_EN: SiteContent = {
         kind: "Product extension",
         description:
           "An extension integrated with the knowledge platform to format documents and prepare them for printing or export.",
+        detailParagraphs: [
+          "An extension integrated into the knowledge platform to prepare and format documents for printing or export.",
+          "It is developed alongside the self-hosted application and shares its workflow: code changes, container deployment and CI/CD.",
+        ],
         highlights: [
           "Application customization",
           "Containerized deployment",
@@ -584,6 +627,10 @@ export const SITE_EN: SiteContent = {
         kind: "Personal automation · evolving",
         description:
           "A personal environment for working with AI agents: persistent profiles, skills, task memory and tool integrations.",
+        detailParagraphs: [
+          "A personal lab for experimenting with agents: profiles, persistent context, skills and task journals.",
+          "I am exploring API and MCP tool integrations, local validation and explicit boundaries before external actions. It is still developing, not a production platform.",
+        ],
         highlights: [
           "Context organization and task journaling",
           "Integrations through APIs and MCP tools",
@@ -597,6 +644,10 @@ export const SITE_EN: SiteContent = {
         visual: "JJM",
         kind: "Personal website",
         description: "This bilingual site presents my career, projects and skills using Astro for the page architecture and React for interactive elements.",
+        detailParagraphs: [
+          "This site organizes bilingual content and reusable components. Astro generates the pages, while React is reserved for interactions that need it.",
+          "It includes accessible navigation, a command menu and per-language metadata; the project gallery and blog have dedicated routes.",
+        ],
         highlights: [
           "Spanish and English routes with dedicated metadata",
           "Accessible navigation and command menu",
@@ -610,6 +661,10 @@ export const SITE_EN: SiteContent = {
         visual: "ES/EN",
         kind: "Services website",
         description: "A bilingual technology-services landing page built around reusable structure, internationalization and SEO fundamentals.",
+        detailParagraphs: [
+          "A Spanish/English landing page for technology services, built on a shared structure across both languages.",
+          "Its technical SEO foundation includes OpenGraph, canonical URLs, hreflang, a sitemap and robots.txt, along with reusable components and environment configuration.",
+        ],
         highlights: [
           "Spanish and English content",
           "OpenGraph, canonical, hreflang and sitemap",
@@ -643,10 +698,11 @@ export const SITE_EN: SiteContent = {
         summary:
           "CI/CD and Kubernetes operations, focused on automation, deployment standardization and production troubleshooting.",
         achievements: [
-          "Built Jenkins pipelines and Shared Libraries in Groovy.",
-          "Administered and troubleshot Kubernetes with Docker and Helm.",
-          "Developed resource usage audit tools to support cluster optimization.",
-          "Worked with Artifactory, Bitbucket, Grafana, Prometheus and Graylog.",
+          "Designed and maintained modular Jenkins pipelines with Groovy Shared Libraries to standardize deployments and reduce duplication.",
+          "Administered and troubleshot Kubernetes; handled Docker and Helm deployments and production incidents.",
+          "Developed scripts to audit resources by microservice and inform optimization proposals.",
+          "Managed binaries and dependencies with JFrog Artifactory integrated into the Bitbucket workflow.",
+          "Used Grafana, Prometheus and Graylog dashboards, metrics and logs to improve operational visibility.",
         ],
         current: true,
       },
@@ -658,8 +714,10 @@ export const SITE_EN: SiteContent = {
           "I started in Full-Stack development and gradually moved toward automation, CI/CD and DevOps.",
         evolution: ["Development", "Automation", "CI/CD", "DevOps"],
         achievements: [
-          "Developed software with Java, Spring Boot, React and Node.js.",
-          "Later worked with Jenkins, Docker, Kubernetes, Helm and Rancher.",
+          "Developed Java and Spring Boot microservices, plus React and Node.js applications and REST APIs.",
+          "Built Jenkins and GitHub Actions pipelines while moving toward automation and CI/CD.",
+          "Worked with Docker, Kubernetes and Helm; monitored environments with Rancher and Lens.",
+          "Deployed applications and managed resources on OVHCloud.",
           "CI/CD improvements reduced deployment times by more than 80%.",
         ],
       },
