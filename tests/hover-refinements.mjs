@@ -74,13 +74,21 @@ test("non-clickable cards have a quiet ambient hover", async () => {
       const item = page.locator(selector).first();
       await item.scrollIntoViewIfNeeded();
       await page.mouse.move(0, 0);
-      const before = await item.evaluate((element) => getComputedStyle(element).backgroundColor);
+      const isGallery = selector === ".gallery-card";
+      const before = await item.evaluate((element, gallery) => gallery
+        ? getComputedStyle(element).backgroundColor
+        : getComputedStyle(element, "::before").opacity, isGallery);
       await item.hover();
-      await page.waitForFunction(([selector, previous]) => {
+      await page.waitForFunction(([selector, previous, gallery]) => {
         const element = document.querySelector(selector);
-        return element && getComputedStyle(element).backgroundColor !== previous;
-      }, [selector, before]);
-      const after = await item.evaluate((element) => getComputedStyle(element).backgroundColor);
+        const current = gallery
+          ? getComputedStyle(element).backgroundColor
+          : getComputedStyle(element, "::before").opacity;
+        return element && current !== previous;
+      }, [selector, before, isGallery]);
+      const after = await item.evaluate((element, gallery) => gallery
+        ? getComputedStyle(element).backgroundColor
+        : getComputedStyle(element, "::before").opacity, isGallery);
       assert.notEqual(after, before, `${selector} should respond subtly`);
       assert.equal(await item.evaluate((element) => getComputedStyle(element).boxShadow), "none", `${selector} should not glow like a link`);
     }

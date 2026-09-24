@@ -186,9 +186,21 @@ html.motion-ready [data-reveal] {
 .nav-link:is(:hover, :focus-visible) { color: #fff; }
 .nav-link:is(:hover, :focus-visible)::after { transform: scaleX(1); }
 
-/* Informational surfaces respond without implying clickability. */
-.ambient-hover { border-radius: .75rem; transition: background-color 250ms ease; }
-.ambient-hover:hover { background-color: rgba(103, 232, 249, .035); }
+/* Informational surfaces get a diffuse light, not a clickable-card outline. */
+.ambient-hover { border-radius: .75rem; }
+.ambient-hover:not(.gallery-card) { position: relative; isolation: isolate; }
+.ambient-hover:not(.gallery-card)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(ellipse 85% 95% at 50% 45%, rgba(103, 232, 249, .055), rgba(52, 211, 153, .018) 58%, transparent 100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 250ms ease;
+}
+.ambient-hover:not(.gallery-card):hover::before { opacity: 1; }
 .gallery-card.ambient-hover:hover { background-color: rgba(20, 40, 58, .72); }
 .blog-card.signal-hover::after { left: 1rem; right: 1rem; bottom: .35rem; border-radius: 999px; }
 
