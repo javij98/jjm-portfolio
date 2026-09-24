@@ -18,7 +18,7 @@ const { content } = Astro.props;
   </div>
   <div class="grid gap-x-8 sm:grid-cols-2 xl:grid-cols-4">
     {content.categories.map((category, index) => (
-      <article class="skill-entry ambient-hover border-t border-white/12 px-2 py-7" data-reveal>
+      <article class="skill-entry ambient-hover -mx-2 border-t border-white/12 px-4 py-7" data-reveal>
         <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-emerald-300">{String(index + 1).padStart(2, "0")} / {String(content.categories.length).padStart(2, "0")}</p>
         <h3 class="mt-2 text-lg font-semibold text-white">{category.title}</h3>
         <p class="mt-2 text-sm leading-6 text-slate-400">{category.description}</p>
