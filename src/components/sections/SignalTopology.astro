@@ -5,7 +5,7 @@ const { variant = "hero" } = Astro.props;
 
 <div class:list={["signal-topology pointer-events-none absolute inset-0 overflow-hidden", `signal-topology--${variant}`]} aria-hidden="true">
   <div class="signal-topology-grid"></div>
-  <svg class="signal-topology-svg" viewBox="0 0 1200 500" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg class:list={["signal-topology-svg", variant === "hero" && "signal-topology-svg--desktop"]} viewBox="0 0 1200 500" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path class="signal-topology-base" d="M50 310 H270 Q300 310 300 280 V145 H510 Q540 145 540 175 V310 H760 Q790 310 790 280 V115 H1000 Q1030 115 1030 145 V310 H1180" />
     <path class="signal-topology-flow signal-topology-flow--one" d="M50 310 H270 Q300 310 300 280 V145 H510 Q540 145 540 175 V310 H760 Q790 310 790 280 V115 H1000 Q1030 115 1030 145 V310 H1180" />
     <path class="signal-topology-flow signal-topology-flow--two" d="M50 310 H270 Q300 310 300 280 V145 H510 Q540 145 540 175 V310 H760 Q790 310 790 280 V115 H1000 Q1030 115 1030 145 V310 H1180" />
@@ -17,6 +17,13 @@ const { variant = "hero" } = Astro.props;
       <circle cx="300" cy="145" r="18" /><circle cx="540" cy="310" r="18" /><circle cx="790" cy="115" r="18" /><circle cx="1030" cy="310" r="18" />
     </g>
   </svg>
+  {variant === "hero" && (
+    <svg class="signal-topology-svg signal-topology-svg--mobile" viewBox="0 0 400 620" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path class="signal-topology-base" d="M20 130 H150 V260 H300 V440 H390" />
+      <path class="signal-topology-flow signal-topology-flow--one" d="M20 130 H150 V260 H300 V440 H390" />
+      <path class="signal-topology-flow signal-topology-flow--two" d="M20 130 H150 V260 H300 V440 H390" />
+    </svg>
+  )}
   <span class="signal-topology-label signal-topology-label--build">01 / BUILD</span>
   <span class="signal-topology-label signal-topology-label--ship">02 / SHIP</span>
   <span class="signal-topology-label signal-topology-label--observe">03 / OBSERVE</span>

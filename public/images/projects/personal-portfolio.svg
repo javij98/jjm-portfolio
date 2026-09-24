@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-labelledby="title">
+  <title id="title">Ilustración conceptual del portfolio personal con terminal y topología</title>
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#0d2937"/><stop offset="1" stop-color="#0b1423"/></linearGradient><pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#67e8f9" stroke-opacity=".055"/></pattern></defs>
+  <rect width="800" height="450" fill="url(#bg)"/><rect width="800" height="450" fill="url(#grid)"/>
+  <rect x="54" y="53" width="692" height="344" rx="15" fill="#101b2a" stroke="#67e8f9" stroke-opacity=".33"/>
+  <path d="M54 92H746" stroke="#67e8f9" stroke-opacity=".18"/><rect x="76" y="66" width="27" height="16" rx="4" fill="#17494a" stroke="#6ee7b7" stroke-opacity=".45"/>
+  <path d="M84 71l5 3-5 3m9 0h5" fill="none" stroke="#6ee7b7" stroke-width="1.5"/><g fill="#49697c"><rect x="373" y="71" width="38" height="4" rx="2"/><rect x="426" y="71" width="38" height="4" rx="2"/><rect x="479" y="71" width="38" height="4" rx="2"/><rect x="532" y="71" width="38" height="4" rx="2"/></g>
+  <path d="M132 130h192" stroke="#6ee7b7" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 10"/>
+  <rect x="132" y="162" width="279" height="17" rx="6" fill="#f4f8fa"/><rect x="132" y="191" width="198" height="17" rx="6" fill="#f4f8fa"/>
+  <rect x="132" y="229" width="177" height="10" rx="4" fill="#67e8f9"/><rect x="132" y="258" width="211" height="6" rx="3" fill="#527284"/><rect x="132" y="276" width="239" height="6" rx="3" fill="#527284"/><rect x="132" y="294" width="181" height="6" rx="3" fill="#527284"/>
+  <rect x="132" y="333" width="104" height="32" rx="7" fill="#10b981"/>
+  <path d="M447 116v63m0 0h72m-72 0v75" fill="none" stroke="#67e8f9" stroke-opacity=".35" stroke-width="2"/><circle cx="447" cy="179" r="9" fill="#6ee7b7"/>
+  <rect x="430" y="144" width="263" height="214" rx="12" fill="#131e30" stroke="#7dd3fc" stroke-opacity=".38"/>
+  <path d="M430 180H693" stroke="#7dd3fc" stroke-opacity=".17"/><circle cx="452" cy="163" r="4" fill="#fb7185"/><circle cx="469" cy="163" r="4" fill="#fbbf24"/><circle cx="486" cy="163" r="4" fill="#34d399"/>
+  <path d="M452 208l8 7-8 7m19-7h126" fill="none" stroke="#67e8f9" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M454 250h179m-179 27h197m-197 27h157" stroke="#638393" stroke-width="6" stroke-linecap="round"/>
+  <path d="M452 332l8 7-8 7" fill="none" stroke="#6ee7b7" stroke-width="3" stroke-linecap="round"/>
+</svg>

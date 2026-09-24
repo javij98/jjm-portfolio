@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-labelledby="title">
+  <title id="title">Ilustración conceptual de una web de servicios bilingüe</title>
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#2a2940"/><stop offset="1" stop-color="#0e1828"/></linearGradient><pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M30 0H0V30" fill="none" stroke="#fcd34d" stroke-opacity=".045"/></pattern></defs>
+  <rect width="800" height="450" fill="url(#bg)"/><rect width="800" height="450" fill="url(#grid)"/>
+  <rect x="76" y="67" width="648" height="313" rx="15" fill="#111b2b" stroke="#fcd34d" stroke-opacity=".28"/>
+  <path d="M76 109H724" stroke="#fcd34d" stroke-opacity=".14"/><circle cx="99" cy="89" r="5" fill="#fb7185"/><circle cx="118" cy="89" r="5" fill="#fbbf24"/><circle cx="137" cy="89" r="5" fill="#34d399"/>
+  <rect x="565" y="81" width="48" height="18" rx="5" fill="#6b5d35"/><rect x="574" y="87" width="29" height="5" rx="2" fill="#fde68a"/>
+  <rect x="622" y="81" width="48" height="18" rx="5" fill="#213947"/><rect x="632" y="87" width="28" height="5" rx="2" fill="#7dd3fc"/>
+  <rect x="114" y="149" width="174" height="9" rx="4" fill="#fcd34d" opacity=".83"/>
+  <rect x="114" y="186" width="275" height="17" rx="6" fill="#f3f4f6"/><rect x="114" y="212" width="238" height="17" rx="6" fill="#f3f4f6"/>
+  <rect x="114" y="248" width="261" height="6" rx="3" fill="#66798c"/><rect x="114" y="265" width="229" height="6" rx="3" fill="#66798c"/>
+  <rect x="114" y="309" width="125" height="36" rx="8" fill="#b99948"/><rect x="252" y="309" width="99" height="36" rx="8" fill="#1d3543" stroke="#fcd34d" stroke-opacity=".35"/>
+  <rect x="475" y="148" width="206" height="175" rx="10" fill="#18273a" stroke="#7dd3fc" stroke-opacity=".29"/>
+  <path d="M502 182h151M502 218h151M502 254h151" stroke="#6f8792" stroke-opacity=".48"/>
+  <circle cx="526" cy="183" r="12" fill="#76613a"/><circle cx="526" cy="219" r="12" fill="#295563"/><circle cx="526" cy="255" r="12" fill="#76613a"/>
+  <path d="M550 182h74m-74 36h88m-88 36h64" stroke="#adc2c2" stroke-width="5" stroke-linecap="round"/>
+  <path d="M669 308l30 0m-9-9 9 9-9 9" fill="none" stroke="#fcd34d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

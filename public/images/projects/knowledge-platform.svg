@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-labelledby="title">
+  <title id="title">Ilustración conceptual de una plataforma de documentación autoalojada</title>
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#0c2935"/><stop offset="1" stop-color="#101928"/></linearGradient><pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M30 0H0V30" fill="none" stroke="#67e8f9" stroke-opacity=".06"/></pattern></defs>
+  <rect width="800" height="450" fill="url(#bg)"/><rect width="800" height="450" fill="url(#grid)"/>
+  <rect x="63" y="52" width="674" height="345" rx="16" fill="#0c1828" stroke="#67e8f9" stroke-opacity=".33"/>
+  <path d="M63 96H737M224 96V397" stroke="#67e8f9" stroke-opacity=".16"/><circle cx="87" cy="74" r="5" fill="#fb7185"/><circle cx="106" cy="74" r="5" fill="#fbbf24"/><circle cx="125" cy="74" r="5" fill="#34d399"/>
+  <rect x="85" y="119" width="88" height="7" rx="3" fill="#67e8f9" opacity=".75"/>
+  <g fill="#4e6878"><rect x="88" y="158" width="82" height="6" rx="3"/><rect x="88" y="193" width="91" height="6" rx="3"/><rect x="88" y="228" width="72" height="6" rx="3"/><rect x="88" y="263" width="99" height="6" rx="3"/></g>
+  <rect x="80" y="186" width="127" height="20" rx="5" fill="#164451" opacity=".6"/>
+  <rect x="260" y="127" width="198" height="12" rx="5" fill="#bbf7f5" opacity=".84"/><rect x="260" y="152" width="293" height="5" rx="2" fill="#547686"/>
+  <rect x="260" y="186" width="280" height="177" rx="10" fill="#102536" stroke="#67e8f9" stroke-opacity=".17"/>
+  <rect x="280" y="207" width="147" height="7" rx="3" fill="#67e8f9" opacity=".64"/>
+  <g fill="#416579"><rect x="280" y="231" width="217" height="5" rx="2"/><rect x="280" y="249" width="235" height="5" rx="2"/><rect x="280" y="267" width="191" height="5" rx="2"/></g>
+  <rect x="280" y="292" width="238" height="53" rx="8" fill="#173b46"/><path d="M302 319h34m15 0h55m15 0h75" stroke="#6ee7b7" stroke-width="5" stroke-linecap="round" opacity=".78"/>
+  <rect x="560" y="185" width="146" height="82" rx="10" fill="#102536" stroke="#67e8f9" stroke-opacity=".23"/>
+  <rect x="577" y="203" width="85" height="6" rx="3" fill="#7dd3fc" opacity=".7"/><rect x="577" y="226" width="110" height="5" rx="2" fill="#486576"/><rect x="577" y="243" width="72" height="5" rx="2" fill="#486576"/>
+  <rect x="560" y="282" width="146" height="81" rx="10" fill="#102536" stroke="#67e8f9" stroke-opacity=".23"/>
+  <circle cx="584" cy="306" r="7" fill="#67e8f9"/><circle cx="584" cy="339" r="7" fill="#6ee7b7"/><path d="M584 313v19m13-26h67m-67 33h87" stroke="#6e97a4" stroke-width="5" stroke-linecap="round"/>
+  <path d="M689 121l21 12v25l-21 12-21-12v-25z" fill="#123f4b" stroke="#67e8f9" stroke-opacity=".6"/><path d="M678 145l8 8 15-17" fill="none" stroke="#67e8f9" stroke-width="3" stroke-linecap="round"/>
+</svg>

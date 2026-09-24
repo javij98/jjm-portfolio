@@ -34,6 +34,7 @@ test("the whole mobile terminal fits in a screenshot-sized first viewport", asyn
       for (const [width, height] of [[398, 752], [390, 740], [375, 667]]) {
         const page = await browser.newPage({ viewport: { width, height }, reducedMotion: "reduce" });
         await page.goto(`${baseUrl}/${lang}`, { waitUntil: "domcontentloaded" });
+        await page.evaluate(() => document.fonts.ready);
         const result = await page.evaluate(() => ({
           terminalBottom: document.querySelector("#hero [data-terminal]").getBoundingClientRect().bottom,
           titleVisible: document.querySelector("#hero h1").getBoundingClientRect().bottom < innerHeight,
