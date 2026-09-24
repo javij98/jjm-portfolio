@@ -93,7 +93,10 @@ test("hero topology responds subtly to hover without becoming a link", async () 
     const topology = page.locator("#hero .signal-topology--hero");
     const before = await topology.evaluate((element) => Number.parseFloat(getComputedStyle(element).opacity));
     await page.locator("#hero h1").hover();
-    await page.waitForTimeout(400);
+    await page.waitForFunction((initial) => {
+      const element = document.querySelector("#hero .signal-topology--hero");
+      return element && Number.parseFloat(getComputedStyle(element).opacity) > initial + 0.1;
+    }, before, { timeout: 5000 });
     const after = await topology.evaluate((element) => Number.parseFloat(getComputedStyle(element).opacity));
     assert.ok(after > before + 0.1, `hero background should brighten on hover (${before} → ${after})`);
     assert.equal(await page.locator("#hero").evaluate((element) => getComputedStyle(element).cursor), "auto");

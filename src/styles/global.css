@@ -192,6 +192,31 @@ html.motion-ready [data-reveal] {
 .gallery-card.ambient-hover:hover { background-color: rgba(20, 40, 58, .72); }
 .blog-card.signal-hover::after { left: 1rem; right: 1rem; bottom: .35rem; border-radius: 999px; }
 
+/* A quiet cursor probe follows the topology without covering the copy. */
+.hero-pointer-field {
+  z-index: -1;
+  overflow: hidden;
+  opacity: 0;
+  background: radial-gradient(circle 19rem at var(--hero-pointer-x, 50%) var(--hero-pointer-y, 50%), rgba(34, 211, 238, .18), rgba(16, 185, 129, .07) 45%, transparent 78%);
+  transition: opacity 320ms ease;
+}
+.hero-pointer-field::after {
+  content: "";
+  position: absolute;
+  left: var(--hero-pointer-x, 50%);
+  top: var(--hero-pointer-y, 50%);
+  width: 3.25rem;
+  height: 3.25rem;
+  border: 1px solid rgba(103, 232, 249, .28);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1rem rgba(34, 211, 238, .025), inset 0 0 1rem rgba(34, 211, 238, .06);
+  transform: translate(-50%, -50%);
+}
+.hero-shell.is-pointer-active .hero-pointer-field { opacity: 1; }
+@media (hover: none), (pointer: coarse) {
+  .hero-pointer-field { display: none; }
+}
+
 /* CI/CD signal diagram: decorative, continuous and deliberately behind content. */
 .signal-topology { z-index: -1; opacity: .8; }
 .signal-topology--hero {
@@ -258,6 +283,7 @@ html.motion-ready [data-reveal] {
   .skills-marquee-group[aria-hidden="true"] { display: none; }
   .skills-marquee-group li::before { margin-right: .5rem; }
   .signal-topology-flow { animation: none; stroke-dasharray: none; opacity: .3; }
+  .hero-pointer-field { opacity: 0 !important; }
   .signal-hover:is(:hover, :focus-visible, :focus-within) { transform: none; }
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

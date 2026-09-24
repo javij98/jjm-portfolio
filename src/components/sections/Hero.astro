@@ -10,11 +10,12 @@ interface Props {
 const { profile, hero } = Astro.props;
 ---
 
-<div class="relative isolate mx-auto max-w-6xl px-5 pb-14 pt-10 sm:px-6 sm:pb-24 sm:pt-20 lg:pt-24">
+<div class="hero-shell relative isolate mx-auto max-w-6xl px-5 pb-14 pt-10 sm:px-6 sm:pb-24 sm:pt-20 lg:pt-24" data-hero-interactive>
   <SignalTopology variant="hero" />
+  <div class="hero-pointer-field pointer-events-none absolute inset-0" data-hero-pointer-field aria-hidden="true"></div>
   <div class="relative z-10" data-reveal>
     <p class="font-mono text-xs font-medium uppercase tracking-[0.2em] text-emerald-300">{hero.eyebrow}</p>
-    <h1 class="mt-4 text-[clamp(2.5rem,5.2vw,4.8rem)] font-bold leading-[1.05] tracking-tight text-white lg:whitespace-nowrap">
+    <h1 class="mt-4 whitespace-nowrap text-[clamp(1.625rem,8.2vw,2.5rem)] font-bold leading-[1.05] tracking-tight text-white sm:text-[clamp(2.5rem,5.2vw,4.8rem)]">
       {profile.name}
     </h1>
   </div>
@@ -88,5 +89,46 @@ const { profile, hero } = Astro.props;
     } else {
       window.setTimeout(typeNext, 100);
     }
+  }
+  const heroSurface = document.querySelector<HTMLElement>("[data-hero-interactive]");
+  if (heroSurface && window.matchMedia("(hover: hover) and (pointer: fine)").matches && !reduced) {
+    let currentX = 0;
+    let currentY = 0;
+    let targetX = 0;
+    let targetY = 0;
+    let frame = 0;
+    let active = false;
+
+    const followPointer = () => {
+      currentX += (targetX - currentX) * 0.18;
+      currentY += (targetY - currentY) * 0.18;
+      heroSurface.style.setProperty("--hero-pointer-x", `${currentX}px`);
+      heroSurface.style.setProperty("--hero-pointer-y", `${currentY}px`);
+      if (Math.abs(targetX - currentX) > 0.3 || Math.abs(targetY - currentY) > 0.3) {
+        frame = window.requestAnimationFrame(followPointer);
+      } else {
+        frame = 0;
+      }
+    };
+
+    heroSurface.addEventListener("pointermove", (event) => {
+      const bounds = heroSurface.getBoundingClientRect();
+      targetX = Math.max(0, Math.min(bounds.width, event.clientX - bounds.left));
+      targetY = Math.max(0, Math.min(bounds.height, event.clientY - bounds.top));
+      if (!active) {
+        currentX = targetX;
+        currentY = targetY;
+        active = true;
+      }
+      heroSurface.classList.add("is-pointer-active");
+      if (!frame) frame = window.requestAnimationFrame(followPointer);
+    }, { passive: true });
+
+    heroSurface.addEventListener("pointerleave", () => {
+      heroSurface.classList.remove("is-pointer-active");
+      active = false;
+      window.cancelAnimationFrame(frame);
+      frame = 0;
+    });
   }
 </script>

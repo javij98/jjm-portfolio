@@ -97,7 +97,7 @@ test("mobile hero brings terminal into the initial view and starts typing only w
     const top = await page.locator("#hero [data-terminal]").evaluate((element) => element.getBoundingClientRect().top);
     assert.ok(top < 900, `terminal should begin in initial viewport: ${top}`);
     await page.close();
-    const shortPage = await browser.newPage({ viewport: { width: 412, height: 540 } });
+    const shortPage = await browser.newPage({ viewport: { width: 412, height: 360 } });
     await shortPage.goto(`${baseUrl}/es`, { waitUntil: "domcontentloaded" });
     await shortPage.waitForTimeout(600);
     const typed = shortPage.locator("#hero [data-typed-command]");
