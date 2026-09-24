@@ -1,0 +1,15 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import BlogPreview from "../../components/sections/BlogPreview.astro";
+import { BLOG_ENABLED } from "../../config/site";
+import { LOCALES, SITE_BY_LANG, isLocale, type Locale } from "../../i18n/content";
+export function getStaticPaths() { return BLOG_ENABLED ? LOCALES.map((lang) => ({ params: { lang } })) : []; }
+const langParam = Astro.params.lang ?? "es";
+if (!isLocale(langParam)) throw new Error(`Unsupported locale: ${langParam}`);
+const lang: Locale = langParam;
+const content = SITE_BY_LANG[lang];
+---
+
+<Layout lang={lang} content={content} currentPath={Astro.url.pathname} pageTitle="Blog" pageDescription={lang === "es" ? "Notas sobre desarrollo, plataformas y aprendizaje." : "Notes on software, platforms and learning."}>
+  <section id="blog" class="section-alt"><BlogPreview lang={lang} full /></section>
+</Layout>

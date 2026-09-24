@@ -1,0 +1,30 @@
+---
+import type { SiteContent } from "../../i18n/content";
+import SectionHeading from "./SectionHeading.astro";
+
+interface Props {
+  content: SiteContent["education"];
+}
+
+const { content } = Astro.props;
+---
+
+<div class="mx-auto max-w-6xl px-5 py-18 sm:px-6 sm:py-24">
+  <SectionHeading eyebrow={content.eyebrow} title={content.title} />
+  <div class="grid gap-4 border-l-2 border-emerald-400/60 pl-6 sm:grid-cols-[12rem_1fr] sm:pl-8" data-reveal>
+    <p class="font-mono text-sm text-emerald-300">{content.period}</p>
+    <div>
+      <h3 class="text-2xl font-semibold text-white">{content.degree}</h3>
+      <p class="mt-2 text-slate-300">{content.institution}</p>
+    </div>
+  </div>
+  <div class="mt-16 border-t border-white/10 pt-9" data-reveal>
+    <p class="font-mono text-xs uppercase tracking-[0.18em] text-emerald-300">{content.trainingEyebrow}</p>
+    <h3 class="mt-2 text-2xl font-semibold text-white">{content.trainingTitle}</h3>
+    <ul class="mt-6 grid gap-x-10 gap-y-0 sm:grid-cols-2">
+      {content.training.map((training) => (
+        <li class="border-b border-white/10 py-4 text-sm leading-6 text-slate-300">{training}</li>
+      ))}
+    </ul>
+  </div>
+</div>

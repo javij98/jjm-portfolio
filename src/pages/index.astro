@@ -8,16 +8,15 @@ const fallbackLocalePath = "/es";
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv="refresh" content={`0;url=${fallbackLocalePath}`} />
+    <link rel="canonical" href="https://javier-jimenez-molina.vercel.app/es" />
+    <title>Javier Jiménez Molina | DevOps Engineer</title>
     <script is:inline>
-      (() => {
-        const browserLang = (navigator.language || "es").toLowerCase();
-        const preferredLocale = browserLang.startsWith("en") ? "en" : "es";
-        window.location.replace(`/${preferredLocale}`);
-      })();
+      const browserLang = (navigator.language || "es").toLowerCase();
+      const preferredLocale = browserLang.startsWith("en") ? "en" : "es";
+      window.location.replace(`/${preferredLocale}`);
     </script>
-    <title>Redirecting...</title>
   </head>
   <body>
-    <a href={fallbackLocalePath}>Go to {fallbackLocalePath}</a>
+    <a href={fallbackLocalePath}>Ir a la versión en español / Go to the Spanish version</a>
   </body>
 </html>

@@ -1,351 +1,192 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Command } from "cmdk";
 import {
   Briefcase,
-  ExternalLink,
+  BookOpen,
   FolderKanban,
   Github,
+  GraduationCap,
   Home,
   Languages,
+  Layers3,
   Linkedin,
   Mail,
+  UserRound,
   Search,
-  Wrench,
+  X,
   type LucideIcon,
 } from "lucide-react";
-import type { Locale } from "../i18n/ui";
-import { scrollToSectionById } from "../utils/scrollToSection";
+import type { Locale } from "../i18n/content";
 
-interface CommandMenuProps {
+interface Props {
   lang: Locale;
-  currentPath: string;
   email: string;
   linkedin: string;
-  servicesHref: string;
-  githubHref?: string;
-  showServices?: boolean;
+  githubHref: string;
+  blogEnabled: boolean;
 }
 
-type CommandGroupId = "navigation" | "social" | "system";
-
-interface CommandItemConfig {
-  id: string;
-  group: CommandGroupId;
+interface MenuItem {
   label: string;
   keywords: string;
   icon: LucideIcon;
   action: () => void;
-  shortcut?: string;
 }
 
-export default function CommandMenu({
-  lang,
-  currentPath,
-  email,
-  linkedin,
-  servicesHref,
-  githubHref = "https://github.com/javij98",
-  showServices = false,
-}: CommandMenuProps) {
+export default function CommandMenu({ lang, email, linkedin, githubHref, blogEnabled }: Props) {
   const [open, setOpen] = useState(false);
-  const [modifierLabel, setModifierLabel] = useState("Ctrl");
-  const inputRef = useRef<HTMLInputElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const wasOpenRef = useRef(false);
+  const restoreFocusRef = useRef(false);
 
-  const t = lang === "es"
+  const isSpanish = lang === "es";
+  const labels = isSpanish
     ? {
         trigger: "Comandos",
-        placeholder: "Escribe un comando o busca...",
-        empty: "Sin resultados.",
-        closeAria: "Cerrar comandos",
-        sections: {
-          navigation: "Navegación",
-          social: "Social",
-          system: "Sistema",
-        },
-        items: {
-          home: "Ir a Inicio",
-          experience: "Ir a Experiencia",
-          impact: "Ir a Impacto",
-          skills: "Ir a Skills",
-          contact: "Ir a Contacto",
-          services: "Abrir Servicios",
-          github: "Abrir GitHub",
-          linkedin: "Abrir LinkedIn",
-          email: "Enviar Email",
-          langEs: "Cambiar a Español",
-          langEn: "Switch to English",
-        },
+        dialog: "Navegación rápida",
+        placeholder: "Buscar sección o enlace...",
+        empty: "Sin resultados",
+        close: "Cerrar",
+        sections: ["Secciones", "Enlaces", "Idioma"],
+        items: ["Inicio", "Sobre mí", "Proyectos", "Experiencia", "Competencias", "Formación", "Contacto", "GitHub", "LinkedIn", "Enviar email", "Español", "English"],
       }
     : {
         trigger: "Commands",
-        placeholder: "Type a command or search...",
-        empty: "No results found.",
-        closeAria: "Close commands",
-        sections: {
-          navigation: "Navigation",
-          social: "Social",
-          system: "System",
-        },
-        items: {
-          home: "Go to Home",
-          experience: "Go to Experience",
-          impact: "Go to Impact",
-          skills: "Go to Skills",
-          contact: "Go to Contact",
-          services: "Open Services",
-          github: "Open GitHub",
-          linkedin: "Open LinkedIn",
-          email: "Send Email",
-          langEs: "Cambiar a español",
-          langEn: "Switch to English",
-        },
+        dialog: "Quick navigation",
+        placeholder: "Find a section or link...",
+        empty: "No results",
+        close: "Close",
+        sections: ["Sections", "Links", "Language"],
+        items: ["Home", "About", "Projects", "Experience", "Skills", "Education", "Contact", "GitHub", "LinkedIn", "Send email", "Español", "English"],
       };
 
-  const normalizeUrl = useCallback((url: string) => {
-    if (/^https?:\/\//i.test(url)) return url;
-    return `https://${url}`;
+  const navigate = (id: string) => {
+    setOpen(false);
+    const homePath = `/${lang}`;
+    if (window.location.pathname.replace(/\/$/, "") === homePath) window.location.hash = id;
+    else window.location.assign(`${homePath}#${id}`);
+  };
+
+  const sections: MenuItem[] = [
+    { label: labels.items[0], keywords: "home inicio", icon: Home, action: () => navigate("hero") },
+    { label: labels.items[1], keywords: "about sobre mi", icon: UserRound, action: () => navigate("about") },
+    { label: labels.items[2], keywords: "projects proyectos portfolio", icon: FolderKanban, action: () => navigate("projects") },
+    { label: labels.items[3], keywords: "experience experiencia career", icon: Briefcase, action: () => navigate("experience") },
+    { label: labels.items[4], keywords: "skills competencias stack", icon: Layers3, action: () => navigate("skills") },
+    { label: labels.items[5], keywords: "education formacion", icon: GraduationCap, action: () => navigate("education") },
+    ...(blogEnabled ? [{ label: "Blog", keywords: "blog articles notas posts", icon: BookOpen, action: () => window.location.assign(`/${lang}/blog`) }] : []),
+    { label: labels.items[6], keywords: "contact contacto", icon: Mail, action: () => navigate("contact") },
+  ];
+  const links: MenuItem[] = [
+    { label: labels.items[7], keywords: "github code", icon: Github, action: () => window.open(githubHref, "_blank", "noopener,noreferrer") },
+    { label: labels.items[8], keywords: "linkedin social", icon: Linkedin, action: () => window.open(linkedin, "_blank", "noopener,noreferrer") },
+    { label: labels.items[9], keywords: "email mail", icon: Mail, action: () => window.location.assign(`mailto:${email}`) },
+  ];
+  const languages: MenuItem[] = [
+    { label: labels.items[10], keywords: "spanish espanol es", icon: Languages, action: () => window.location.assign(`/es${window.location.pathname.replace(/^\/(es|en)/, "")}${window.location.hash}`) },
+    { label: labels.items[11], keywords: "english en", icon: Languages, action: () => window.location.assign(`/en${window.location.pathname.replace(/^\/(es|en)/, "")}${window.location.hash}`) },
+  ];
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key.toLowerCase() === "k" && (event.ctrlKey || event.metaKey)) {
+        event.preventDefault();
+        restoreFocusRef.current = true;
+        setOpen((previous) => !previous);
+      }
+      if (event.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  const navigateToSection = useCallback(
-    (sectionId: string) => {
-      const didNavigate = scrollToSectionById(sectionId);
-      if (didNavigate) {
-        window.history.replaceState(null, "", `${window.location.pathname}#${sectionId}`);
-        return;
-      }
+  useEffect(() => {
+    if (open) {
+      wasOpenRef.current = true;
+      document.body.style.overflow = "hidden";
+      inputRef.current?.focus();
+    } else {
+      document.body.style.overflow = "";
+      if (wasOpenRef.current && restoreFocusRef.current) triggerRef.current?.focus();
+      restoreFocusRef.current = false;
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
 
-      window.location.assign(`/${lang}#${sectionId}`);
-    },
-    [lang],
-  );
-
-  const switchLocale = useCallback(
-    (targetLang: Locale) => {
-      const segments = currentPath.split("/").filter(Boolean);
-      if (segments[0] === "es" || segments[0] === "en") {
-        segments[0] = targetLang;
-      } else {
-        segments.unshift(targetLang);
-      }
-
-      const nextPath = segments.length > 0 ? `/${segments.join("/")}` : `/${targetLang}`;
-      window.location.assign(nextPath);
-    },
-    [currentPath],
-  );
-
-  const openExternal = useCallback((url: string) => {
-    window.open(normalizeUrl(url), "_blank", "noopener,noreferrer");
-  }, [normalizeUrl]);
-
-  const commandItems = useMemo<CommandItemConfig[]>(
-    () => [
-      {
-        id: "nav-home",
-        group: "navigation",
-        label: t.items.home,
-        keywords: "hero inicio home",
-        icon: Home,
-        action: () => navigateToSection("hero"),
-      },
-      {
-        id: "nav-impact",
-        group: "navigation",
-        label: t.items.impact,
-        keywords: "impact impacto metrics metricas resultados",
-        icon: FolderKanban,
-        action: () => navigateToSection("metrics"),
-      },
-      {
-        id: "nav-experience",
-        group: "navigation",
-        label: t.items.experience,
-        keywords: "experience experiencia",
-        icon: Briefcase,
-        action: () => navigateToSection("experience"),
-      },
-      {
-        id: "nav-skills",
-        group: "navigation",
-        label: t.items.skills,
-        keywords: "skills stack tech",
-        icon: Wrench,
-        action: () => navigateToSection("skills"),
-      },
-      {
-        id: "nav-contact",
-        group: "navigation",
-        label: t.items.contact,
-        keywords: "contact contacto email",
-        icon: Mail,
-        action: () => navigateToSection("contact"),
-      },
-      ...(showServices ? [{
-        id: "nav-services",
-        group: "navigation",
-        label: t.items.services,
-        keywords: "services servicios consulting consultoria freelance",
-        icon: ExternalLink,
-        action: () => openExternal(servicesHref),
-      } as CommandItemConfig] : []),
-      {
-        id: "social-github",
-        group: "social",
-        label: t.items.github,
-        keywords: "github repo code",
-        icon: Github,
-        action: () => openExternal(githubHref),
-      },
-      {
-        id: "social-linkedin",
-        group: "social",
-        label: t.items.linkedin,
-        keywords: "linkedin profile social",
-        icon: Linkedin,
-        action: () => openExternal(linkedin),
-      },
-      {
-        id: "social-email",
-        group: "social",
-        label: t.items.email,
-        keywords: "email mail contacto contact",
-        icon: Mail,
-        action: () => window.location.assign(`mailto:${email}`),
-      },
-      {
-        id: "system-lang-es",
-        group: "system",
-        label: t.items.langEs,
-        keywords: "spanish espanol idioma es",
-        icon: Languages,
-        action: () => switchLocale("es"),
-      },
-      {
-        id: "system-lang-en",
-        group: "system",
-        label: t.items.langEn,
-        keywords: "english idioma en",
-        icon: Languages,
-        action: () => switchLocale("en"),
-      },
-    ],
-    [email, githubHref, linkedin, navigateToSection, openExternal, servicesHref, showServices, switchLocale, t.items],
-  );
-
-  const groupedItems = useMemo(
-    () => ({
-      navigation: commandItems.filter((item) => item.group === "navigation"),
-      social: commandItems.filter((item) => item.group === "social"),
-      system: commandItems.filter((item) => item.group === "system"),
-    }),
-    [commandItems],
-  );
-
-  const runAndClose = useCallback((action: () => void) => {
+  const run = (action: () => void) => {
+    restoreFocusRef.current = false;
     setOpen(false);
     action();
-  }, []);
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key.toLowerCase() === "k" && (event.metaKey || event.ctrlKey)) {
-        event.preventDefault();
-        setOpen((prev) => !prev);
-        return;
-      }
-
-      if (event.key === "Escape") {
-        setOpen(false);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
-
-  useEffect(() => {
-    const isMac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
-    setModifierLabel(isMac ? "Cmd" : "Ctrl");
-  }, []);
-
-  useEffect(() => {
-    if (!open) return;
-    const frame = window.requestAnimationFrame(() => inputRef.current?.focus());
-    return () => window.cancelAnimationFrame(frame);
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-
-    const handlePointerDown = (event: PointerEvent) => {
-      const target = event.target;
-      if (!(target instanceof Node)) return;
-      if (panelRef.current && !panelRef.current.contains(target)) {
-        setOpen(false);
-      }
-    };
-
-    document.addEventListener("pointerdown", handlePointerDown);
-    return () => document.removeEventListener("pointerdown", handlePointerDown);
-  }, [open]);
+  };
 
   return (
     <>
       <button
+        ref={triggerRef}
         type="button"
-        onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-2 rounded-md border border-white/10 bg-slate-900/55 px-2.5 py-1.5 font-mono text-[11px] text-slate-300 transition hover:bg-white/5 hover:text-white"
-        aria-label={t.trigger}
+        onClick={(event) => {
+          restoreFocusRef.current = event.detail === 0;
+          setOpen(true);
+        }}
+        aria-label={labels.trigger}
+        aria-expanded={open}
+        className="signal-hover inline-flex h-9 shrink-0 items-center whitespace-nowrap gap-2 rounded-md border border-white/15 bg-slate-900/60 px-2.5 text-xs text-slate-200 focus-visible:outline-2 focus-visible:outline-cyan-300"
       >
-        <Search className="h-3.5 w-3.5 text-accent-300" />
-        <span className="hidden md:inline">{t.trigger}</span>
-        <kbd className="hidden rounded border border-white/10 bg-slate-950/80 px-1.5 py-0.5 text-[10px] text-slate-500 sm:inline">
-          {modifierLabel}+K
-        </kbd>
+        <Search className="h-4 w-4 text-cyan-300" aria-hidden="true" />
+        <span className="hidden lg:inline">{labels.trigger}</span>
+        <kbd className="hidden shrink-0 whitespace-nowrap font-mono text-[10px] text-slate-400 lg:inline">⌘/Ctrl K</kbd>
       </button>
 
-      {open && (
-        <div className="fixed inset-0 z-[90] bg-slate-950/75 backdrop-blur-sm">
+      {open && typeof document !== "undefined" && createPortal(
+        <div
+          className="fixed inset-0 z-[90] bg-slate-950/80 px-3 pt-20 backdrop-blur-sm sm:pt-28"
+          onMouseDown={(event) => {
+            if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
+              restoreFocusRef.current = false;
+              setOpen(false);
+            }
+          }}
+        >
           <div
             ref={panelRef}
-            className="relative z-[91] mx-auto mt-18 w-[calc(100%-1rem)] max-w-2xl sm:mt-24"
+            role="dialog"
+            aria-modal="true"
+            aria-label={labels.dialog}
+            onKeyDown={(event) => {
+              if (event.key !== "Tab") return;
+              const focusable = panelRef.current?.querySelectorAll<HTMLElement>("input, button");
+              if (!focusable?.length) return;
+              const first = focusable.item(0);
+              const last = focusable.item(focusable.length - 1);
+              if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault();
+                last.focus();
+              } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault();
+                first.focus();
+              }
+            }}
+            className="mx-auto max-w-xl overflow-hidden rounded-xl border border-white/15 bg-slate-900 shadow-2xl shadow-black/50"
           >
-            <Command className="overflow-hidden rounded-xl border border-white/10 bg-slate-900 shadow-2xl shadow-black/40">
-              <div className="flex items-center gap-2 border-b border-white/10 px-3 py-2.5">
-                <span className="font-mono text-sm text-operational-400">&gt;</span>
-                <Command.Input
-                  ref={inputRef}
-                  placeholder={t.placeholder}
-                  className="w-full bg-transparent font-mono text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none"
-                />
+            <Command label={labels.dialog}>
+              <div className="flex items-center gap-2 border-b border-white/10 px-4">
+                <Search className="h-4 w-4 text-emerald-300" aria-hidden="true" />
+                <Command.Input ref={inputRef} placeholder={labels.placeholder} className="h-13 min-w-0 flex-1 bg-transparent text-sm text-white outline-none placeholder:text-slate-400" />
+                <button type="button" onClick={() => { restoreFocusRef.current = false; setOpen(false); }} aria-label={labels.close} className="rounded-md p-2 text-slate-400 hover:text-white focus-visible:outline-2 focus-visible:outline-cyan-300"><X className="h-4 w-4" /></button>
               </div>
-
-              <Command.List className="max-h-[60vh] overflow-y-auto p-2">
-                <Command.Empty className="px-3 py-6 text-center font-mono text-xs text-slate-500">
-                  {t.empty}
-                </Command.Empty>
-
-                {(["navigation", "social", "system"] as const).map((group) => (
-                  <Command.Group
-                    key={group}
-                    heading={t.sections[group]}
-                    className="mb-1 text-[10px] font-mono uppercase tracking-widest text-slate-500 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-2"
-                  >
-                    {groupedItems[group].map((item) => (
-                      <Command.Item
-                        key={item.id}
-                        value={`${item.label} ${item.keywords}`}
-                        onSelect={() => runAndClose(item.action)}
-                        className="relative flex cursor-pointer items-center gap-3 rounded-lg border-l-2 border-transparent px-2.5 py-2 text-sm text-slate-300 outline-none transition data-[selected=true]:border-operational-400 data-[selected=true]:bg-white/5 data-[selected=true]:text-white data-[selected=true]:[&_svg]:text-operational-300"
-                      >
-                        <item.icon className="h-4 w-4 text-slate-500 transition-colors" />
-                        <span className="font-mono text-xs sm:text-sm">{item.label}</span>
-                        {item.shortcut && (
-                          <span className="ml-auto font-mono text-[10px] text-slate-500">
-                            {item.shortcut}
-                          </span>
-                        )}
+              <Command.List className="max-h-[min(65vh,28rem)] overflow-y-auto p-2">
+                <Command.Empty className="px-3 py-6 text-center text-sm text-slate-400">{labels.empty}</Command.Empty>
+                {[sections, links, languages].map((group, groupIndex) => (
+                  <Command.Group key={labels.sections[groupIndex]} heading={labels.sections[groupIndex]} className="mb-2 font-mono text-[11px] uppercase tracking-wider text-slate-400 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-2">
+                    {group.map((item) => (
+                      <Command.Item key={item.label} value={`${item.label} ${item.keywords}`} onSelect={() => run(item.action)} className="flex cursor-pointer items-center gap-3 rounded-md px-3 py-2.5 text-sm normal-case tracking-normal text-slate-200 outline-none data-[selected=true]:bg-emerald-400/10 data-[selected=true]:text-white">
+                        <item.icon className="h-4 w-4 text-cyan-300" aria-hidden="true" />
+                        {item.label}
                       </Command.Item>
                     ))}
                   </Command.Group>
@@ -353,7 +194,8 @@ export default function CommandMenu({
               </Command.List>
             </Command>
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </>
   );
