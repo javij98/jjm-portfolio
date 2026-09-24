@@ -456,7 +456,7 @@ export const SITE_ES: SiteContent = {
     eyebrow: "Hablemos",
     title: "Contacto",
     description:
-      "Si buscas a alguien para trabajar en CI/CD, Kubernetes y automatización, me encantará conversar.",
+      "Si buscas a alguien para trabajar en CI/CD, Kubernetes, Infraestructura, IA, Integración y automatización, me encantará conversar.",
     statement: "Construyamos una entrega más clara, automatizada y fiable.",
     emailLabel: "Escribirme un email",
     copyLabel: "Copiar dirección",
@@ -780,7 +780,7 @@ export const SITE_EN: SiteContent = {
     eyebrow: "Let's talk",
     title: "Contact",
     description:
-      "If you need someone to work on CI/CD, Kubernetes and automation, I'd be glad to talk.",
+      "If you’re looking for someone to work on CI/CD, Kubernetes, infrastructure, AI, integration, and automation, I’d love to connect.",
     statement: "Let’s make delivery clearer, more automated and more reliable.",
     emailLabel: "Send me an email",
     copyLabel: "Copy address",
