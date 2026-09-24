@@ -120,12 +120,22 @@ html.project-dialog-open { overflow: hidden; padding-right: var(--project-dialog
   margin: auto;
   padding: 0;
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(103, 232, 249, .5) #101b2b;
   border: 1px solid rgba(103,232,249,.3);
   border-radius: 1rem;
   background: #101b2b;
   color: #e2e8f0;
   box-shadow: 0 24px 80px rgba(0,0,0,.55), 0 0 50px rgba(6,182,212,.08);
 }
+.project-dialog::-webkit-scrollbar { width: 8px; }
+.project-dialog::-webkit-scrollbar-track { margin-block: 12px; border-radius: 999px; background: #101b2b; }
+.project-dialog::-webkit-scrollbar-thumb {
+  border: 2px solid #101b2b;
+  border-radius: 999px;
+  background: rgba(103, 232, 249, .5);
+}
+.project-dialog::-webkit-scrollbar-thumb:hover { background: rgba(103, 232, 249, .8); }
 .project-dialog::backdrop { background: rgba(3,8,18,.78); backdrop-filter: blur(6px); }
 .project-dialog-header {
   position: sticky;
