@@ -1,0 +1,54 @@
+---
+import type { SiteContent } from "../../i18n/content";
+import SectionHeading from "./SectionHeading.astro";
+import SignalTopology from "./SignalTopology.astro";
+
+interface Props {
+  profile: SiteContent["profile"];
+  content: SiteContent["contact"];
+}
+
+const { profile, content } = Astro.props;
+---
+
+<div class="mx-auto max-w-6xl px-5 py-18 sm:px-6 sm:py-24">
+  <SectionHeading eyebrow={content.eyebrow} title={content.title} description={content.description} />
+  <div class="contact-callout relative isolate overflow-hidden border-y border-white/12 px-1 py-12 sm:py-16" data-reveal>
+    <SignalTopology variant="contact" />
+    <div class="relative z-10 max-w-3xl">
+      <p class="font-mono text-xs uppercase tracking-[0.18em] text-emerald-300">CI/CD <span class="mx-2 text-slate-500">/</span> Kubernetes <span class="mx-2 text-slate-500">/</span> Automation</p>
+      <p class="mt-5 text-3xl font-bold leading-tight tracking-tight text-white sm:text-5xl">{content.statement}</p>
+    </div>
+    <div class="relative z-10 mt-10">
+    <div class="flex flex-wrap items-center gap-3">
+      <a href={`mailto:${profile.email}`} class="signal-hover inline-flex min-h-11 items-center justify-center rounded-lg border border-emerald-300 bg-emerald-400 px-5 py-2.5 text-sm font-semibold text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300">
+        {content.emailLabel}<span aria-hidden="true" class="ml-2">↗</span>
+      </a>
+      <button type="button" data-copy-email={profile.email} data-copied-label={content.copiedLabel} data-error-label={content.copyError} class="signal-hover inline-flex min-h-11 items-center justify-center rounded-lg border border-white/20 px-4 py-2.5 text-sm text-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">
+        {content.copyLabel}
+      </button>
+    </div>
+    <p class="mt-4 font-mono text-xs text-slate-400">{profile.email}</p>
+    <p data-copy-feedback role="status" aria-live="polite" class="mt-2 min-h-5 text-xs text-emerald-300"></p>
+    <div class="mt-6 flex flex-wrap gap-x-6 gap-y-2 border-t border-white/10 pt-5">
+      <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" class="signal-hover inline-flex min-h-9 items-center rounded-md px-2 text-sm font-medium text-cyan-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">{content.linkedinLabel}<span aria-hidden="true" class="ml-1">↗</span><span class="sr-only"> ({content.newTabLabel})</span></a>
+      <a href={profile.github} target="_blank" rel="noopener noreferrer" class="signal-hover inline-flex min-h-9 items-center rounded-md px-2 text-sm font-medium text-cyan-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">{content.githubLabel}<span aria-hidden="true" class="ml-1">↗</span><span class="sr-only"> ({content.newTabLabel})</span></a>
+    </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const copyButton = document.querySelector<HTMLButtonElement>("[data-copy-email]");
+  const copyFeedback = document.querySelector<HTMLElement>("[data-copy-feedback]");
+
+  copyButton?.addEventListener("click", async () => {
+    if (!copyFeedback) return;
+    try {
+      await navigator.clipboard.writeText(copyButton.dataset.copyEmail ?? "");
+      copyFeedback.textContent = copyButton.dataset.copiedLabel ?? "";
+    } catch {
+      copyFeedback.textContent = copyButton.dataset.errorLabel ?? "";
+    }
+  });
+</script>

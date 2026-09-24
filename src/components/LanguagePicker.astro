@@ -1,46 +1,19 @@
 ---
-import type { Locale, UiLabels } from "../i18n/ui";
+import type { Locale } from "../i18n/content";
 
-export interface Props {
+interface Props {
   currentLang: Locale;
   pathname: string;
-  labels: UiLabels["language"];
 }
 
-const { currentLang, pathname, labels }: Props = Astro.props;
-
-const getHrefForLang = (targetLang: Locale): string => {
-  const segments = pathname.split("/").filter(Boolean);
-
-  if (segments[0] === "es" || segments[0] === "en") {
-    segments[0] = targetLang;
-  } else {
-    segments.unshift(targetLang);
-  }
-
-  return `/${segments.join("/")}`;
-};
-
-const esHref = getHrefForLang("es");
-const enHref = getHrefForLang("en");
+const { currentLang, pathname } = Astro.props;
+const suffix = pathname.replace(/^\/(es|en)(?=\/|$)/, "");
+const esHref = `/es${suffix}`;
+const enHref = `/en${suffix}`;
 ---
 
-<div
-  class="inline-flex items-center gap-1 rounded-md border border-white/10 bg-slate-900/50 px-2 py-1 font-mono text-[10px] sm:text-[11px]"
->
-  <a
-    href={esHref}
-    aria-current={currentLang === "es" ? "page" : undefined}
-    class={`transition-colors ${currentLang === "es" ? "text-accent-300" : "text-slate-500 hover:text-slate-300"}`}
-  >
-    {labels.es}
-  </a>
-  <span class="text-slate-600">|</span>
-  <a
-    href={enHref}
-    aria-current={currentLang === "en" ? "page" : undefined}
-    class={`transition-colors ${currentLang === "en" ? "text-accent-300" : "text-slate-500 hover:text-slate-300"}`}
-  >
-    {labels.en}
-  </a>
+<div class="inline-flex h-9 items-center gap-1 rounded-md border border-white/15 bg-slate-900/60 px-2 font-mono text-xs" aria-label={currentLang === "es" ? "Idioma" : "Language"}>
+  <a href={esHref} lang="es" aria-current={currentLang === "es" ? "page" : undefined} class:list={["rounded px-1 py-1 focus-visible:outline-2 focus-visible:outline-cyan-300", currentLang === "es" ? "text-cyan-200" : "text-slate-400 hover:text-white"]}>ES</a>
+  <span aria-hidden="true" class="text-slate-600">/</span>
+  <a href={enHref} lang="en" aria-current={currentLang === "en" ? "page" : undefined} class:list={["rounded px-1 py-1 focus-visible:outline-2 focus-visible:outline-cyan-300", currentLang === "en" ? "text-cyan-200" : "text-slate-400 hover:text-white"]}>EN</a>
 </div>

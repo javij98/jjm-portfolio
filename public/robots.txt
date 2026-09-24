@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://javier-jimenez-molina.vercel.app/sitemap.xml

@@ -1,0 +1,39 @@
+---
+import type { SiteContent } from "../../i18n/content";
+
+interface Props {
+  content: SiteContent["skills"];
+}
+const { content } = Astro.props;
+---
+
+<div class="mx-auto max-w-6xl px-5 py-5 sm:px-6" aria-label={content.marqueeLabel}>
+  <div class="mb-2 flex items-center justify-between gap-3">
+    <p class="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">{content.marqueeLabel}</p>
+    <button type="button" class="marquee-pause min-h-9 text-xs text-cyan-200 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300" data-marquee-pause data-pause-label={content.marqueePause} data-resume-label={content.marqueeResume} aria-pressed="false" hidden>{content.marqueePause}</button>
+  </div>
+  <div class="skills-marquee py-2" tabindex="0" data-skills-marquee>
+    <div class="skills-marquee-track">
+      <ul class="skills-marquee-group">
+        {content.marqueeItems.map((item) => <li>{item}</li>)}
+      </ul>
+      <ul class="skills-marquee-group" aria-hidden="true">
+        {content.marqueeItems.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  const marquee = document.querySelector<HTMLElement>("[data-skills-marquee]");
+  const pauseButton = document.querySelector<HTMLButtonElement>("[data-marquee-pause]");
+  if (marquee && pauseButton && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    pauseButton.hidden = false;
+    pauseButton.addEventListener("click", () => {
+      const paused = pauseButton.getAttribute("aria-pressed") !== "true";
+      pauseButton.setAttribute("aria-pressed", String(paused));
+      pauseButton.textContent = paused ? pauseButton.dataset.resumeLabel ?? "" : pauseButton.dataset.pauseLabel ?? "";
+      marquee.classList.toggle("is-paused", paused);
+    });
+  }
+</script>

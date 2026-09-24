@@ -6,7 +6,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test:hover": "node --test tests/hover-outline.mjs",
+    "test:ui": "node --test tests/*.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^4.4.2",
@@ -15,10 +17,12 @@
     "@types/react-dom": "^19.2.3",
     "astro": "^5.17.1",
     "cmdk": "^1.1.1",
-    "framer-motion": "^12.34.0",
     "lucide-react": "^0.564.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "tailwindcss": "^4.1.18"
+  },
+  "devDependencies": {
+    "playwright": "^1.63.0"
   }
 }

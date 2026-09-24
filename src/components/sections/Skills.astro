@@ -1,0 +1,35 @@
+---
+import type { SiteContent } from "../../i18n/content";
+import SectionHeading from "./SectionHeading.astro";
+
+interface Props { content: SiteContent["skills"]; }
+const { content } = Astro.props;
+---
+
+<div class="mx-auto max-w-6xl px-5 py-18 sm:px-6 sm:py-24">
+  <SectionHeading eyebrow={content.eyebrow} title={content.title} description={content.introduction} />
+  <div class="mb-6 flex flex-wrap gap-x-5 gap-y-2 text-xs text-slate-300" aria-label={content.levelsLabel} data-reveal>
+    {(["strong", "experienced", "developing"] as const).map((level) => (
+      <span class="flex items-center gap-2">
+        <span class:list={["h-2 w-2 rounded-full", level === "strong" ? "bg-emerald-300" : level === "experienced" ? "bg-cyan-300" : "bg-amber-300"]}></span>
+        {content.levels[level]}
+      </span>
+    ))}
+  </div>
+  <div class="grid gap-x-8 sm:grid-cols-2 xl:grid-cols-4">
+    {content.categories.map((category, index) => (
+      <article class="skill-entry ambient-hover border-t border-white/12 px-2 py-7" data-reveal>
+        <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-emerald-300">{String(index + 1).padStart(2, "0")} / {String(content.categories.length).padStart(2, "0")}</p>
+        <h3 class="mt-2 text-lg font-semibold text-white">{category.title}</h3>
+        <p class="mt-2 text-sm leading-6 text-slate-400">{category.description}</p>
+        <ul class="mt-5 flex flex-wrap gap-x-4 gap-y-2">
+          {category.skills.map((skill) => (
+            <li class:list={["border-b pb-1 font-mono text-xs", skill.level === "strong" ? "border-emerald-400/60 text-emerald-100" : skill.level === "experienced" ? "border-cyan-400/50 text-cyan-100" : "border-amber-400/60 text-amber-100"]} title={content.levels[skill.level]}>
+              {skill.name}<span class="sr-only"> — {content.levels[skill.level]}</span>
+            </li>
+          ))}
+        </ul>
+      </article>
+    ))}
+  </div>
+</div>

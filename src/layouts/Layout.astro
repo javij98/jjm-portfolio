@@ -2,201 +2,139 @@
 import "../styles/global.css";
 import LanguagePicker from "../components/LanguagePicker.astro";
 import CommandMenu from "../components/CommandMenu";
-import type { Locale, UiLabels } from "../i18n/ui";
+import type { Locale, SiteContent } from "../i18n/content";
+import { BLOG_ENABLED } from "../config/site";
 
-export interface Props {
-  title?: string;
-  description?: string;
+interface Props {
   lang: Locale;
-  labels: UiLabels;
+  content: SiteContent;
   currentPath: string;
-  email: string;
-  linkedin: string;
-  githubHref?: string;
+  pageTitle?: string;
+  pageDescription?: string;
+  article?: boolean;
 }
 
-const {
-  title = "Javier Jiménez Molina | DevOps & Platform Engineer",
-  description =
-    "Ingeniero DevOps con +4 años de experiencia y background sólido en desarrollo (Java/React). Especializado en reducir el Time-to-Market mediante pipelines de CI/CD avanzados y orquestación eficiente con Kubernetes.",
-  lang,
-  labels,
-  currentPath,
-  email,
-  linkedin,
-  githubHref = "https://github.com/javij98",
-}: Props = Astro.props;
-
+const { lang, content, currentPath, pageTitle, pageDescription, article = false } = Astro.props;
+const title = pageTitle ? `${pageTitle} | ${content.profile.name}` : `${content.profile.name} | ${content.profile.role}`;
+const description = pageDescription ?? content.profile.introduction;
+const baseUrl = Astro.site ?? new URL("https://javier-jimenez-molina.vercel.app");
+const pathSuffix = currentPath.replace(new RegExp(`^/${lang}(?=/|$)`), "") || "";
+const isHome = pathSuffix === "" || pathSuffix === "/";
+const homePrefix = isHome ? "" : `/${lang}`;
+const canonical = new URL(currentPath, baseUrl).toString();
+const spanishUrl = new URL(`/es${pathSuffix}`, baseUrl).toString();
+const englishUrl = new URL(`/en${pathSuffix}`, baseUrl).toString();
 const navLinks = [
-  { label: labels.nav.home, href: "#hero" },
-  { label: labels.nav.metrics, href: "#metrics" },
-  { label: labels.nav.experience, href: "#experience" },
-  { label: labels.nav.skills, href: "#skills" },
-  { label: labels.nav.contact, href: "#contact" },
+  { label: content.nav.home, href: `${homePrefix}#hero` },
+  { label: content.nav.about, href: `${homePrefix}#about` },
+  { label: content.nav.projects, href: isHome ? "#projects" : `/${lang}/projects` },
+  { label: content.nav.experience, href: `${homePrefix}#experience` },
+  { label: content.nav.skills, href: `${homePrefix}#skills` },
+  { label: content.nav.education, href: `${homePrefix}#education` },
+  ...(BLOG_ENABLED ? [{ label: content.nav.blog, href: `/${lang}/blog` }] : []),
+  { label: content.nav.contact, href: `${homePrefix}#contact` },
 ];
-
-const servicesBase = (import.meta.env.PUBLIC_SERVICES_URL ?? "https://services-javier-jimenez-molina.vercel.app")
-  .trim()
-  .replace(/\/$/, "");
-const servicesHref = `${servicesBase}/${lang}`;
-const servicesLabel = lang === "es" ? "Servicios" : "Services";
-const SHOW_SERVICES = false; // FLAG: Pon a 'false' para ocultar el link de Servicios
 ---
 
 <!doctype html>
-<html lang={lang} data-theme="dark" style="color-scheme: dark;">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="color-scheme" content="dark" />
-    <meta name="supported-color-schemes" content="dark" />
+    <script is:inline>if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("motion-ready");</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#080f1c" />
     <meta name="description" content={description} />
-    <meta name="author" content="Javier Jiménez Molina" />
+    <meta name="author" content={content.profile.name} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="es" href={spanishUrl} />
+    <link rel="alternate" hreflang="en" href={englishUrl} />
+    <link rel="alternate" hreflang="x-default" href={spanishUrl} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
+    <meta property="og:type" content={article ? "article" : "website"} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content={labels.meta.ogLocale} />
-
-    <meta name="twitter:card" content="summary_large_image" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={lang === "es" ? "es_ES" : "en_US"} />
+    <meta property="og:locale:alternate" content={lang === "es" ? "en_US" : "es_ES"} />
+    <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
   </head>
 
-  <body class="min-h-screen flex flex-col" style="color-scheme: dark;">
-    <nav
-      id="sticky-recruiter-nav"
-      class="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-slate-950/65 shadow-lg shadow-black/20 backdrop-blur-xl supports-[backdrop-filter]:bg-slate-950/45"
-    >
-      <div
-        class="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6"
-      >
-        <a href="#hero" class="group flex shrink-0 items-center gap-3">
-          <div
-            class="flex h-8 w-8 items-center justify-center rounded-md border border-operational-500/30 bg-operational-500/10"
-          >
-            <span class="font-mono text-sm font-bold text-operational-400"
-              >&gt;_</span
-            >
-          </div>
-          <span class="hidden font-mono text-sm font-medium text-slate-300 transition-colors group-hover:text-white sm:inline">
-            Javier Jiménez Molina
-          </span>
+  <body class="min-h-screen bg-slate-950 text-slate-100">
+    <a href="#main-content" class="sr-only rounded-md bg-emerald-300 px-4 py-2 text-slate-950 focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[100]">{lang === "es" ? "Saltar al contenido" : "Skip to content"}</a>
+    <header class="sticky top-0 z-50 border-b border-white/10 bg-slate-950/90 backdrop-blur-xl">
+      <nav class="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-3 px-5 sm:px-6" aria-label={lang === "es" ? "Navegación principal" : "Main navigation"}>
+        <a href={`${homePrefix}#hero`} class="flex shrink-0 items-center gap-2.5 rounded-md font-mono text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">
+          <span aria-hidden="true" class="flex h-8 w-8 items-center justify-center rounded-lg border border-emerald-400/30 bg-emerald-400/10 text-emerald-300">&gt;_</span>
+          <span class="hidden sm:inline">Javier Jiménez Molina</span>
+          <span class="sm:hidden">Javier J.</span>
         </a>
 
-        <div class="hidden items-center gap-1 lg:flex">
-          {
-            navLinks.map((link) => (
-              <a
-                href={link.href}
-                class="rounded-md px-3 py-2 font-mono text-xs text-slate-400 transition-all hover:bg-white/5 hover:text-white"
-              >
-                {link.label}
-              </a>
-            ))
-          }
-          {SHOW_SERVICES && (
-            <a
-              href={servicesHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="ml-2 inline-flex items-center gap-1 rounded-md border border-operational-500/45 bg-operational-500/12 px-3 py-2 font-mono text-xs font-semibold text-operational-300 transition-all hover:border-operational-300/80 hover:bg-operational-500/24 hover:text-operational-100"
-            >
-              {servicesLabel}
-              <span aria-hidden="true">↗</span>
-            </a>
-          )}
+        <div class="hidden shrink-0 items-center gap-1 2xl:flex">
+          {navLinks.map((link) => (
+            <a href={link.href} class="nav-link whitespace-nowrap rounded-md px-2.5 py-2 text-xs font-medium text-slate-300 focus-visible:outline-2 focus-visible:outline-cyan-300">{link.label}</a>
+          ))}
         </div>
 
-        <div class="flex items-center gap-3">
-          {SHOW_SERVICES && (
-            <a
-              href={servicesHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center gap-1 rounded-md border border-operational-500/45 bg-operational-500/12 px-2.5 py-1.5 font-mono text-[11px] font-semibold text-operational-300 transition-all hover:border-operational-300/80 hover:bg-operational-500/24 hover:text-operational-100 lg:hidden"
-            >
-              {servicesLabel}
-              <span aria-hidden="true">↗</span>
-            </a>
-          )}
-          <CommandMenu
-            client:load
-            lang={lang}
-            currentPath={currentPath}
-            email={email}
-            linkedin={linkedin}
-            servicesHref={servicesHref}
-            githubHref={githubHref}
-            showServices={SHOW_SERVICES}
-          />
-          <LanguagePicker currentLang={lang} pathname={currentPath} labels={labels.language} />
-
-          <div class="hidden items-center gap-2 sm:flex">
-            <div class="h-2 w-2 animate-pulse rounded-full bg-operational-400 shadow-[0_0_6px] shadow-operational-400/50">
+        <div class="flex shrink-0 items-center gap-2">
+          <CommandMenu client:load blogEnabled={BLOG_ENABLED} lang={lang} email={content.profile.email} linkedin={content.profile.linkedin} githubHref={content.profile.github} />
+          <LanguagePicker currentLang={lang} pathname={currentPath} />
+          <details class="relative 2xl:hidden" data-mobile-nav>
+            <summary class="flex h-9 w-9 cursor-pointer list-none items-center justify-center rounded-md border border-white/15 text-slate-200 marker:hidden hover:bg-white/5 focus-visible:outline-2 focus-visible:outline-cyan-300" aria-label={content.nav.menu}>
+              <span aria-hidden="true" class="font-mono text-lg leading-none">☰</span>
+            </summary>
+            <div class="absolute right-0 top-12 w-52 rounded-xl border border-white/15 bg-slate-900 p-2 shadow-2xl shadow-black/40">
+              {navLinks.map((link) => (
+                <a href={link.href} class="nav-link block rounded-md px-3 py-2.5 text-sm text-slate-200 focus-visible:outline-2 focus-visible:outline-cyan-300">{link.label}</a>
+              ))}
             </div>
-            <span class="font-mono text-xs text-operational-400">{labels.nav.online}</span>
-          </div>
+          </details>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </header>
 
-    <main class="flex-1 pt-20">
+    <main id="main-content">
+      {!isHome && (
+        <nav class="mx-auto max-w-6xl px-5 pt-6 sm:px-6 sm:pt-8" aria-label={lang === "es" ? "Volver a la web principal" : "Return to main site"}>
+          <a href={`/${lang}`} data-back-home class="signal-hover inline-flex min-h-11 items-center gap-2 rounded-lg border border-white/15 bg-slate-900/40 px-4 py-2 font-mono text-xs text-cyan-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">
+            <span aria-hidden="true">←</span>{lang === "es" ? "Volver al inicio" : "Back to home"}
+          </a>
+        </nav>
+      )}
       <slot />
     </main>
 
-    <footer class="border-t border-white/10 bg-slate-950/80 backdrop-blur-sm">
-      <div
-        class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-3"
-      >
-        <div class="flex items-center gap-6">
-          <div class="flex items-center gap-2">
-            <div class="h-1.5 w-1.5 rounded-full bg-operational-400"></div>
-            <span class="font-mono text-[11px] text-slate-500"
-              >{labels.footer.status}: <span class="text-operational-400">{labels.footer.online}</span></span
-            >
-          </div>
-          <div class="flex items-center gap-2">
-            <svg
-              class="h-3 w-3 text-slate-500"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                d="M6 3v12M18 9a3 3 0 1 0 0 6M6 15a3 3 0 1 0 0-6m12 6V3"
-              ></path>
-            </svg>
-            <span class="font-mono text-[11px] text-slate-500"
-              >{labels.footer.branch}: <span class="text-slate-400">{labels.footer.branchValue}</span></span
-            >
-          </div>
-          <div class="hidden items-center gap-2 sm:flex">
-            <svg
-              class="h-3 w-3 text-slate-500"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <circle cx="12" cy="12" r="10"></circle>
-              <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-            </svg>
-            <span class="font-mono text-[11px] text-slate-500"
-              >{labels.footer.region}: <span class="text-slate-400">{labels.footer.regionValue}</span></span
-            >
-          </div>
-        </div>
-
-        <span class="font-mono text-[11px] text-slate-600">
-          © {new Date().getFullYear()} Javier Jiménez Molina
-        </span>
+    <footer class="border-t border-white/10">
+      <div class="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-7 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <span>© {new Date().getFullYear()} {content.profile.name}</span>
+        <span class="font-mono">{content.footer}</span>
       </div>
     </footer>
 
+    <script>
+      const revealTargets = [...document.querySelectorAll<HTMLElement>("[data-reveal]")];
+      if (document.documentElement.classList.contains("motion-ready") && "IntersectionObserver" in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          });
+        }, { threshold: 0.08, rootMargin: "0px 0px -35px 0px" });
+        revealTargets.forEach((target) => observer.observe(target));
+      } else {
+        document.documentElement.classList.remove("motion-ready");
+      }
+
+      const mobileNav = document.querySelector<HTMLDetailsElement>("[data-mobile-nav]");
+      mobileNav?.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => {
+          mobileNav.open = false;
+        });
+      });
+    </script>
   </body>
 </html>

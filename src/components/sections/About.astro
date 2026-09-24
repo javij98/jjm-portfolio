@@ -1,0 +1,28 @@
+---
+import type { SiteContent } from "../../i18n/content";
+import SectionHeading from "./SectionHeading.astro";
+
+interface Props {
+  content: SiteContent["about"];
+}
+
+const { content } = Astro.props;
+---
+
+<div class="mx-auto max-w-6xl px-5 py-18 sm:px-6 sm:py-24">
+  <SectionHeading eyebrow={content.eyebrow} title={content.title} />
+  <div class="grid gap-10 lg:grid-cols-[minmax(0,1.5fr)_minmax(16rem,0.7fr)] lg:gap-20">
+    <div class="max-w-3xl space-y-5 text-lg leading-8 text-slate-300" data-reveal>
+      {content.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+    </div>
+    <aside class="border-l border-emerald-400/45 pl-6 sm:pl-8" data-reveal>
+      <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-emerald-300">{content.asideLabel}</p>
+      <h3 class="mt-3 text-xl font-semibold leading-snug text-white">{content.asideTitle}</h3>
+      <p class="mt-4 text-sm leading-7 text-slate-300">{content.asideText}</p>
+      <p class="mt-7 font-mono text-[11px] uppercase tracking-[0.18em] text-slate-400">{content.interestsLabel}</p>
+      <ul class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-sm text-cyan-200">
+        {content.interests.map((interest, index) => <li>{index > 0 && <span aria-hidden="true" class="mr-3 text-slate-500">/</span>}{interest}</li>)}
+      </ul>
+    </aside>
+  </div>
+</div>

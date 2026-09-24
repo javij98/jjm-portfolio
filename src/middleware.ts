@@ -1,5 +1,4 @@
 import { defineMiddleware } from "astro:middleware";
 
-export const onRequest = defineMiddleware((_context, next) => {
-  return next();
-});
+// Manual locale routing is handled by src/pages/[lang]/index.astro.
+export const onRequest = defineMiddleware((_context, next) => next());

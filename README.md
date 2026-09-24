@@ -1,43 +1,34 @@
-# Astro Starter Kit: Minimal
+# Portfolio de Javier Jiménez Molina
+
+Portfolio bilingüe de Javier, DevOps Engineer con experiencia en CI/CD, Kubernetes, contenedores, Linux y automatización. La web muestra su trayectoria profesional, los seis proyectos personales documentados y su dirección hacia Platform y Cloud Engineering.
+
+## Desarrollo local
 
 ```sh
-npm create astro@latest -- --template minimal
+npm ci
+npm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+La web está disponible en `/es` y `/en`, con catálogos completos en `/es/projects` y `/en/projects` y blog estático en `/es/blog` y `/en/blog`. La raíz dirige al idioma del navegador, con español como alternativa.
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```sh
+npm run build
+npm run preview
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+Para comprobar el contorno de hover en escritorio y móvil, instala Chromium para Playwright una vez con `npx playwright install chromium`, arranca `npm run dev` y ejecuta `npm run test:ui` en otra terminal.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## Estructura
 
-Any static assets, like images, can be placed in the `public/` directory.
+- `src/i18n/content.ts`: contenido y etiquetas en español e inglés.
+- `src/config/site.ts`: flags centrales (`BLOG_ENABLED`) y límite de proyectos de portada (`HOME_PROJECT_PREVIEW_LIMIT`).
+- `src/data/blog.ts`: entradas estáticas bilingües; punto de sustitución por una fuente dinámica futura.
+- `src/components/sections/`: secciones renderizadas con Astro, incluidas la galería filtrable, la franja animada de tecnologías y las vistas de blog.
+- `src/components/CommandMenu.tsx`: navegación rápida interactiva con React.
+- `src/layouts/Layout.astro`: navegación, pie y metadatos SEO compartidos.
+- `docs/PROFILE_CONTEXT.md` y `docs/WEBSITE_GOALS.md`: fuentes para la trayectoria y el posicionamiento profesional.
+- `AGENTS.md`: criterios de trabajo para futuras actualizaciones.
 
-## 🧞 Commands
+Para ocultar el blog, cambia `BLOG_ENABLED` a `false` en `src/config/site.ts` y reconstruye la web. Se eliminarán la sección de portada, los enlaces de navegación y paleta, las rutas generadas y sus entradas del sitemap.
 
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+No se deben añadir métricas, enlaces a proyectos o afirmaciones profesionales sin una fuente verificable. Cualquier cambio de contenido debe mantenerse en ambos idiomas.
