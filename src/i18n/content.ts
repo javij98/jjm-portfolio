@@ -59,6 +59,7 @@ export interface SiteContent {
     terminalTitle: string;
     terminalPrompt: string;
     terminalLines: string[];
+    terminalMobileLines: string[];
     projectsCta: string;
     contactCta: string;
   };
@@ -165,7 +166,7 @@ export const SITE_ES: SiteContent = {
   },
   hero: {
     eyebrow: "Ingeniería DevOps · Murcia, España",
-    mobileIntroduction: "Ingeniero DevOps en Murcia. Mejoro la entrega y operación de aplicaciones con CI/CD, Kubernetes y automatización.",
+    mobileIntroduction: "CI/CD, Kubernetes y automatización para entregar y operar software con confianza.",
     focus: "Mi foco",
     focusAreas: ["Kubernetes", "CI/CD", "Docker", "Linux", "Automatización"],
     terminalTitle: "perfil / enfoque actual",
@@ -174,6 +175,11 @@ export const SITE_ES: SiteContent = {
       "Construyo y mantengo pipelines de entrega con Jenkins.",
       "Trabajo en entornos Kubernetes y resolución de incidencias en producción.",
       "Desarrollo herramientas para auditar y optimizar recursos.",
+    ],
+    terminalMobileLines: [
+      "Pipelines de entrega con Jenkins.",
+      "Kubernetes y soporte en producción.",
+      "Audito y optimizo recursos.",
     ],
     projectsCta: "Ver proyectos",
     contactCta: "Contactar",
@@ -484,7 +490,7 @@ export const SITE_EN: SiteContent = {
   },
   hero: {
     eyebrow: "DevOps Engineering · Murcia, Spain",
-    mobileIntroduction: "DevOps Engineer in Murcia. I improve the delivery and operation of applications with CI/CD, Kubernetes and automation.",
+    mobileIntroduction: "CI/CD, Kubernetes and automation for reliable delivery and operations.",
     focus: "My focus",
     focusAreas: ["Kubernetes", "CI/CD", "Docker", "Linux", "Automation"],
     terminalTitle: "profile / current focus",
@@ -493,6 +499,11 @@ export const SITE_EN: SiteContent = {
       "I build and maintain delivery pipelines with Jenkins.",
       "I work with Kubernetes and troubleshoot production issues.",
       "I develop tools to audit and optimize resources.",
+    ],
+    terminalMobileLines: [
+      "Delivery pipelines with Jenkins.",
+      "Kubernetes and production support.",
+      "I audit and optimize resources.",
     ],
     projectsCta: "Explore projects",
     contactCta: "Get in touch",

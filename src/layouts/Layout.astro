@@ -96,7 +96,16 @@ const navLinks = [
       </nav>
     </header>
 
-    <main id="main-content"><slot /></main>
+    <main id="main-content">
+      {!isHome && (
+        <nav class="mx-auto max-w-6xl px-5 pt-6 sm:px-6 sm:pt-8" aria-label={lang === "es" ? "Volver a la web principal" : "Return to main site"}>
+          <a href={`/${lang}`} data-back-home class="signal-hover inline-flex min-h-11 items-center gap-2 rounded-lg border border-white/15 bg-slate-900/40 px-4 py-2 font-mono text-xs text-cyan-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">
+            <span aria-hidden="true">←</span>{lang === "es" ? "Volver al inicio" : "Back to home"}
+          </a>
+        </nav>
+      )}
+      <slot />
+    </main>
 
     <footer class="border-t border-white/10">
       <div class="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-7 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between sm:px-6">

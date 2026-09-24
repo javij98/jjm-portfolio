@@ -16,7 +16,7 @@ const categoryCount = (category: "all" | ProjectCategory) =>
   category === "all" ? content.items.length : content.items.filter((item) => item.category === category).length;
 ---
 
-<div class="mx-auto max-w-6xl px-5 py-18 sm:px-6 sm:py-24">
+<div class:list={["mx-auto max-w-6xl px-5 sm:px-6", full ? "pb-18 pt-8 sm:pb-24 sm:pt-10" : "py-18 sm:py-24"]}>
   <SectionHeading eyebrow={content.eyebrow} title={content.title} description={content.introduction} />
   {full && (
     <div class="gallery-filters mb-8 flex flex-wrap gap-2" data-project-filters hidden role="group" aria-label={content.filterLabel}>

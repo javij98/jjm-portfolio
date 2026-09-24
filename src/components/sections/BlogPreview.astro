@@ -9,7 +9,7 @@ const isEs = lang === "es";
 const posts = full ? BLOG_POSTS : BLOG_POSTS.slice(0, 2);
 ---
 
-<div class="mx-auto max-w-6xl px-5 py-18 sm:px-6 sm:py-24">
+<div class:list={["mx-auto max-w-6xl px-5 sm:px-6", full ? "pb-18 pt-8 sm:pb-24 sm:pt-10" : "py-18 sm:py-24"]}>
   <SectionHeading
     eyebrow={isEs ? "Notas de ingeniería" : "Engineering notes"}
     title="Blog"
