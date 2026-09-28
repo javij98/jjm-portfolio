@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Javier Jiménez Molina — J con entradas convergentes</title>
+  <path d="M11 18h34v19c0 10-6 16-16 16-8 0-14-4-17-11" stroke="#67e8f9" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M30 18V8" stroke="#34d399" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="30" cy="18" r="4" fill="#34d399"/>
+  <circle cx="30" cy="8" r="4" fill="#34d399"/>
+</svg>

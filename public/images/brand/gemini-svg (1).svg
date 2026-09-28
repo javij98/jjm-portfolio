@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <defs>
+    <linearGradient id="techPipe" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4776E6" />
+      <stop offset="100%" stop-color="#8E54E9" />
+    </linearGradient>
+  </defs>
+  
+  <!-- J Path geométrico -->
+  <path d="M 25 25 L 85 25 L 85 75 L 65 95 L 35 95 L 25 85" fill="none" stroke="url(#techPipe)" stroke-width="12" stroke-linejoin="miter"/>
+  
+  <!-- Integración lateral -->
+  <path d="M 85 50 L 105 50 L 110 45" fill="none" stroke="url(#techPipe)" stroke-width="8" stroke-linejoin="round"/>
+  
+  <!-- Nodos de entrada y salida -->
+  <circle cx="25" cy="25" r="8" fill="#4776E6"/>
+  <circle cx="25" cy="85" r="8" fill="#8E54E9"/>
+  <circle cx="110" cy="45" r="5" fill="#8E54E9"/>
+  
+  <!-- Articulaciones del pipeline -->
+  <circle cx="85" cy="25" r="4" fill="#ffffff"/>
+  <circle cx="85" cy="50" r="4" fill="#ffffff"/>
+  <circle cx="85" cy="75" r="4" fill="#ffffff"/>
+  <circle cx="65" cy="95" r="4" fill="#ffffff"/>
+</svg>

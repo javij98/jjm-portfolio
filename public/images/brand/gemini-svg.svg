@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <defs>
+    <linearGradient id="fluidPipe" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00C9FF" />
+      <stop offset="100%" stop-color="#92FE9D" />
+    </linearGradient>
+  </defs>
+  
+  <!-- J Path principal -->
+  <path d="M 30 30 L 80 30 L 80 80 A 25 25 0 0 1 30 80" fill="none" stroke="url(#fluidPipe)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Rama secundaria (Integración/Bifurcación) -->
+  <line x1="80" y1="55" x2="100" y2="55" stroke="#4BEEB0" stroke-width="10" stroke-linecap="round"/>
+  
+  <!-- Nodos de conexión -->
+  <circle cx="30" cy="30" r="7" fill="#00C9FF"/>
+  <circle cx="30" cy="80" r="7" fill="#92FE9D"/>
+  <circle cx="100" cy="55" r="5" fill="#92FE9D"/>
+  
+  <!-- Nodo de intersección -->
+  <circle cx="80" cy="55" r="4" fill="#ffffff" opacity="0.9"/>
+</svg>

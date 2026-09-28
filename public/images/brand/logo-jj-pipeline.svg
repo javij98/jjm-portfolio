@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Javier Jiménez Molina — monograma JJ en un pipeline continuo</title>
+  <defs>
+    <linearGradient id="pipeline" x1="7" y1="14" x2="55" y2="51" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#67e8f9"/>
+      <stop offset=".52" stop-color="#2dd4bf"/>
+      <stop offset="1" stop-color="#34d399"/>
+    </linearGradient>
+  </defs>
+  <path d="M7 14h21v23c0 9-5 14-13 14h23c10 0 17-5 17-14V14H35" stroke="url(#pipeline)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

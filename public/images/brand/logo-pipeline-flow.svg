@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Javier Jiménez Molina — J de flujo continuo</title>
+  <defs>
+    <linearGradient id="flow" x1="11" y1="14" x2="43" y2="54" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#67e8f9"/>
+      <stop offset="1" stop-color="#34d399"/>
+    </linearGradient>
+  </defs>
+  <path d="M11 15h35v21c0 11-6 18-17 18-9 0-15-5-18-13" stroke="#67e8f9" stroke-opacity=".25" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M11 15h35v21c0 11-6 18-17 18-9 0-15-5-18-13" stroke="url(#flow)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="11" cy="15" r="4" fill="#67e8f9"/>
+</svg>
