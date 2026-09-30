@@ -60,10 +60,10 @@ const categoryCount = (category: "all" | ProjectCategory) =>
     ))}
   </div>
   {projects.map((project, index) => (
-    <dialog id={`project-dialog-${index}`} class="project-dialog" data-project-dialog aria-labelledby={`project-dialog-title-${index}`} aria-describedby={`project-dialog-description-${index}`}>
+    <dialog id={`project-dialog-${index}`} class="project-dialog" data-project-dialog data-detail-dialog aria-labelledby={`project-dialog-title-${index}`} aria-describedby={`project-dialog-description-${index}`}>
       <div class="project-dialog-header">
         <span class="font-mono text-[11px] uppercase tracking-[0.16em] text-emerald-300">{project.kind}</span>
-        <button type="button" class="project-dialog-close" data-project-close aria-label={content.closeLabel}>
+        <button type="button" class="project-dialog-close" data-project-close data-detail-close aria-label={content.closeLabel}>
           <span aria-hidden="true">×</span><span>{content.closeLabel}</span>
         </button>
       </div>
@@ -99,25 +99,7 @@ const categoryCount = (category: "all" | ProjectCategory) =>
 </div>
 
 <script>
-  document.querySelectorAll<HTMLDialogElement>("[data-project-dialog]").forEach((dialog) => {
-    const opener = document.querySelector<HTMLButtonElement>(`[aria-controls="${dialog.id}"]`);
-    const closeButton = dialog.querySelector<HTMLButtonElement>("[data-project-close]");
-    opener?.addEventListener("click", () => {
-      const scrollbarWidth = Math.max(0, window.innerWidth - document.documentElement.clientWidth);
-      document.documentElement.style.setProperty("--project-dialog-scrollbar", `${scrollbarWidth}px`);
-      dialog.showModal();
-      document.documentElement.classList.add("project-dialog-open");
-      closeButton?.focus();
-    });
-    closeButton?.addEventListener("click", () => dialog.close());
-    dialog.addEventListener("click", (event) => {
-      if (event.target === dialog) dialog.close();
-    });
-    dialog.addEventListener("close", () => {
-      document.documentElement.classList.remove("project-dialog-open");
-      opener?.focus();
-    });
-  });
+  import "../../scripts/detail-dialogs";
 
   const filters = document.querySelector<HTMLElement>("[data-project-filters]");
   const buttons = [...(filters?.querySelectorAll<HTMLButtonElement>("[data-project-filter]") ?? [])];

@@ -1,0 +1,81 @@
+---
+import type { SiteContent } from "../../i18n/content";
+import { WORK_EXAMPLE_PREVIEW_LIMIT } from "../../config/site";
+import WorkExample from "./WorkExample.astro";
+import WorkExampleContent from "./WorkExampleContent.astro";
+
+interface Props {
+  content: SiteContent["experience"];
+}
+
+const { content } = Astro.props;
+const preview = content.examples.slice(0, WORK_EXAMPLE_PREVIEW_LIMIT);
+const remaining = content.examples.slice(WORK_EXAMPLE_PREVIEW_LIMIT);
+---
+
+<div class="mt-14 border-t border-white/10 pt-9" data-reveal>
+  <p class="font-mono text-xs uppercase tracking-[0.18em] text-emerald-300">{content.examplesEyebrow}</p>
+  <h3 class="mt-2 text-2xl font-semibold text-white">{content.examplesTitle}</h3>
+  <p class="mt-3 max-w-2xl leading-7 text-slate-300">{content.examplesIntroduction}</p>
+</div>
+<div class="mt-5" data-work-examples>
+  <div class="divide-y divide-white/10">
+    {preview.map((example, index) => <WorkExample example={example} index={index} labels={content.exampleLabels} />)}
+  </div>
+  {remaining.length > 0 && (
+    <div id="additional-work-examples" class="divide-y divide-white/10 border-t border-white/10" data-work-examples-more>
+      {remaining.map((example, index) => <WorkExample example={example} index={index + preview.length} labels={content.exampleLabels} />)}
+    </div>
+    <div class="border-t border-white/10 pt-6">
+      <button type="button" class="work-examples-toggle signal-hover flex min-h-11 w-fit cursor-pointer flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-cyan-300/40 px-5 py-3 text-sm font-semibold text-cyan-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300" data-work-examples-toggle hidden aria-expanded="false" aria-controls="additional-work-examples">
+        <span data-work-examples-label data-more-label={content.exampleLabels.showMore} data-less-label={content.exampleLabels.showLess}>{content.exampleLabels.showMore}</span>
+        <span class="font-mono text-xs font-normal text-slate-400" data-work-examples-count>+{remaining.length} {content.exampleLabels.remaining}</span>
+        <svg class="work-examples-chevron ml-1 h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+      </button>
+    </div>
+  )}
+</div>
+{content.examples.map((example, index) => (
+  <dialog id={`work-case-dialog-${index}`} class="project-dialog work-case-dialog" data-work-case-dialog data-detail-dialog aria-labelledby={`work-case-dialog-title-${index}`} aria-describedby={`work-case-dialog-description-${index}`}>
+    <div class="project-dialog-header">
+      <span class="font-mono text-[11px] uppercase tracking-[0.16em] text-emerald-300">{example.area}</span>
+      <button type="button" class="project-dialog-close" data-detail-close aria-label={content.exampleLabels.close}>
+        <span aria-hidden="true">×</span><span>{content.exampleLabels.close}</span>
+      </button>
+    </div>
+    <div class="project-dialog-content">
+      <h2 id={`work-case-dialog-title-${index}`} class="text-2xl font-bold tracking-tight text-white sm:text-3xl">{example.title}</h2>
+      <p id={`work-case-dialog-description-${index}`} class="mb-6 mt-4 leading-7 text-slate-200">{example.description}</p>
+      <WorkExampleContent example={example} labels={content.exampleLabels} />
+    </div>
+  </dialog>
+))}
+
+<script>
+  import "../../scripts/detail-dialogs";
+
+  document.querySelectorAll<HTMLElement>("[data-work-examples]").forEach((section) => {
+    const additional = section.querySelector<HTMLElement>("[data-work-examples-more]");
+    const toggle = section.querySelector<HTMLButtonElement>("[data-work-examples-toggle]");
+    const label = toggle?.querySelector<HTMLElement>("[data-work-examples-label]");
+    const count = toggle?.querySelector<HTMLElement>("[data-work-examples-count]");
+    if (!additional || !toggle || !label) return;
+
+    additional.hidden = true;
+    toggle.hidden = false;
+    toggle.addEventListener("click", (event) => {
+      const expanded = toggle.getAttribute("aria-expanded") !== "true";
+      additional.hidden = !expanded;
+      toggle.setAttribute("aria-expanded", String(expanded));
+      label.textContent = expanded ? label.dataset.lessLabel! : label.dataset.moreLabel!;
+      if (count) count.hidden = expanded;
+      if (event.detail > 0) toggle.blur();
+      if (!expanded) toggle.scrollIntoView({ block: "nearest", behavior: "instant" });
+    });
+  });
+</script>
+
+<style>
+  .work-examples-toggle[hidden], [data-work-examples-more][hidden] { display: none; }
+  .work-examples-toggle[aria-expanded="true"] .work-examples-chevron { transform: rotate(180deg); }
+</style>

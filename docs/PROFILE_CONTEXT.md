@@ -306,7 +306,17 @@ names, ticket identifiers, hostnames, secrets, private links or cluster details.
 - CI/CD configuration pre-validation: designed and debugged exact-commit
   classification in Jenkins Shared Libraries, with fail-closed behavior and local
   tests across several technology generators. One Jenkins run was observed. This
-  is not evidence of general rollout or quantified time savings.
+  is not evidence of general rollout or measured time savings. Javier subsequently
+  confirmed that this work skips builds for configuration-only changes such as
+  `values.yaml` and `application.properties`. Javier clarified that his typical
+  4–5 weekly changes were per developer and per microservice, with 10–15 minutes
+  per build. The environment covers approximately 10 projects with 10
+  microservices each. Counting one stream of 4–5 changes per microservice across
+  those approximately 100 services gives 4,000–7,500 build minutes (about 67–125
+  hours) potentially avoided per week, or 13–25 hours per working day over five
+  days. This is aggregate CI agent execution time across projects, excluding
+  deployments, not personal working hours or a measured production result.
+  Developer count is unknown and must not be used as an additional multiplier.
 - Helm OCI chart and telemetry: identified an invalid HPA specification during
   dry-run and prepared chart/telemetry changes locally. Do not claim the chart
   was published or deployed to production.
@@ -315,11 +325,30 @@ names, ticket identifiers, hostnames, secrets, private links or cluster details.
   improvement is documented.
 - Further work recorded in the private inventory includes webhook/API
   integrations, test coverage diagnosis and documentation. Only publish
-  additional examples after their status and confidentiality are checked.
+  additional inventory-derived examples after their status and confidentiality
+  are checked.
 
-These examples show engineering approach, not business metrics. The documented
-Capgemini deployment-time reduction of more than 80% comes from the original
-professional context above; do not attribute it to these examples.
+Additional anonymized work examples confirmed directly by Javier on 2026-09-30:
+
+- Developed a complete Python workflow using shared Jenkins pipelines and
+  Shared Libraries. Python is the application technology supported by the
+  workflow; the shared library uses Groovy.
+- Automated Bitbucket Pull Request alerts through Bitbucket webhooks to Jenkins,
+  followed by notifications to Slack, email and Microsoft Teams.
+- Resolved Jenkins build/deployment pipeline incidents and Docker container
+  incidents in Kubernetes.
+- Configured Grafana alerts for HTTP 500 errors with Prometheus as the metrics
+  source and notifications to Slack channels.
+
+These confirmations support publishing the work and its qualitative benefit,
+but do not establish additional adoption figures, response times or savings.
+The resource-auditing tooling and Capgemini CI/CD improvement described above
+can also be used as additional real cases without inventing achievements.
+
+The inventory-reviewed examples show engineering approach, not measured business
+metrics. The documented deployment-time reduction of more than 80% comes from
+the Capgemini experience above; attribute it only to that case, not to the
+configuration-only pipeline or other work examples.
 
 ## AI automation and harness engineering (developing)
 
