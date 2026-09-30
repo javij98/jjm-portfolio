@@ -39,6 +39,13 @@ filterable, non-scrolling gallery: MoneyFlow, Self-hosted Knowledge Platform,
 Print Studio, Hermes Agent, Personal Portfolio and Services Site. Work examples
 remain separate under experience, anonymized and with their actual status.
 
+Work examples use a compact list: title, a short description and a Details
+action. Full context, status, technologies and qualified impact figures appear
+in dialogs using the same style as personal project dialogs. Show four cases
+initially and expand the others in place, with the expansion control below the
+entire visible list. Pointer clicks should release the control's focus, while
+keyboard interaction keeps a visible focus indicator.
+
 Prioritize:
 
 1. MoneyFlow

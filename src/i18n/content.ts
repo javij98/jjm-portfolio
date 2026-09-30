@@ -30,6 +30,23 @@ export interface Experience {
   current?: boolean;
 }
 
+export interface WorkExample {
+  title: string;
+  description: string;
+  area: string;
+  status: string;
+  problem: string;
+  solution: string;
+  impact: string;
+  stack: string[];
+  metric?: {
+    value: string;
+    label: string;
+    note?: string;
+    kind: "documented" | "estimated";
+  };
+}
+
 export interface SiteContent {
   profile: {
     name: string;
@@ -98,7 +115,18 @@ export interface SiteContent {
     examplesEyebrow: string;
     examplesTitle: string;
     examplesIntroduction: string;
-    examples: { title: string; status: string; description: string }[];
+    exampleLabels: {
+      problem: string;
+      solution: string;
+      impact: string;
+      stack: string;
+      showMore: string;
+      showLess: string;
+      remaining: string;
+      details: string;
+      close: string;
+    };
+    examples: WorkExample[];
     items: Experience[];
   };
   skills: {
@@ -332,11 +360,121 @@ export const SITE_ES: SiteContent = {
     impactLabel: "Impacto acreditado",
     examplesEyebrow: "Del trabajo diario",
     examplesTitle: "Problemas concretos, soluciones contrastadas",
-    examplesIntroduction: "Tres ejemplos anonimizados de mi trabajo diario, con la fase alcanzada en cada uno.",
+    examplesIntroduction: "Casos reales de CI/CD, automatización y operación de plataformas: el problema, cómo lo abordé y qué aporta al equipo.",
+    exampleLabels: {
+      problem: "El reto",
+      solution: "Qué hice",
+      impact: "Qué aporta",
+      stack: "Tecnologías del caso",
+      showMore: "Ver más casos",
+      showLess: "Ver menos",
+      remaining: "casos más",
+      details: "Detalles",
+      close: "Cerrar",
+    },
     examples: [
-      { title: "Validación previa de CI/CD", status: "Desarrollo y prueba local", description: "Desarrollé una validación de cambios de configuración para pipelines Jenkins. Clasifica el commit exacto, falla de forma conservadora ante errores y se probó en generadores de varias tecnologías y en una ejecución Jenkins." },
-      { title: "Helm y telemetría", status: "Preparación y dry-run", description: "Durante un dry-run de un chart Helm OCI detecté una especificación HPA inválida. Preparé la corrección y una integración de telemetría para su validación local." },
-      { title: "Diagnóstico de memoria en Kubernetes", status: "Análisis y propuesta", description: "Analicé reinicios por falta de memoria relacionando límites y solicitudes de recursos con el comportamiento observado. Documenté una propuesta de ajuste." },
+      {
+        title: "Un workflow compartido para proyectos Python",
+        description: "Un flujo completo de construcción y despliegue para Python, reutilizable entre proyectos mediante Jenkins Shared Libraries.",
+        area: "CI/CD · Estandarización",
+        status: "Desarrollo de pipeline y Shared Library",
+        problem: "Incorporar Python al flujo de entrega compartido sin tener que crear y mantener un pipeline independiente para cada proyecto.",
+        solution: "Desarrollé un workflow completo para esta nueva tecnología sobre Jenkins Shared Libraries, concentrando la lógica reutilizable de construcción y despliegue en una base común.",
+        impact: "Un mismo punto de mantenimiento para los proyectos Python y un flujo de entrega coherente con el resto de tecnologías del equipo.",
+        stack: ["Jenkins", "Shared Libraries", "Groovy", "Python"],
+      },
+      {
+        title: "Cambios de configuración sin reconstruir la aplicación",
+        description: "Validación de cambios en values.yaml, application.properties y otros ficheros para evitar construcciones innecesarias en Jenkins.",
+        area: "CI/CD · Developer Experience",
+        status: "Desarrollo y validación",
+        problem: "Una modificación en values.yaml o application.properties disparaba una construcción completa aunque el código de la aplicación no hubiera cambiado.",
+        solution: "Desarrollé una validación previa en la Shared Library para clasificar los ficheros del commit exacto y omitir construcciones innecesarias. Ante errores, la clasificación falla de forma conservadora. La probé en generadores de varias tecnologías y en una ejecución Jenkins.",
+        impact: "Menos esperas para los desarrolladores al ajustar configuración y menos trabajo repetido en los agentes de Jenkins.",
+        stack: ["Jenkins", "Shared Libraries", "Git", "Helm"],
+        metric: {
+          value: "13–25 h / día",
+          label: "Ahorro potencial agregado · 67–125 h / semana",
+          note: "Estimación para unos 100 microservicios (10 proyectos × 10): 4–5 cambios semanales por microservicio × 10–15 min por construcción, distribuidos en 5 días laborables. Suma tiempo de ejecución de agentes CI entre proyectos, excluyendo despliegues.",
+          kind: "estimated",
+        },
+      },
+      {
+        title: "Pull Requests que llegan al equipo automáticamente",
+        description: "Webhooks de Bitbucket conectados a Jenkins para avisar de las revisiones pendientes en Slack, correo y Microsoft Teams.",
+        area: "Automatización · Colaboración",
+        status: "Integración desarrollada",
+        problem: "El equipo necesitaba enterarse de las Pull Requests sin depender de revisar Bitbucket manualmente o avisar por cada canal.",
+        solution: "Automaticé el flujo Bitbucket → webhook → Jenkins y las notificaciones posteriores al canal de Slack, por correo y a Microsoft Teams.",
+        impact: "Las solicitudes de revisión llegan a los canales de trabajo del equipo y se reduce la necesidad de perseguir avisos manuales.",
+        stack: ["Bitbucket", "Webhooks", "Jenkins", "Slack", "Email", "Microsoft Teams"],
+      },
+      {
+        title: "Del fallo en Jenkins al contenedor en Kubernetes",
+        description: "Resolución de incidencias de construcción, despliegue y ejecución de contenedores Docker en Kubernetes.",
+        area: "Operación · Resolución de incidencias",
+        status: "Resolución de incidencias",
+        problem: "Una entrega podía bloquearse durante la construcción, en el despliegue o al ejecutar el contenedor: cada fase requería un diagnóstico distinto.",
+        solution: "Resolví incidencias de construcción y despliegue en pipelines Jenkins y problemas de contenedores Docker en Kubernetes, siguiendo el fallo desde la ejecución del pipeline hasta el comportamiento de la aplicación.",
+        impact: "Recuperar el flujo de entrega y ayudar al equipo a localizar si el bloqueo está en CI/CD o en la ejecución del contenedor.",
+        stack: ["Jenkins", "Docker", "Kubernetes", "Linux"],
+      },
+      {
+        title: "Errores HTTP 500 con aviso directo a Slack",
+        description: "Alertas de Grafana con métricas de Prometheus para llevar los errores de servidor al canal de trabajo del equipo.",
+        area: "Observabilidad · Alertas",
+        status: "Alertas configuradas",
+        problem: "Los errores de servidor necesitaban una señal visible para el equipo, sin depender de que alguien estuviera mirando un dashboard.",
+        solution: "Configuré alertas de errores HTTP 500 en Grafana con Prometheus como fuente de métricas y notificaciones a los canales de Slack.",
+        impact: "Los errores se convierten en avisos operativos que el equipo puede investigar desde su canal habitual de trabajo.",
+        stack: ["Grafana", "Prometheus", "HTTP", "Slack"],
+      },
+      {
+        title: "Auditoría de recursos por microservicio",
+        description: "Scripts para revisar recursos en Kubernetes y fundamentar propuestas de optimización por microservicio.",
+        area: "Kubernetes · Automatización",
+        status: "Herramientas de auditoría desarrolladas",
+        problem: "Revisar recursos de Kubernetes de forma manual dificultaba tener una visión comparable de los microservicios y detectar dónde estudiar ajustes.",
+        solution: "Desarrollé scripts para auditar el uso de recursos por microservicio y apoyar el análisis de la configuración de los entornos Kubernetes.",
+        impact: "Una base repetible para fundamentar propuestas de optimización de recursos del clúster con datos del entorno.",
+        stack: ["Kubernetes", "Bash", "Linux"],
+      },
+      {
+        title: "Entregas más rápidas en Capgemini",
+        description: "Mejoras de CI/CD que redujeron los tiempos de despliegue en más de un 80 % durante mi evolución hacia DevOps.",
+        area: "CI/CD · Mejora continua",
+        status: "Resultado documentado",
+        problem: "El proceso de entrega necesitaba acortar el tiempo entre los cambios de desarrollo y su despliegue.",
+        solution: "Contribuí a mejorar CI/CD durante mi evolución de desarrollo de software hacia automatización y DevOps en Capgemini.",
+        impact: "Las mejoras redujeron los tiempos de despliegue en más de un 80 %, haciendo más ágil la entrega de aplicaciones.",
+        stack: ["CI/CD", "Automatización"],
+        metric: {
+          value: ">80 %",
+          label: "Reducción del tiempo de despliegue",
+          note: "Resultado documentado de la etapa en Capgemini.",
+          kind: "documented",
+        },
+      },
+      {
+        title: "Validación de un chart Helm y su telemetría",
+        description: "Detección de una configuración HPA inválida durante un dry-run y preparación de la corrección y la telemetría del chart.",
+        area: "Kubernetes · Helm",
+        status: "Preparación y dry-run",
+        problem: "Un chart Helm OCI contenía una especificación HPA inválida que apareció durante la validación previa al despliegue.",
+        solution: "Detecté el problema durante el dry-run y preparé la corrección del chart junto con una integración de telemetría para validación local.",
+        impact: "Detectar un problema de configuración antes de desplegar y dejar preparada su corrección. El caso llegó a preparación y validación local.",
+        stack: ["Helm", "Kubernetes", "OCI", "HPA"],
+      },
+      {
+        title: "Diagnóstico de reinicios por memoria en Kubernetes",
+        description: "Análisis de reinicios por falta de memoria y propuesta de ajuste de requests y limits a partir del comportamiento observado.",
+        area: "Kubernetes · Fiabilidad",
+        status: "Análisis y propuesta",
+        problem: "Los contenedores sufrían reinicios por falta de memoria y había que entender la relación entre el consumo observado y los recursos configurados.",
+        solution: "Analicé los reinicios relacionando requests y limits con el comportamiento de la aplicación y documenté una propuesta de ajuste.",
+        impact: "Un diagnóstico fundamentado para orientar el ajuste de memoria. No hay una mejora posterior medida en este caso.",
+        stack: ["Kubernetes", "Docker", "Requests / Limits"],
+      },
     ],
     items: [
       {
@@ -683,12 +821,122 @@ export const SITE_EN: SiteContent = {
     evolutionLabel: "Role progression",
     impactLabel: "Documented impact",
     examplesEyebrow: "Day-to-day engineering",
-    examplesTitle: "Concrete problems, evidence-led work",
-    examplesIntroduction: "Three anonymized examples from my day-to-day work, each with its stage of progress.",
+    examplesTitle: "Concrete problems, practical solutions",
+    examplesIntroduction: "Real cases from CI/CD, automation and platform operations: the problem, how I approached it and what it brings to the team.",
+    exampleLabels: {
+      problem: "The challenge",
+      solution: "What I did",
+      impact: "What it brings",
+      stack: "Case technologies",
+      showMore: "See more cases",
+      showLess: "See less",
+      remaining: "more cases",
+      details: "Details",
+      close: "Close",
+    },
     examples: [
-      { title: "CI/CD pre-validation", status: "Development and local testing", description: "I developed configuration-only change validation for Jenkins pipelines. It classifies the exact commit, fails closed on errors and was tested across several technology generators and in one Jenkins run." },
-      { title: "Helm and telemetry", status: "Preparation and dry-run", description: "During a Helm OCI chart dry-run, I found an invalid HPA specification. I prepared the fix and a telemetry integration for local validation." },
-      { title: "Kubernetes memory troubleshooting", status: "Analysis and proposal", description: "I analyzed out-of-memory restarts by relating resource requests and limits to observed behavior, then documented a proposed adjustment." },
+      {
+        title: "A shared workflow for Python projects",
+        description: "A complete Python build and deployment workflow, reusable across projects through Jenkins Shared Libraries.",
+        area: "CI/CD · Standardization",
+        status: "Pipeline and Shared Library development",
+        problem: "Bringing Python into the shared delivery flow without creating and maintaining a separate pipeline for every project.",
+        solution: "I developed a complete workflow for this new technology using Jenkins Shared Libraries, keeping reusable build and deployment logic in a common foundation.",
+        impact: "One maintenance point for Python projects and a delivery flow consistent with the team's other technologies.",
+        stack: ["Jenkins", "Shared Libraries", "Groovy", "Python"],
+      },
+      {
+        title: "Configuration changes without rebuilding the application",
+        description: "Validation of changes to values.yaml, application.properties and other configuration files to avoid unnecessary Jenkins builds.",
+        area: "CI/CD · Developer Experience",
+        status: "Development and validation",
+        problem: "A change to values.yaml or application.properties triggered a full build even when the application code had not changed.",
+        solution: "I developed pre-validation in the Shared Library to classify files in the exact commit and skip unnecessary builds. Classification fails closed on errors. I tested it across several technology generators and in one Jenkins run.",
+        impact: "Less waiting for developers when adjusting configuration and less repeated work on Jenkins agents.",
+        stack: ["Jenkins", "Shared Libraries", "Git", "Helm"],
+        metric: {
+          value: "13–25 h / day",
+          label: "Potential aggregate savings · 67–125 h / week",
+          note: "Estimate for around 100 microservices (10 projects × 10): 4–5 weekly changes per microservice × 10–15 min per build, spread across 5 working days. This adds up CI agent execution time across projects, excluding deployments.",
+          kind: "estimated",
+        },
+      },
+      {
+        title: "Pull Requests that reach the team automatically",
+        description: "Bitbucket webhooks connected to Jenkins to notify reviewers through Slack, email and Microsoft Teams.",
+        area: "Automation · Collaboration",
+        status: "Integration developed",
+        problem: "The team needed to hear about Pull Requests without manually checking Bitbucket or sending a separate message to every channel.",
+        solution: "I automated the Bitbucket → webhook → Jenkins flow and the subsequent notifications to the Slack channel, email and Microsoft Teams.",
+        impact: "Review requests reach the team's working channels, reducing the need to chase manual notifications.",
+        stack: ["Bitbucket", "Webhooks", "Jenkins", "Slack", "Email", "Microsoft Teams"],
+      },
+      {
+        title: "From a Jenkins failure to a container in Kubernetes",
+        description: "Troubleshooting build, deployment and Docker container execution issues in Kubernetes.",
+        area: "Operations · Troubleshooting",
+        status: "Incident resolution",
+        problem: "Delivery could stall during the build, deployment or container execution: each stage needed a different diagnosis.",
+        solution: "I resolved build and deployment failures in Jenkins pipelines and Docker container issues in Kubernetes, following the failure from the pipeline run to the application's behavior.",
+        impact: "Restoring the delivery flow and helping the team identify whether a blockage comes from CI/CD or container execution.",
+        stack: ["Jenkins", "Docker", "Kubernetes", "Linux"],
+      },
+      {
+        title: "HTTP 500 errors with direct Slack notifications",
+        description: "Grafana alerts backed by Prometheus metrics to bring server errors into the team's working channel.",
+        area: "Observability · Alerting",
+        status: "Alerts configured",
+        problem: "Server errors needed a visible signal for the team without relying on someone watching a dashboard.",
+        solution: "I configured Grafana alerts for HTTP 500 errors using Prometheus metrics and notifications to Slack channels.",
+        impact: "Errors become operational notifications that the team can investigate from its usual working channel.",
+        stack: ["Grafana", "Prometheus", "HTTP", "Slack"],
+      },
+      {
+        title: "Resource auditing by microservice",
+        description: "Scripts to review Kubernetes resources and inform optimization proposals for each microservice.",
+        area: "Kubernetes · Automation",
+        status: "Audit tooling developed",
+        problem: "Manual Kubernetes resource reviews made it harder to compare microservices and identify where to investigate adjustments.",
+        solution: "I developed scripts to audit resource usage by microservice and support configuration analysis in Kubernetes environments.",
+        impact: "A repeatable basis for resource optimization proposals grounded in data from the cluster.",
+        stack: ["Kubernetes", "Bash", "Linux"],
+      },
+      {
+        title: "Faster delivery at Capgemini",
+        description: "CI/CD improvements that reduced deployment times by more than 80% during my transition toward DevOps.",
+        area: "CI/CD · Continuous improvement",
+        status: "Documented result",
+        problem: "The delivery process needed to shorten the time between development changes and deployment.",
+        solution: "I contributed to CI/CD improvements while moving from software development toward automation and DevOps at Capgemini.",
+        impact: "The improvements reduced deployment times by more than 80%, making application delivery faster.",
+        stack: ["CI/CD", "Automation"],
+        metric: {
+          value: ">80%",
+          label: "Reduction in deployment time",
+          note: "Documented result from my time at Capgemini.",
+          kind: "documented",
+        },
+      },
+      {
+        title: "Validating a Helm chart and its telemetry",
+        description: "Finding an invalid HPA configuration during a dry-run and preparing the chart fix and telemetry integration.",
+        area: "Kubernetes · Helm",
+        status: "Preparation and dry-run",
+        problem: "A Helm OCI chart contained an invalid HPA specification that surfaced during pre-deployment validation.",
+        solution: "I found the issue during a dry-run and prepared the chart fix alongside a telemetry integration for local validation.",
+        impact: "Identifying a configuration problem before deployment and preparing its fix. This case reached preparation and local validation.",
+        stack: ["Helm", "Kubernetes", "OCI", "HPA"],
+      },
+      {
+        title: "Diagnosing memory-related restarts in Kubernetes",
+        description: "Analysis of out-of-memory restarts and proposed requests and limits adjustments based on observed behavior.",
+        area: "Kubernetes · Reliability",
+        status: "Analysis and proposal",
+        problem: "Containers were restarting due to insufficient memory, requiring an understanding of observed usage relative to configured resources.",
+        solution: "I analyzed restarts by relating requests and limits to application behavior and documented a proposed adjustment.",
+        impact: "An evidence-based diagnosis to guide memory adjustments. No measured post-change improvement is recorded for this case.",
+        stack: ["Kubernetes", "Docker", "Requests / Limits"],
+      },
     ],
     items: [
       {
