@@ -1,5 +1,6 @@
 ---
 const fallbackLocalePath = "/es";
+const baseUrl = Astro.site ?? new URL("https://javier-jimenez-molina.vercel.app");
 ---
 
 <!doctype html>
@@ -9,6 +10,8 @@ const fallbackLocalePath = "/es";
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv="refresh" content={`0;url=${fallbackLocalePath}`} />
     <link rel="canonical" href="https://javier-jimenez-molina.vercel.app/es" />
+    <link rel="alternate" type="text/markdown" href={new URL("/es/index.md", baseUrl).href} />
+    <link rel="describedby" type="text/plain" href={new URL("/llms.txt", baseUrl).href} />
     <title>Javier Jiménez Molina | DevOps Engineer</title>
     <script is:inline>
       const browserLang = (navigator.language || "es").toLowerCase();
