@@ -12,7 +12,7 @@ const esHref = `/es${suffix}`;
 const enHref = `/en${suffix}`;
 ---
 
-<div class="inline-flex h-9 items-center gap-1 rounded-md border border-white/15 bg-slate-900/60 px-2 font-mono text-xs" aria-label={currentLang === "es" ? "Idioma" : "Language"}>
+<div data-language-picker class="inline-flex h-9 w-20 shrink-0 items-center justify-center gap-1 rounded-md border border-white/15 bg-slate-900/60 px-2 font-mono text-xs" aria-label={currentLang === "es" ? "Idioma" : "Language"}>
   <a href={esHref} lang="es" aria-current={currentLang === "es" ? "page" : undefined} class:list={["rounded px-1 py-1 focus-visible:outline-2 focus-visible:outline-cyan-300", currentLang === "es" ? "text-cyan-200" : "text-slate-400 hover:text-white"]}>ES</a>
   <span aria-hidden="true" class="text-slate-600">/</span>
   <a href={enHref} lang="en" aria-current={currentLang === "en" ? "page" : undefined} class:list={["rounded px-1 py-1 focus-visible:outline-2 focus-visible:outline-cyan-300", currentLang === "en" ? "text-cyan-200" : "text-slate-400 hover:text-white"]}>EN</a>

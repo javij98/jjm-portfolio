@@ -240,7 +240,7 @@ Technologies:
 - Vercel
 
 Website:
-https://javier-jimenez-molina.vercel.app
+https://javierjimenez.dev
 
 ---
 

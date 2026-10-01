@@ -1,0 +1,72 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { LOCALES, SITE_BY_LANG, isLocale } from "../../i18n/content";
+import { portfolioMarkdown } from "../../lib/markdown";
+import { SITE_URL } from "../../config/url.mjs";
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang ?? "es";
+if (!isLocale(lang)) throw new Error(`Unsupported locale: ${lang}`);
+const content = SITE_BY_LANG[lang];
+const markdown = portfolioMarkdown(lang, Astro.site ?? new URL(SITE_URL));
+const labels = lang === "es" ? {
+  description: "Toda la web en un único documento Markdown. Listo para leer, copiar o compartir con una IA.",
+  copy: "Copiar Markdown", copied: "Markdown copiado", error: "No se pudo copiar. Puedes seleccionar el texto o descargar el archivo.",
+  raw: "Markdown sin formato", download: "Descargar .md", document: "Portfolio completo en Markdown",
+} : {
+  description: "The whole website in a single Markdown document. Ready to read, copy or share with an AI.",
+  copy: "Copy Markdown", copied: "Markdown copied", error: "Could not copy. You can select the text or download the file.",
+  raw: "Raw Markdown", download: "Download .md", document: "Complete Markdown portfolio",
+};
+---
+
+<Layout lang={lang} content={content} currentPath={Astro.url.pathname} pageTitle="LLM mode" pageDescription={labels.description} mode="llm">
+  <section class="mx-auto max-w-5xl px-5 py-10 sm:px-6 sm:py-14" aria-labelledby="llm-heading">
+    <div class="mb-8 flex flex-col gap-5 border-b border-white/10 pb-7">
+      <div>
+        <h1 id="llm-heading" class="font-mono text-xl font-semibold text-cyan-100 sm:text-2xl">LLM mode <span class="font-normal text-slate-500">/ {lang}/index.md</span></h1>
+        <p class="mt-3 max-w-2xl text-sm leading-7 text-slate-400">{labels.description}</p>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <button type="button" hidden data-copy-markdown data-copy-label={labels.copy} data-copied-label={labels.copied} data-copy-error={labels.error} class="signal-hover inline-flex min-h-11 items-center rounded-md border border-cyan-300/25 bg-cyan-300/5 px-4 py-2 font-mono text-xs text-cyan-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">{labels.copy}</button>
+        <a href={`/${lang}/index.md`} class="signal-hover inline-flex min-h-11 items-center rounded-md border border-white/15 px-4 py-2 font-mono text-xs text-slate-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">{labels.raw}</a>
+        <a href={`/${lang}/index.md`} download={`javier-jimenez-molina-${lang}.md`} class="signal-hover inline-flex min-h-11 items-center rounded-md border border-white/15 px-4 py-2 font-mono text-xs text-slate-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">{labels.download}</a>
+      </div>
+      <p data-copy-status role="status" class="text-xs text-slate-400 empty:hidden"></p>
+    </div>
+    <pre data-markdown-content aria-label={labels.document} class="whitespace-pre-wrap break-words font-mono text-[13px] leading-7 text-slate-300 sm:text-sm">{markdown}</pre>
+  </section>
+</Layout>
+
+<style>
+  [data-copy-markdown][hidden] { display: none; }
+  [data-markdown-content] { overflow-wrap: anywhere; }
+</style>
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>("[data-copy-markdown]");
+  const status = document.querySelector<HTMLElement>("[data-copy-status]");
+  const markdown = document.querySelector<HTMLElement>("[data-markdown-content]");
+  if (button && status && markdown && navigator.clipboard?.writeText) {
+    button.hidden = false;
+    let reset: ReturnType<typeof setTimeout>;
+    button.addEventListener("click", async (event) => {
+      if (event.detail > 0) button.blur();
+      clearTimeout(reset);
+      try {
+        await navigator.clipboard.writeText(markdown.textContent ?? "");
+        status.textContent = button.dataset.copiedLabel ?? "";
+        button.textContent = button.dataset.copiedLabel ?? "";
+      } catch {
+        status.textContent = button.dataset.copyError ?? "";
+      }
+      reset = setTimeout(() => {
+        button.textContent = button.dataset.copyLabel ?? "";
+        status.textContent = "";
+      }, 3000);
+    });
+  }
+</script>

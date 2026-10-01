@@ -8,9 +8,9 @@
 }
 
 :root { color-scheme: dark; }
-html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+html { scroll-behavior: smooth; scrollbar-gutter: stable; -webkit-font-smoothing: antialiased; }
 body {
-  min-width: 320px;
+  min-width: 0;
   font-family: var(--font-sans);
   background-color: #080f1c;
   background-image: radial-gradient(ellipse 70% 26% at 55% 0%, rgba(6, 182, 212, 0.08), transparent);
@@ -112,7 +112,10 @@ html.motion-ready [data-reveal] {
   opacity: .65;
 }
 .gallery-body { display: flex; flex: 1; flex-direction: column; padding: 1.5rem; }
-html.project-dialog-open { overflow: hidden; padding-right: var(--project-dialog-scrollbar, 0px); }
+html.project-dialog-open { overflow: hidden; }
+@supports not (scrollbar-gutter: stable) {
+  html.project-dialog-open { padding-right: var(--project-dialog-scrollbar, 0px); }
+}
 .project-dialog {
   width: min(47rem, calc(100vw - 1.5rem));
   max-width: none;
@@ -236,6 +239,7 @@ html.project-dialog-open { overflow: hidden; padding-right: var(--project-dialog
   box-shadow: inset 0 0 0 1px rgba(103,232,249,.52), 0 12px 32px rgba(6,182,212,.13), 0 0 22px rgba(52,211,153,.09);
 }
 .signal-hover:is(:hover, :focus-visible, :focus-within)::after { transform: scaleX(1); }
+.signal-hover:is(:hover, :focus-visible, :focus-within) h2,
 .signal-hover:is(:hover, :focus-visible, :focus-within) h3,
 .signal-hover:is(:hover, :focus-visible, :focus-within) h4 { color: #a5f3fc; }
 

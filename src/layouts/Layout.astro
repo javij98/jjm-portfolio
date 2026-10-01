@@ -1,9 +1,12 @@
 ---
 import "../styles/global.css";
 import LanguagePicker from "../components/LanguagePicker.astro";
+import ModePicker from "../components/ModePicker.astro";
 import CommandMenu from "../components/CommandMenu";
 import type { Locale, SiteContent } from "../i18n/content";
 import { BLOG_ENABLED } from "../config/site";
+import { markdownPath } from "../lib/markdown";
+import { SITE_URL } from "../config/url.mjs";
 
 interface Props {
   lang: Locale;
@@ -12,18 +15,22 @@ interface Props {
   pageTitle?: string;
   pageDescription?: string;
   article?: boolean;
+  mode?: "human" | "llm";
 }
 
-const { lang, content, currentPath, pageTitle, pageDescription, article = false } = Astro.props;
+const { lang, content, currentPath, pageTitle, pageDescription, article = false, mode = "human" } = Astro.props;
+const isLlm = mode === "llm";
 const title = pageTitle ? `${pageTitle} | ${content.profile.name}` : `${content.profile.name} | ${content.profile.role}`;
 const description = pageDescription ?? content.profile.introduction;
-const baseUrl = Astro.site ?? new URL("https://javier-jimenez-molina.vercel.app");
-const pathSuffix = currentPath.replace(new RegExp(`^/${lang}(?=/|$)`), "") || "";
-const isHome = pathSuffix === "" || pathSuffix === "/";
+const baseUrl = Astro.site ?? new URL(SITE_URL);
+const normalizedPath = currentPath.replace(/\/+$/, "") || "/";
+const pathSuffix = normalizedPath.replace(new RegExp(`^/${lang}(?=/|$)`), "") || "";
+const isHome = pathSuffix === "";
 const homePrefix = isHome ? "" : `/${lang}`;
-const canonical = new URL(currentPath, baseUrl).toString();
-const spanishUrl = new URL(`/es${pathSuffix}`, baseUrl).toString();
-const englishUrl = new URL(`/en${pathSuffix}`, baseUrl).toString();
+const canonical = new URL(isLlm ? `/${lang}` : normalizedPath, baseUrl).toString();
+const alternateSuffix = isLlm ? "" : pathSuffix;
+const spanishUrl = new URL(`/es${alternateSuffix}`, baseUrl).toString();
+const englishUrl = new URL(`/en${alternateSuffix}`, baseUrl).toString();
 const navLinks = [
   { label: content.nav.home, href: `${homePrefix}#hero` },
   { label: content.nav.about, href: `${homePrefix}#about` },
@@ -37,7 +44,7 @@ const navLinks = [
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={lang} data-reading-mode={mode}>
   <head>
     <meta charset="UTF-8" />
     <script is:inline>if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("motion-ready");</script>
@@ -49,6 +56,8 @@ const navLinks = [
     <link rel="alternate" hreflang="es" href={spanishUrl} />
     <link rel="alternate" hreflang="en" href={englishUrl} />
     <link rel="alternate" hreflang="x-default" href={spanishUrl} />
+    <link rel="alternate" type="text/markdown" href={new URL(markdownPath(currentPath, lang), baseUrl).href} title={lang === "es" ? "Contenido en Markdown" : "Markdown content"} />
+    <link rel="describedby" type="text/plain" href={new URL("/llms.txt", baseUrl).href} title="llms.txt" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <meta property="og:type" content={article ? "article" : "website"} />
@@ -66,11 +75,11 @@ const navLinks = [
   <body class="min-h-screen bg-slate-950 text-slate-100">
     <a href="#main-content" class="sr-only rounded-md bg-emerald-300 px-4 py-2 text-slate-950 focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[100]">{lang === "es" ? "Saltar al contenido" : "Skip to content"}</a>
     <header class="sticky top-0 z-50 border-b border-white/10 bg-slate-950/90 backdrop-blur-xl">
-      <nav class="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-3 px-5 sm:px-6" aria-label={lang === "es" ? "Navegación principal" : "Main navigation"}>
-        <a href={`${homePrefix}#hero`} class="flex shrink-0 items-center gap-2.5 rounded-md font-mono text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">
+      <nav class="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-2 px-2.5 min-[375px]:px-3 sm:gap-3 sm:px-6" aria-label={lang === "es" ? "Navegación principal" : "Main navigation"}>
+        <a href={`${homePrefix}#hero`} aria-label={content.profile.name} class="flex shrink-0 items-center gap-2.5 rounded-md font-mono text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">
           <img src="/favicon.svg" alt="" width="36" height="36" class="h-9 w-9" aria-hidden="true" />
-          <span class="hidden sm:inline">Javier Jiménez Molina</span>
-          <span class="sm:hidden">Javier J.</span>
+          <span class="hidden md:inline">Javier Jiménez Molina</span>
+          <span class="hidden sm:inline md:hidden">Javier J.</span>
         </a>
 
         <div class="hidden shrink-0 items-center gap-1 2xl:flex">
@@ -79,8 +88,9 @@ const navLinks = [
           ))}
         </div>
 
-        <div class="flex shrink-0 items-center gap-2">
-          <CommandMenu client:load blogEnabled={BLOG_ENABLED} lang={lang} email={content.profile.email} linkedin={content.profile.linkedin} githubHref={content.profile.github} />
+        <div class="flex shrink-0 items-center gap-1.5 sm:gap-2">
+          <div class="hidden min-[375px]:block"><CommandMenu client:load blogEnabled={BLOG_ENABLED} lang={lang} email={content.profile.email} linkedin={content.profile.linkedin} githubHref={content.profile.github} /></div>
+          <ModePicker lang={lang} mode={mode} />
           <LanguagePicker currentLang={lang} pathname={currentPath} />
           <details class="relative 2xl:hidden" data-mobile-nav>
             <summary class="flex h-9 w-9 cursor-pointer list-none items-center justify-center rounded-md border border-white/15 text-slate-200 marker:hidden hover:bg-white/5 focus-visible:outline-2 focus-visible:outline-cyan-300" aria-label={content.nav.menu}>
@@ -97,7 +107,7 @@ const navLinks = [
     </header>
 
     <main id="main-content">
-      {!isHome && (
+      {!isHome && !isLlm && (
         <nav class="mx-auto max-w-6xl px-5 pt-6 sm:px-6 sm:pt-8" aria-label={lang === "es" ? "Volver a la web principal" : "Return to main site"}>
           <a href={`/${lang}`} data-back-home class="signal-hover inline-flex min-h-11 items-center gap-2 rounded-lg border border-white/15 bg-slate-900/40 px-4 py-2 font-mono text-xs text-cyan-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">
             <span aria-hidden="true">←</span>{lang === "es" ? "Volver al inicio" : "Back to home"}
@@ -107,12 +117,12 @@ const navLinks = [
       <slot />
     </main>
 
-    <footer class="border-t border-white/10">
+    {!isLlm && <footer class="border-t border-white/10">
       <div class="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-7 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <span>© {new Date().getFullYear()} {content.profile.name}</span>
         <span class="font-mono">{content.footer}</span>
       </div>
-    </footer>
+    </footer>}
 
     <script>
       const revealTargets = [...document.querySelectorAll<HTMLElement>("[data-reveal]")];

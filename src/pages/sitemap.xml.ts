@@ -1,9 +1,10 @@
 import type { APIRoute } from "astro";
 import { BLOG_ENABLED } from "../config/site";
 import { BLOG_POSTS } from "../data/blog";
+import { SITE_URL } from "../config/url.mjs";
 
 export const GET: APIRoute = ({ site }) => {
-  const base = site ?? new URL("https://javier-jimenez-molina.vercel.app");
+  const base = site ?? new URL(SITE_URL);
   const paths = ["es", "en"].flatMap((lang) => [
     `/${lang}`,
     `/${lang}/projects`,

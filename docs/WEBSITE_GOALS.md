@@ -102,3 +102,21 @@ Avoid:
 - Generic AI-generated marketing text
 - Overclaiming expertise
 - Very long paragraphs
+
+## Human and LLM reading modes
+
+Offer a Human / LLM selector next to ES / EN using the same restrained style.
+Both labels and the surrounding header controls retain their size and position
+across modes and languages. Reserve the scrollbar gutter to avoid shifts on
+pages of different lengths.
+The LLM view presents the entire published portfolio as plain Markdown in both
+languages, including all projects, complete work examples, skill levels and
+articles. Preserve case status and all qualifications on impact figures.
+
+Generate the exports from the same public content as the visual site. Provide
+static Markdown files and a public llms.txt index that work without JavaScript.
+Keep the language when switching modes, and allow copying or downloading the
+complete document. Avoid claims that these formats guarantee AI discovery.
+
+The canonical public domain is https://javierjimenez.dev. Share its configuration
+across metadata, sitemap, robots.txt and Markdown exports.
