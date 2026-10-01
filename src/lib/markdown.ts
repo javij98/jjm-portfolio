@@ -42,7 +42,7 @@ function document(parts: string[]): string {
   return `${parts.filter(Boolean).join("\n\n")}\n`;
 }
 
-function projects(content: SiteContent): string[] {
+function projects(content: SiteContent, lang: Locale): string[] {
   return [
     heading(2, content.projects.title),
     inline(content.projects.introduction),
@@ -51,7 +51,7 @@ function projects(content: SiteContent): string[] {
       inline(project.kind),
       inline(project.description),
       ...project.detailParagraphs.map(inline),
-      field(content.projects.filterLabel, content.projects.filters[project.category]),
+      field(labels[lang].category, content.projects.filters[project.category]),
       heading(4, content.projects.highlightLabel),
       list(project.highlights),
       field(content.projects.stackLabel, project.stack.join(", ")),
@@ -127,7 +127,7 @@ export function portfolioMarkdown(lang: Locale, site: URL): string {
       ] : []),
       field(experience.exampleLabels.stack, example.stack.join(", ")),
     ]),
-    ...projects(content),
+    ...projects(content, lang),
     heading(2, skills.title),
     inline(skills.introduction),
     ...skills.categories.flatMap((category) => [
@@ -174,7 +174,7 @@ export function routeMarkdown(route: MarkdownRoute, site: URL): string {
       heading(1, `${content.profile.name} — ${content.nav.projects}`),
       link(labels[route.lang].website, `/${route.lang}/projects`, site),
       link(labels[route.lang].markdown, `/${route.lang}/index.md`, site),
-      ...projects(content),
+      ...projects(content, route.lang),
     ]);
   }
   if (route.kind === "blog") {

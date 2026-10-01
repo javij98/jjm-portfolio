@@ -11,6 +11,7 @@ interface Props {
 
 const { content, lang, full = false } = Astro.props;
 const projects = full ? content.items : content.items.slice(0, HOME_PROJECT_PREVIEW_LIMIT);
+const ProjectHeading = full ? "h2" : "h3";
 const categories: ("all" | ProjectCategory)[] = ["all", "product", "platform", "automation", "web"];
 const coverByVisual: Record<string, string> = {
   MF: "/images/projects/moneyflow.svg",
@@ -25,7 +26,7 @@ const categoryCount = (category: "all" | ProjectCategory) =>
 ---
 
 <div class:list={["mx-auto max-w-6xl px-5 sm:px-6", full ? "pb-18 pt-8 sm:pb-24 sm:pt-10" : "py-18 sm:py-24"]}>
-  <SectionHeading eyebrow={content.eyebrow} title={content.title} description={content.introduction} />
+  <SectionHeading tag={full ? "h1" : "h2"} eyebrow={content.eyebrow} title={content.title} description={content.introduction} />
   {full && (
     <div class="gallery-filters mb-8 flex flex-wrap gap-2" data-project-filters hidden role="group" aria-label={content.filterLabel}>
       {categories.map((category) => (
@@ -47,7 +48,7 @@ const categoryCount = (category: "all" | ProjectCategory) =>
         </div>
         <div class="gallery-body">
           <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-emerald-300">{project.kind}</p>
-          <h3 class="mt-3 text-xl font-semibold tracking-tight text-white">{project.name}</h3>
+          <ProjectHeading class="mt-3 text-xl font-semibold tracking-tight text-white">{project.name}</ProjectHeading>
           <p class="mt-3 text-sm leading-6 text-slate-300">{project.description}</p>
           <button type="button" class="project-details-trigger mt-4 inline-flex min-h-11 items-center self-start font-mono text-xs text-cyan-200 underline-offset-4 hover:text-cyan-100 hover:underline focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300" data-project-open aria-haspopup="dialog" aria-controls={`project-dialog-${index}`}>
             {content.detailsLabel}<span aria-hidden="true" class="ml-1">↗</span>

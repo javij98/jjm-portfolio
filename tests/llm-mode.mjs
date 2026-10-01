@@ -96,9 +96,14 @@ test("both reading modes fit mobile and desktop screens in ES and EN", async () 
     for (const lang of ["es", "en"]) {
       for (const suffix of ["", "/llm"]) {
         await page.goto(`${baseUrl}/${lang}${suffix}`);
+        await page.evaluate(() => document.fonts.ready);
         for (const width of [320, 375, 640, 768, 1024, 1280, 1536, 1920]) {
           await page.setViewportSize({ width, height: 900 });
-          // Let the browser repaint after resizing; scrollWidth can otherwise reflect the previous viewport.
+          // Let viewport media queries and layout finish updating before checking overflow.
+          await page.waitForFunction(({ padding, gap }) => {
+            const style = getComputedStyle(document.querySelector("header nav"));
+            return Number.parseFloat(style.paddingLeft) === padding && Number.parseFloat(style.columnGap) === gap;
+          }, { padding: width < 375 ? 10 : width < 640 ? 12 : 24, gap: width < 640 ? 8 : 12 });
           await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
           const size = await page.evaluate(() => {
             const header = document.querySelector("header nav");

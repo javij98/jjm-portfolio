@@ -2,6 +2,9 @@
 
 Portfolio bilingüe de Javier, DevOps Engineer con experiencia en CI/CD, Kubernetes, contenedores, Linux y automatización. La web muestra su trayectoria profesional, los seis proyectos personales documentados y su dirección hacia Platform y Cloud Engineering.
 
+Dominio oficial: [javierjimenez.dev](https://javierjimenez.dev). El origen canónico
+se define una sola vez en `src/config/url.mjs` para Astro, metadatos y exportaciones.
+
 ## Desarrollo local
 
 ```sh
@@ -22,6 +25,7 @@ Para comprobar el contorno de hover en escritorio y móvil, instala Chromium par
 
 - `src/i18n/content.ts`: contenido y etiquetas en español e inglés.
 - `src/config/site.ts`: flags centrales (`BLOG_ENABLED`) y límite de proyectos de portada (`HOME_PROJECT_PREVIEW_LIMIT`).
+- `src/config/url.mjs`: dominio oficial compartido por la configuración y las rutas estáticas, incluido `robots.txt`.
 - `src/data/blog.ts`: entradas estáticas bilingües; punto de sustitución por una fuente dinámica futura.
 - `src/components/sections/`: secciones renderizadas con Astro, incluidas la galería filtrable, la franja animada de tecnologías y las vistas de blog.
 - `src/components/CommandMenu.tsx`: navegación rápida interactiva con React.

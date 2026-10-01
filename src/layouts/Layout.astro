@@ -6,6 +6,7 @@ import CommandMenu from "../components/CommandMenu";
 import type { Locale, SiteContent } from "../i18n/content";
 import { BLOG_ENABLED } from "../config/site";
 import { markdownPath } from "../lib/markdown";
+import { SITE_URL } from "../config/url.mjs";
 
 interface Props {
   lang: Locale;
@@ -21,13 +22,15 @@ const { lang, content, currentPath, pageTitle, pageDescription, article = false,
 const isLlm = mode === "llm";
 const title = pageTitle ? `${pageTitle} | ${content.profile.name}` : `${content.profile.name} | ${content.profile.role}`;
 const description = pageDescription ?? content.profile.introduction;
-const baseUrl = Astro.site ?? new URL("https://javier-jimenez-molina.vercel.app");
-const pathSuffix = currentPath.replace(new RegExp(`^/${lang}(?=/|$)`), "") || "";
-const isHome = pathSuffix === "" || pathSuffix === "/";
+const baseUrl = Astro.site ?? new URL(SITE_URL);
+const normalizedPath = currentPath.replace(/\/+$/, "") || "/";
+const pathSuffix = normalizedPath.replace(new RegExp(`^/${lang}(?=/|$)`), "") || "";
+const isHome = pathSuffix === "";
 const homePrefix = isHome ? "" : `/${lang}`;
-const canonical = new URL(isLlm ? `/${lang}` : currentPath, baseUrl).toString();
-const spanishUrl = new URL(`/es${pathSuffix}`, baseUrl).toString();
-const englishUrl = new URL(`/en${pathSuffix}`, baseUrl).toString();
+const canonical = new URL(isLlm ? `/${lang}` : normalizedPath, baseUrl).toString();
+const alternateSuffix = isLlm ? "" : pathSuffix;
+const spanishUrl = new URL(`/es${alternateSuffix}`, baseUrl).toString();
+const englishUrl = new URL(`/en${alternateSuffix}`, baseUrl).toString();
 const navLinks = [
   { label: content.nav.home, href: `${homePrefix}#hero` },
   { label: content.nav.about, href: `${homePrefix}#about` },
@@ -72,24 +75,24 @@ const navLinks = [
   <body class="min-h-screen bg-slate-950 text-slate-100">
     <a href="#main-content" class="sr-only rounded-md bg-emerald-300 px-4 py-2 text-slate-950 focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[100]">{lang === "es" ? "Saltar al contenido" : "Skip to content"}</a>
     <header class="sticky top-0 z-50 border-b border-white/10 bg-slate-950/90 backdrop-blur-xl">
-      <nav class="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-3 px-5 sm:px-6" aria-label={lang === "es" ? "Navegación principal" : "Main navigation"}>
+      <nav class="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-2 px-2.5 min-[375px]:px-3 sm:gap-3 sm:px-6" aria-label={lang === "es" ? "Navegación principal" : "Main navigation"}>
         <a href={`${homePrefix}#hero`} aria-label={content.profile.name} class="flex shrink-0 items-center gap-2.5 rounded-md font-mono text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">
           <img src="/favicon.svg" alt="" width="36" height="36" class="h-9 w-9" aria-hidden="true" />
           <span class="hidden md:inline">Javier Jiménez Molina</span>
           <span class="hidden sm:inline md:hidden">Javier J.</span>
         </a>
 
-        {!isLlm && <div class="hidden shrink-0 items-center gap-1 2xl:flex">
+        <div class="hidden shrink-0 items-center gap-1 2xl:flex">
           {navLinks.map((link) => (
             <a href={link.href} class="nav-link whitespace-nowrap rounded-md px-2.5 py-2 text-xs font-medium text-slate-300 focus-visible:outline-2 focus-visible:outline-cyan-300">{link.label}</a>
           ))}
-        </div>}
+        </div>
 
-        <div class="flex shrink-0 items-center gap-2">
-          {!isLlm && <CommandMenu client:load blogEnabled={BLOG_ENABLED} lang={lang} email={content.profile.email} linkedin={content.profile.linkedin} githubHref={content.profile.github} />}
+        <div class="flex shrink-0 items-center gap-1.5 sm:gap-2">
+          <div class="hidden min-[375px]:block"><CommandMenu client:load blogEnabled={BLOG_ENABLED} lang={lang} email={content.profile.email} linkedin={content.profile.linkedin} githubHref={content.profile.github} /></div>
           <ModePicker lang={lang} mode={mode} />
           <LanguagePicker currentLang={lang} pathname={currentPath} />
-          {!isLlm && <details class="relative 2xl:hidden" data-mobile-nav>
+          <details class="relative 2xl:hidden" data-mobile-nav>
             <summary class="flex h-9 w-9 cursor-pointer list-none items-center justify-center rounded-md border border-white/15 text-slate-200 marker:hidden hover:bg-white/5 focus-visible:outline-2 focus-visible:outline-cyan-300" aria-label={content.nav.menu}>
               <span aria-hidden="true" class="font-mono text-lg leading-none">☰</span>
             </summary>
@@ -98,7 +101,7 @@ const navLinks = [
                 <a href={link.href} class="nav-link block rounded-md px-3 py-2.5 text-sm text-slate-200 focus-visible:outline-2 focus-visible:outline-cyan-300">{link.label}</a>
               ))}
             </div>
-          </details>}
+          </details>
         </div>
       </nav>
     </header>

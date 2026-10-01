@@ -144,7 +144,7 @@ export default function CommandMenu({ lang, email, linkedin, githubHref, blogEna
 
       {open && typeof document !== "undefined" && createPortal(
         <div
-          className="fixed inset-0 z-[90] bg-slate-950/80 px-3 pt-20 backdrop-blur-sm sm:pt-28"
+          className="fixed inset-0 z-[90] w-screen bg-slate-950/80 px-3 pt-20 backdrop-blur-sm sm:pt-28"
           onMouseDown={(event) => {
             if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
               restoreFocusRef.current = false;

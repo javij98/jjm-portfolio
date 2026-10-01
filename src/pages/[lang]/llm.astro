@@ -2,6 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import { LOCALES, SITE_BY_LANG, isLocale } from "../../i18n/content";
 import { portfolioMarkdown } from "../../lib/markdown";
+import { SITE_URL } from "../../config/url.mjs";
 
 export function getStaticPaths() {
   return LOCALES.map((lang) => ({ params: { lang } }));
@@ -10,7 +11,7 @@ export function getStaticPaths() {
 const lang = Astro.params.lang ?? "es";
 if (!isLocale(lang)) throw new Error(`Unsupported locale: ${lang}`);
 const content = SITE_BY_LANG[lang];
-const markdown = portfolioMarkdown(lang, Astro.site ?? new URL("https://javier-jimenez-molina.vercel.app"));
+const markdown = portfolioMarkdown(lang, Astro.site ?? new URL(SITE_URL));
 const labels = lang === "es" ? {
   description: "Toda la web en un único documento Markdown. Listo para leer, copiar o compartir con una IA.",
   copy: "Copiar Markdown", copied: "Markdown copiado", error: "No se pudo copiar. Puedes seleccionar el texto o descargar el archivo.",

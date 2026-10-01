@@ -13,10 +13,10 @@ const modes = [
 ];
 ---
 
-<div role="group" class="inline-flex h-9 items-center gap-1 rounded-md border border-white/15 bg-slate-900/60 px-2 font-mono text-xs" aria-label={lang === "es" ? "Modo de lectura" : "Reading mode"}>
+<div data-mode-picker role="group" class="inline-flex h-9 w-28 shrink-0 items-center justify-center gap-1 rounded-md border border-white/15 bg-slate-900/60 px-2 font-mono text-xs" aria-label={lang === "es" ? "Modo de lectura" : "Reading mode"}>
   {modes.map((item, index) => (
     <>
-      {index > 0 && <span aria-hidden="true" class="hidden text-slate-600 sm:inline">/</span>}
+      {index > 0 && <span aria-hidden="true" class="text-slate-600">/</span>}
       <a
         href={item.href}
         data-view-mode={item.value}
@@ -25,7 +25,7 @@ const modes = [
         title={item.description}
         class:list={[
           "rounded px-1 py-1 focus-visible:outline-2 focus-visible:outline-cyan-300",
-          mode === item.value ? "hidden text-cyan-200 sm:inline" : "text-slate-400 hover:text-white",
+          mode === item.value ? "text-cyan-200" : "text-slate-400 hover:text-white",
         ]}
       >{item.label}</a>
     </>
