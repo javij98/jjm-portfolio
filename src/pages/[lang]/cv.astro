@@ -1,0 +1,268 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { LOCALES, SITE_BY_LANG, isLocale, type Locale } from "../../i18n/content";
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const langParam = Astro.params.lang ?? "es";
+if (!isLocale(langParam)) throw new Error(`Unsupported locale: ${langParam}`);
+
+const lang: Locale = langParam;
+const content = SITE_BY_LANG[lang];
+const training = [
+  { name: "Agile Software Development", provider: "University of Minnesota" },
+  { name: "Confluence: Getting Started", provider: "Pluralsight" },
+  { name: "Continuous Delivery & DevOps", provider: "University of Minnesota" },
+  { name: "DevOps: The Big Picture", provider: "Pluralsight" },
+  { name: "Docker Advanced", provider: "Pluralsight" },
+  { name: "Oracle PL/SQL Advanced", provider: "Oracle" },
+  { name: "IT Service Management Specific Practices", provider: "Pluralsight" },
+  { name: "Linux Advanced", provider: "Pluralsight" },
+];
+
+const copy = lang === "es"
+  ? {
+      pageTitle: "CV",
+      description: "Experiencia, competencias y proyectos de Javier Jiménez Molina, Ingeniero DevOps.",
+      focus: "Kubernetes · CI/CD · Contenedores · Linux · Automatización",
+      summary: "Ingeniero DevOps con más de cuatro años de experiencia técnica, especializado en automatización de infraestructura, orquestación de contenedores y optimización de CI/CD. Mi trayectoria en desarrollo full-stack ayuda a conectar las necesidades de desarrollo y operaciones. Trabajo con observabilidad, automatización e integraciones con APIs, n8n y webhooks.",
+      introLabel: "Perfil profesional",
+      experience: "Experiencia profesional",
+      krimda: "Ingeniero DevOps",
+      krimdaOne: "Diseño y mantengo pipelines modulares de Jenkins con Shared Libraries (Groovy) y Pipelines as Code para estandarizar despliegues y reducir duplicación.",
+      krimdaTwo: "Integré JFrog Artifactory con Bitbucket para la gestión centralizada de binarios y dependencias.",
+      krimdaThree: "Administro clústeres Kubernetes y desarrollé herramientas para auditar el uso de recursos por servicio y optimizar la capacidad.",
+      krimdaFour: "Configuré dashboards en Grafana y centralización de logs con Graylog para mejorar la visibilidad y respuesta a incidencias.",
+      krimdaFive: "Automatizo procesos e integraciones mediante APIs, flujos n8n y webhooks.",
+      krimdaLocation: "Murcia, España",
+      krimdaDates: "jul. 2025–actualidad",
+      capgemini: "Ingeniero de Software / DevOps",
+      capgeminiSummary: "Evolucioné desde el desarrollo de software hacia operaciones, automatización e ingeniería de CI/CD.",
+      capgeminiOne: "Desarrollé microservicios con Java y Spring Boot, aplicaciones con React y APIs REST con Node.js.",
+      capgeminiTwo: "Gestioné cargas con Docker, Kubernetes y Helm; supervisé entornos productivos con Rancher y Lens.",
+      capgeminiThree: "Desplegué y gestioné recursos cloud en OVHcloud para entornos productivos.",
+      capgeminiLocation: "Valencia, España · Híbrido",
+      impact: "Mejora documentada: reducción superior al 80% en tiempos de despliegue.",
+      capgeminiDates: "feb. 2021–jul. 2025",
+      skills: "Competencias técnicas",
+      strong: "Dominio sólido",
+      applied: "Experiencia aplicada",
+      aiAutomation: "Automatización con IA",
+      aiAutomationSkills: "LLMs · MCP · Harness Engineering (en desarrollo) · contexto, validación y seguridad · Hermes Agent (proyecto personal)",
+      operations: "Sistemas y contenedores",
+      delivery: "Plataforma y entrega",
+      observability: "Observabilidad",
+      development: "Base de desarrollo",
+      education: "Formación",
+      degree: "Grado en Ingeniería Telemática",
+      university: "Universidad Politécnica de Cartagena · 2017–2021",
+      languages: "Idiomas",
+      languageLevels: "Español nativo · Inglés B2",
+      featuredProjects: "Proyectos destacados",
+      projectStack: "Tecnologías",
+      training: "Cursos y certificaciones",
+      portfolio: "Portfolio completo",
+      mail: "Escríbeme",
+      download: "Descargar CV en inglés (PDF)",
+      downloadName: "JavierJimenezMolinaCV_en.pdf",
+    }
+  : {
+      pageTitle: "CV",
+      description: "Experience, skills and projects of Javier Jiménez Molina, DevOps Engineer.",
+      focus: "Kubernetes · CI/CD · Containers · Linux · Automation",
+      summary: "DevOps Engineer with more than four years of technical experience, focused on infrastructure automation, container orchestration and CI/CD optimisation. My full-stack development background helps me connect development and operations needs. I work with observability, automation, and API, n8n and webhook integrations.",
+      introLabel: "Professional profile",
+      experience: "Professional experience",
+      krimda: "DevOps Engineer",
+      krimdaOne: "Design and maintain modular Jenkins pipelines with Shared Libraries (Groovy) and Pipelines as Code to standardise deployments and reduce duplication.",
+      krimdaTwo: "Integrated JFrog Artifactory with Bitbucket for centralised binary and dependency management.",
+      krimdaThree: "Administer Kubernetes clusters and developed tools to audit per-service resource usage and optimise capacity.",
+      krimdaFour: "Set up Grafana dashboards and centralised logging with Graylog to improve visibility and incident response.",
+      krimdaFive: "Automate processes and integrations through APIs, n8n workflows and webhooks.",
+      krimdaLocation: "Murcia, Spain",
+      krimdaDates: "Jul 2025–present",
+      capgemini: "Software / DevOps Engineer",
+      capgeminiSummary: "Progressed from software development into operations, automation and CI/CD engineering.",
+      capgeminiOne: "Built Java and Spring Boot microservices, React applications and Node.js REST APIs.",
+      capgeminiTwo: "Managed workloads with Docker, Kubernetes and Helm; monitored production environments with Rancher and Lens.",
+      capgeminiThree: "Deployed and managed cloud resources on OVHcloud for production environments.",
+      capgeminiLocation: "Valencia, Spain · Hybrid",
+      impact: "Documented improvement: deployment times reduced by more than 80%.",
+      capgeminiDates: "Feb 2021–Jul 2025",
+      skills: "Technical skills",
+      strong: "Strong",
+      applied: "Applied experience",
+      aiAutomation: "AI automation",
+      aiAutomationSkills: "LLMs · MCP · Harness Engineering (developing) · context, validation and safety · Hermes Agent (personal project)",
+      operations: "Systems and containers",
+      delivery: "Platform and delivery",
+      observability: "Observability",
+      development: "Development background",
+      education: "Education",
+      degree: "BSc in Telematics Engineering",
+      university: "Universidad Politécnica de Cartagena · 2017–2021",
+      languages: "Languages",
+      languageLevels: "Spanish native · English B2",
+      featuredProjects: "Featured projects",
+      projectStack: "Stack",
+      training: "Training and certifications",
+      portfolio: "Full portfolio",
+      mail: "Email me",
+      download: "Download CV (PDF)",
+      downloadName: "JavierJimenezMolinaCV_en.pdf",
+    };
+---
+
+<Layout lang={lang} content={content} currentPath={Astro.url.pathname} pageTitle={copy.pageTitle} pageDescription={copy.description}>
+  <article class="mx-auto max-w-5xl px-5 pb-10 pt-8 sm:px-6 sm:pb-14 sm:pt-10" aria-labelledby="cv-heading">
+    <header class="mb-7 border-b border-white/10 pb-6 sm:mb-8 sm:pb-7">
+      <div class="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p class="mb-2 font-mono text-xs uppercase tracking-[0.18em] text-cyan-300">{copy.introLabel}</p>
+          <h1 id="cv-heading" class="text-3xl font-semibold tracking-tight text-white sm:text-4xl">{content.profile.name}</h1>
+          <p class="mt-2 text-base font-medium text-cyan-100 sm:text-lg">{lang === "es" ? "Ingeniero DevOps" : "DevOps Engineer"}</p>
+          <p class="mt-2 max-w-2xl text-sm text-slate-400">{copy.focus}</p>
+        </div>
+      </div>
+      <p class="mt-5 max-w-3xl text-sm leading-6 text-slate-300">{copy.summary}</p>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <a href={`mailto:${content.profile.email}`} class="signal-hover inline-flex min-h-10 items-center rounded-md border border-cyan-300/30 bg-cyan-300/10 px-3.5 py-2 font-mono text-xs text-cyan-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">{copy.mail}</a>
+        <a href={content.profile.linkedin} target="_blank" rel="noreferrer" class="signal-hover inline-flex min-h-10 items-center rounded-md border border-white/15 px-3.5 py-2 font-mono text-xs text-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">LinkedIn</a>
+        <a href={`/${lang}/projects`} class="signal-hover inline-flex min-h-10 items-center rounded-md border border-white/15 px-3.5 py-2 font-mono text-xs text-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">{copy.portfolio}</a>
+        <a href="/files/JavierJimenezMolinaCV_en.pdf" download={copy.downloadName} class="signal-hover inline-flex min-h-10 items-center rounded-md border border-emerald-300/40 bg-emerald-300/10 px-3.5 py-2 font-mono text-xs text-emerald-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300">{copy.download}</a>
+      </div>
+    </header>
+
+    <div class="grid gap-7 md:grid-cols-[1.15fr_0.85fr] md:gap-10">
+      <section aria-labelledby="cv-experience" class="min-w-0">
+        <h2 id="cv-experience" class="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{copy.experience}</h2>
+        <ol class="space-y-5">
+          <li class="border-l border-cyan-300/30 pl-4">
+            <div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+              <h3 class="font-semibold text-white">Krimda <span class="font-normal text-slate-300">· {copy.krimda}</span></h3>
+              <span class="font-mono text-xs text-cyan-200">{copy.krimdaDates}</span>
+            </div>
+            <p class="mt-1 text-xs text-slate-500">{copy.krimdaLocation}</p>
+            <ul class="mt-2 space-y-1 text-sm leading-5 text-slate-300">
+              <li>{copy.krimdaOne}</li>
+              <li>{copy.krimdaTwo}</li>
+              <li>{copy.krimdaThree}</li>
+              <li>{copy.krimdaFour}</li>
+              <li>{copy.krimdaFive}</li>
+            </ul>
+          </li>
+          <li class="border-l border-white/15 pl-4">
+            <div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+              <h3 class="font-semibold text-white">Capgemini <span class="font-normal text-slate-300">· {copy.capgemini}</span></h3>
+              <span class="font-mono text-xs text-slate-400">{copy.capgeminiDates}</span>
+            </div>
+            <p class="mt-1 text-xs text-slate-500">{copy.capgeminiLocation}</p>
+            <p class="mt-2 text-sm leading-5 text-slate-300">{copy.capgeminiSummary}</p>
+            <ul class="mt-2 space-y-1 text-sm leading-5 text-slate-300">
+              <li>{copy.capgeminiOne}</li>
+              <li>{copy.capgeminiTwo}</li>
+              <li>{copy.capgeminiThree}</li>
+            </ul>
+            <p class="mt-2 rounded-md border border-emerald-300/15 bg-emerald-300/5 px-3 py-2 text-sm leading-5 text-emerald-100">{copy.impact}</p>
+          </li>
+        </ol>
+
+        <div class="mt-6 border-t border-white/10 pt-5">
+          <h2 class="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{copy.education}</h2>
+          <p class="font-medium text-white">{copy.degree}</p>
+          <p class="mt-1 text-sm text-slate-400">{copy.university}</p>
+        </div>
+      </section>
+
+      <section aria-labelledby="cv-skills" class="min-w-0">
+        <h2 id="cv-skills" class="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{copy.skills}</h2>
+        <div class="space-y-4">
+          <div>
+            <h3 class="text-sm font-semibold text-white">{copy.strong}</h3>
+            <p class="mt-1 text-sm leading-5 text-slate-300">Docker · Bash / Shell · Git / Bitbucket · Linux</p>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-white">{copy.delivery}</h3>
+            <p class="mt-1 text-sm leading-5 text-slate-300">{copy.applied}: Jenkins Shared Libraries · Groovy · Pipelines as Code · GitHub Actions · GitLab CI · Kubernetes · Docker · Helm · Rancher · Lens</p>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-white">{copy.observability}</h3>
+            <p class="mt-1 text-sm leading-5 text-slate-300">Prometheus · Grafana · Graylog</p>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-white">{copy.development}</h3>
+            <p class="mt-1 text-sm leading-5 text-slate-300">Java · Spring Boot · Node.js · React · JavaScript / TypeScript · REST APIs</p>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-white">{lang === "es" ? "Artefactos y automatización" : "Artifacts and automation"}</h3>
+            <p class="mt-1 text-sm leading-5 text-slate-300">JFrog Artifactory · Bash / Shell · Python · APIs · Webhooks · n8n</p>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-white">{lang === "es" ? "Cloud" : "Cloud"}</h3>
+            <p class="mt-1 text-sm leading-5 text-slate-300">{lang === "es" ? "OVHcloud · AWS (en desarrollo) · Terraform (en desarrollo)" : "OVHcloud · AWS (developing) · Terraform (developing)"}</p>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-white">{copy.aiAutomation}</h3>
+            <p class="mt-1 text-sm leading-5 text-slate-300">{copy.aiAutomationSkills}</p>
+          </div>
+        </div>
+        <div class="mt-5 border-t border-white/10 pt-4">
+          <h3 class="text-sm font-semibold text-white">{copy.languages}</h3>
+          <p class="mt-1 text-sm leading-5 text-slate-300">{copy.languageLevels}</p>
+        </div>
+      </section>
+    </div>
+
+    <section aria-labelledby="cv-projects" class="mt-9 border-t border-white/10 pt-7">
+      <h2 id="cv-projects" class="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{copy.featuredProjects}</h2>
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {content.projects.items.map((project) => (
+          <article class="rounded-lg border border-white/10 bg-slate-900/50 p-4">
+            <h3 class="font-semibold text-white">{project.name}</h3>
+            <p class="mt-2 text-sm leading-5 text-slate-300">{project.description}</p>
+            <p class="mt-3 text-xs leading-5 text-cyan-100/80"><span class="font-semibold">{copy.projectStack}:</span> {project.stack.join(" · ")}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <div class="mt-9 grid gap-8 border-t border-white/10 pt-7 md:grid-cols-[0.8fr_1.2fr] md:gap-10">
+      <div class="grid gap-7 sm:grid-cols-2 md:grid-cols-1">
+        <section aria-labelledby="cv-education">
+          <h2 id="cv-education" class="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{copy.education}</h2>
+          <p class="font-medium text-white">{copy.degree}</p>
+          <p class="mt-1 text-sm text-slate-300">{lang === "es" ? "Tecnologías de la Información y las Comunicaciones" : "Information Technologies and Telecommunications"}</p>
+          <p class="mt-1 text-sm text-slate-400">{lang === "es" ? "Universidad Politécnica de Cartagena" : "Universidad Politécnica de Cartagena"}</p>
+          <p class="mt-1 text-xs text-slate-500">{lang === "es" ? "Cartagena, Murcia · 2017–2021" : "Cartagena, Murcia · 2017–2021"}</p>
+        </section>
+        <section aria-labelledby="cv-languages">
+          <h2 id="cv-languages" class="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{copy.languages}</h2>
+          <p class="text-sm text-slate-300">{copy.languageLevels}</p>
+        </section>
+      </div>
+
+      <section aria-labelledby="cv-training">
+        <h2 id="cv-training" class="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{copy.training}</h2>
+        <ul class="grid gap-x-5 gap-y-2 sm:grid-cols-2">
+          {training.map((item) => (
+            <li class="text-sm leading-5 text-slate-300">
+              <span class="font-medium text-white">{item.name}</span>
+              <span class="block text-xs text-slate-500">{item.provider}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </div>
+
+    <div class="mt-7 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-5 text-xs text-slate-500">
+      <span>{content.profile.location}</span>
+      <a href={content.profile.github} target="_blank" rel="noreferrer" class="rounded-sm text-slate-300 underline decoration-white/20 underline-offset-4 hover:text-white focus-visible:outline-2 focus-visible:outline-cyan-300">GitHub</a>
+    </div>
+  </article>
+</Layout>
+
+<style>
+  :global(main > nav[aria-label]) { display: none; }
+</style>

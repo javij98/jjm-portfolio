@@ -1,0 +1,25 @@
+---
+import { SITE_URL } from "../config/url.mjs";
+
+const fallbackPath = "/es/cv";
+const baseUrl = Astro.site ?? new URL(SITE_URL);
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="refresh" content={`0;url=${fallbackPath}`} />
+    <link rel="canonical" href={new URL(fallbackPath, baseUrl).href} />
+    <title>CV | Javier Jiménez Molina</title>
+    <script is:inline>
+      const browserLang = (navigator.language || "es").toLowerCase();
+      const preferredLocale = browserLang.startsWith("en") ? "en" : "es";
+      window.location.replace(`/${preferredLocale}/cv`);
+    </script>
+  </head>
+  <body>
+    <a href={fallbackPath}>Ver CV / View CV</a>
+  </body>
+</html>
