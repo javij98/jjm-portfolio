@@ -42,6 +42,7 @@ const navLinks = [
   { label: "CV", href: `/${lang}/cv` },
   { label: content.nav.contact, href: `${homePrefix}#contact` },
 ];
+const desktopNavLinks = navLinks.filter((link) => link.href !== `${homePrefix}#hero`);
 ---
 
 <!doctype html>
@@ -79,13 +80,13 @@ const navLinks = [
       <nav class="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-2 px-2.5 min-[375px]:px-3 sm:gap-3 sm:px-6" aria-label={lang === "es" ? "Navegación principal" : "Main navigation"}>
         <a href={`${homePrefix}#hero`} aria-label={content.profile.name} class="flex shrink-0 items-center gap-2.5 rounded-md font-mono text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">
           <img src="/favicon.svg" alt="" width="36" height="36" class="h-9 w-9" aria-hidden="true" />
-          <span class="hidden md:inline">Javier Jiménez Molina</span>
-          <span class="hidden sm:inline md:hidden">Javier J.</span>
+          <span class="hidden 2xl:inline">Javier Jiménez Molina</span>
+          <span class="hidden sm:inline 2xl:hidden">Javier J.</span>
         </a>
 
-        <div class="hidden shrink-0 items-center gap-1 2xl:flex">
-          {navLinks.map((link) => (
-            <a href={link.href} class="nav-link whitespace-nowrap rounded-md px-2.5 py-2 text-xs font-medium text-slate-300 focus-visible:outline-2 focus-visible:outline-cyan-300">{link.label}</a>
+        <div class="hidden shrink-0 items-center gap-0 lg:flex 2xl:gap-1">
+          {desktopNavLinks.map((link) => (
+            <a href={link.href} class="nav-link whitespace-nowrap rounded-md px-1.5 py-2 text-[11px] font-medium text-slate-300 focus-visible:outline-2 focus-visible:outline-cyan-300 2xl:px-2.5 2xl:text-xs">{link.label}</a>
           ))}
         </div>
 
@@ -93,7 +94,7 @@ const navLinks = [
           <div class="hidden min-[375px]:block"><CommandMenu client:load blogEnabled={BLOG_ENABLED} lang={lang} email={content.profile.email} linkedin={content.profile.linkedin} githubHref={content.profile.github} /></div>
           <ModePicker lang={lang} mode={mode} />
           <LanguagePicker currentLang={lang} pathname={currentPath} />
-          <details class="relative 2xl:hidden" data-mobile-nav>
+          <details class="relative lg:hidden" data-mobile-nav>
             <summary class="flex h-9 w-9 cursor-pointer list-none items-center justify-center rounded-md border border-white/15 text-slate-200 marker:hidden hover:bg-white/5 focus-visible:outline-2 focus-visible:outline-cyan-300" aria-label={content.nav.menu}>
               <span aria-hidden="true" class="font-mono text-lg leading-none">☰</span>
             </summary>
@@ -121,7 +122,7 @@ const navLinks = [
     {!isLlm && <footer class="border-t border-white/10">
       <div class="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-7 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <span>© {new Date().getFullYear()} {content.profile.name}</span>
-        <span class="font-mono">{content.footer}</span>
+        {pathSuffix !== "/cv" && <span class="font-mono">{content.footer}</span>}
       </div>
     </footer>}
 
