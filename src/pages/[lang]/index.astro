@@ -24,7 +24,7 @@ const content = SITE_BY_LANG[lang];
 ---
 
 <Layout lang={lang} content={content} currentPath={Astro.url.pathname}>
-  <section id="hero"><Hero profile={content.profile} hero={content.hero} /></section>
+  <section id="hero"><Hero lang={lang} profile={content.profile} hero={content.hero} /></section>
   <div class="border-y border-white/10 bg-slate-900/40"><TechnologyMarquee content={content.skills} /></div>
   <section id="about" class="section-alt"><About content={content.about} /></section>
   <section id="projects"><Projects content={content.projects} lang={lang} /></section>

@@ -138,8 +138,8 @@ export default function CommandMenu({ lang, email, linkedin, githubHref, blogEna
         className="signal-hover inline-flex h-9 shrink-0 items-center whitespace-nowrap gap-2 rounded-md border border-white/15 bg-slate-900/60 px-2.5 text-xs text-slate-200 focus-visible:outline-2 focus-visible:outline-cyan-300"
       >
         <Search className="h-4 w-4 text-cyan-300" aria-hidden="true" />
-        <span className="hidden lg:inline 2xl:hidden">{labels.trigger}</span>
-        <kbd className="hidden shrink-0 whitespace-nowrap font-mono text-[10px] text-slate-400 lg:inline 2xl:hidden">⌘/Ctrl K</kbd>
+        <span className="hidden md:inline lg:hidden">{labels.trigger}</span>
+        <kbd className="hidden shrink-0 whitespace-nowrap font-mono text-[10px] text-slate-400 md:inline lg:hidden">⌘/Ctrl K</kbd>
       </button>
 
       {open && typeof document !== "undefined" && createPortal(

@@ -1,13 +1,14 @@
 ---
-import type { SiteContent } from "../../i18n/content";
+import type { Locale, SiteContent } from "../../i18n/content";
 import SignalTopology from "./SignalTopology.astro";
 
 interface Props {
+  lang: Locale;
   profile: SiteContent["profile"];
   hero: SiteContent["hero"];
 }
 
-const { profile, hero } = Astro.props;
+const { lang, profile, hero } = Astro.props;
 ---
 
 <div class="hero-shell relative isolate" data-hero-interactive>
@@ -35,6 +36,9 @@ const { profile, hero } = Astro.props;
         <div class="mt-5 flex flex-wrap gap-3 sm:mt-9">
           <a href="#projects" class="signal-hover inline-flex min-h-11 items-center justify-center rounded-lg border border-emerald-300 bg-emerald-400 px-5 py-2.5 text-sm font-semibold text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300">
             {hero.projectsCta}<span aria-hidden="true" class="ml-2">↗</span>
+          </a>
+          <a href={`/${lang}/cv`} class="signal-hover inline-flex min-h-11 items-center justify-center rounded-lg border border-cyan-300/50 bg-cyan-300/10 px-5 py-2.5 text-sm font-semibold text-cyan-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">
+            {lang === "es" ? "Ver CV" : "View CV"}
           </a>
           <a href="#contact" class="signal-hover inline-flex min-h-11 items-center justify-center rounded-lg border border-white/20 px-5 py-2.5 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">
             {hero.contactCta}
