@@ -9,6 +9,7 @@ const baseUrl = Astro.site ?? new URL(SITE_URL);
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta http-equiv="refresh" content={`0;url=${fallbackLocalePath}`} />
     <link rel="canonical" href={new URL(fallbackLocalePath, baseUrl).href} />
     <link rel="alternate" type="text/markdown" href={new URL("/es/index.md", baseUrl).href} />

@@ -26,3 +26,6 @@ pnpm-debug.log*
 
 # local env files
 .env.local
+
+# local Hermes project idea
+/IDEA.md
