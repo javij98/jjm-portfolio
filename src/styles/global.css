@@ -214,6 +214,41 @@ html.project-dialog-open { overflow: hidden; }
 }
 
 
+/* The search control expands without shifting the other header controls. */
+.search-discovery-expansion {
+  --search-expanded-width: 160px;
+  position: absolute;
+  z-index: 5;
+  top: -1px;
+  left: -1px;
+  display: flex;
+  height: calc(100% + 2px);
+  width: max(100%, var(--search-expanded-width));
+  align-items: center;
+  gap: .5rem;
+  overflow: hidden;
+  border: 1px solid rgba(103,232,249,.4);
+  border-radius: .375rem;
+  padding-inline: .625rem;
+  background: #101b2b;
+  color: #cffafe;
+  font-size: .72rem;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: 0 10px 24px rgba(0,0,0,.3);
+  animation: search-discovery 4s ease both;
+}
+@media (min-width: 560px) {
+  .search-discovery-expansion { --search-expanded-width: 200px; left: auto; right: -1px; }
+}
+@keyframes search-discovery {
+  0%, 100% { width: calc(100% + 2px); }
+  15%, 75% { width: max(calc(100% + 2px), var(--search-expanded-width)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .search-discovery-expansion { animation: none; }
+}
+
 /* One visual language for hover and keyboard focus across cards, links and actions. */
 .signal-hover {
   position: relative;
