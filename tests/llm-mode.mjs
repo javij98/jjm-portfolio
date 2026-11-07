@@ -36,7 +36,7 @@ test("Human / LLM and language switching work without JavaScript and include all
       assert.ok(markdown.includes(`**${labels.estimate}:** 13–25 h`));
       assert.match(markdown, /67–125 h/);
       assert.match(markdown, lang === "es" ? /tiempo de ejecución de agentes CI/ : /CI agent execution time/);
-      assert.match(markdown, /mailto:jjime981@gmail\.com/);
+      assert.match(markdown, /mailto:contact@javierjimenez\.dev/);
       assert.equal(section(markdown, "Blog").match(/^### /gm)?.length, 2, "Include full published blog articles");
       assert.equal(await page.locator("[data-copy-markdown]").isVisible(), false, "No inactive copy control without JavaScript");
 
