@@ -170,7 +170,7 @@ export interface SiteContent {
 const commonProfile = {
   name: "Javier Jiménez Molina",
   role: "DevOps Engineer",
-  email: "jjime981@gmail.com",
+  email: "contact@javierjimenez.dev",
   linkedin: "https://www.linkedin.com/in/javierjimenezmolina",
   github: "https://github.com/javij98",
 };
