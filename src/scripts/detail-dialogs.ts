@@ -27,3 +27,18 @@ document.querySelectorAll<HTMLDialogElement>("[data-detail-dialog]").forEach((di
     }
   });
 });
+
+// Reuse the normal opener for links to details, including collapsed cases.
+function openLinkedDetail() {
+  const id = window.location.hash.slice(1);
+  if (!/^(project-dialog|work-case-dialog)-\d+$/.test(id)) return;
+  const dialog = document.getElementById(id) as HTMLDialogElement | null;
+  const opener = document.querySelector<HTMLButtonElement>(`[aria-controls="${id}"]`);
+  if (!dialog || dialog.open || !opener) return;
+  const additional = opener.closest<HTMLElement>("[data-work-examples-more]");
+  if (additional?.hidden) document.querySelector<HTMLButtonElement>("[data-work-examples-toggle]")?.click();
+  opener.click();
+}
+
+window.addEventListener("hashchange", openLinkedDetail);
+window.setTimeout(openLinkedDetail, 0);

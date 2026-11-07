@@ -1,6 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { LOCALES, SITE_BY_LANG, isLocale, type Locale } from "../../i18n/content";
+import { cvEmailHref } from "../../lib/cv-actions";
 
 export function getStaticPaths() {
   return LOCALES.map((lang) => ({ params: { lang } }));
@@ -70,8 +71,6 @@ const copy = lang === "es"
       downloadEnglish: "Inglés (PDF)",
       downloadAction: "Descargar PDF",
       emailAction: "Enviártelo por correo",
-      emailSubject: "CV de Javier Jiménez Molina",
-      emailBody: "Aquí tienes el enlace al CV de Javier Jiménez Molina:",
     }
   : {
       pageTitle: "CV",
@@ -120,8 +119,6 @@ const copy = lang === "es"
       downloadEnglish: "English (PDF)",
       downloadAction: "Download PDF",
       emailAction: "Email it to yourself",
-      emailSubject: "Javier Jiménez Molina's CV",
-      emailBody: "Here is the link to Javier Jiménez Molina's CV:",
     };
 ---
 
@@ -153,7 +150,7 @@ const copy = lang === "es"
                 <summary class="nav-link cursor-pointer list-none whitespace-nowrap rounded px-3 py-2 font-mono text-xs text-slate-200 focus-visible:outline-2 focus-visible:outline-cyan-300 [&::-webkit-details-marker]:hidden">{label}</summary>
                 <div class="ml-3 border-l border-white/10 pl-2">
                   <a href={`/${language}/cv.pdf`} download={filename} class="nav-link block whitespace-nowrap rounded px-3 py-2 font-mono text-xs text-slate-200 focus-visible:outline-2 focus-visible:outline-cyan-300">{copy.downloadAction}</a>
-                  <a href={`mailto:?subject=${encodeURIComponent(copy.emailSubject)}&body=${encodeURIComponent(`${copy.emailBody}\n\nhttps://javierjimenez.dev/${language}/cv.pdf`)}`} class="nav-link block whitespace-nowrap rounded px-3 py-2 font-mono text-xs text-slate-200 focus-visible:outline-2 focus-visible:outline-cyan-300">{copy.emailAction}</a>
+                  <a href={cvEmailHref(lang, language)} class="nav-link block whitespace-nowrap rounded px-3 py-2 font-mono text-xs text-slate-200 focus-visible:outline-2 focus-visible:outline-cyan-300">{copy.emailAction}</a>
                 </div>
               </details>
             ))}
