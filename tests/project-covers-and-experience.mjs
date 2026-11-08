@@ -39,7 +39,8 @@ test("work cases expand in place in both languages and remain usable on mobile a
     for (const lang of ["es", "en"]) {
       for (const width of [360, 768, 1408]) {
         const page = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion: "reduce" });
-        await page.goto(`${baseUrl}/${lang}`, { waitUntil: "domcontentloaded" });
+        await page.goto(`${baseUrl}/${lang}/cv/${lang === "es" ? "completo" : "full"}`, { waitUntil: "domcontentloaded" });
+        await page.evaluate(() => document.fonts.ready);
         const entries = page.locator(".experience-entry");
         assert.equal(await entries.count(), 2);
         assert.equal(await entries.nth(0).locator("ul li").count(), 5);
@@ -111,7 +112,7 @@ test("all work cases and their complete content remain available without JavaScr
   const browser = await chromium.launch({ headless: true, args: ["--no-proxy-server"] });
   try {
     const page = await browser.newPage({ javaScriptEnabled: false, viewport: { width: 390, height: 900 } });
-    await page.goto(`${baseUrl}/es`, { waitUntil: "domcontentloaded" });
+    await page.goto(`${baseUrl}/es/cv/completo`, { waitUntil: "domcontentloaded" });
     assert.equal(await page.locator(".work-example:visible").count(), 9);
     assert.equal(await page.locator(".work-example dl:visible").count(), 9);
     assert.equal(await page.locator("[data-work-case-open]:visible").count(), 0);

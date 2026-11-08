@@ -77,7 +77,10 @@ test("metadata, robots, sitemap and Markdown all identify the official domain", 
     assert.equal(await robots.text(), `User-agent: *\nAllow: /\nSitemap: ${origin}/sitemap.xml\n`);
     const sitemap = await page.request.get(`${baseUrl}/sitemap.xml`);
     const paths = [...(await sitemap.text()).matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => new URL(match[1]));
-    assert.equal(paths.length, 10);
+    assert.equal(paths.length, 14);
+    for (const path of ["/es/cv", "/es/cv/completo", "/en/cv", "/en/cv/full"]) {
+      assert.ok(paths.some((url) => url.pathname === path), `Missing ${path} in sitemap`);
+    }
     for (const url of paths) {
       assert.equal(url.origin, origin);
       await page.goto(`${baseUrl}${url.pathname}`);

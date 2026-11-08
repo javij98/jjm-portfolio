@@ -1,0 +1,13 @@
+---
+import type { Locale } from "../i18n/content";
+interface Props { lang: Locale; view: "compact" | "full"; }
+const { lang, view } = Astro.props;
+const fullPath = `/${lang}/cv/${lang === "es" ? "completo" : "full"}`;
+const links = [
+  { view: "compact", href: `/${lang}/cv`, label: lang === "es" ? "Vista compacta" : "Compact view" },
+  { view: "full", href: fullPath, label: lang === "es" ? "Vista completa" : "Full view" },
+];
+---
+<nav data-cv-view-picker aria-label={lang === "es" ? "Vista del CV" : "CV view"} class="mb-7 flex w-fit flex-wrap gap-1 rounded-lg border border-white/15 bg-slate-900/60 p-1 text-sm">
+  {links.map((item) => <a href={item.href} aria-current={view === item.view ? "page" : undefined} class:list={["rounded-md px-3 py-2 font-medium focus-visible:outline-2 focus-visible:outline-cyan-300", view === item.view ? "bg-cyan-300/15 text-cyan-100" : "text-slate-400 hover:text-white"]}>{item.label}</a>)}
+</nav>

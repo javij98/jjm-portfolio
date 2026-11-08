@@ -2,13 +2,8 @@
 import Layout from "../../layouts/Layout.astro";
 import Hero from "../../components/sections/Hero.astro";
 import About from "../../components/sections/About.astro";
-import TechnologyMarquee from "../../components/sections/TechnologyMarquee.astro";
 import BlogPreview from "../../components/sections/BlogPreview.astro";
 import { BLOG_ENABLED } from "../../config/site";
-import Projects from "../../components/sections/Projects.astro";
-import Experience from "../../components/sections/Experience.astro";
-import Skills from "../../components/sections/Skills.astro";
-import Education from "../../components/sections/Education.astro";
 import Contact from "../../components/sections/Contact.astro";
 import { LOCALES, SITE_BY_LANG, isLocale, type Locale } from "../../i18n/content";
 
@@ -25,12 +20,24 @@ const content = SITE_BY_LANG[lang];
 
 <Layout lang={lang} content={content} currentPath={Astro.url.pathname}>
   <section id="hero"><Hero lang={lang} profile={content.profile} hero={content.hero} /></section>
-  <div class="border-y border-white/10 bg-slate-900/40"><TechnologyMarquee content={content.skills} /></div>
   <section id="about" class="section-alt"><About content={content.about} /></section>
-  <section id="projects"><Projects content={content.projects} lang={lang} /></section>
-  <section id="experience" class="section-alt"><Experience content={content.experience} /></section>
-  <section id="skills"><Skills content={content.skills} /></section>
-  <section id="education" class="section-alt"><Education content={content.education} /></section>
   {BLOG_ENABLED && <section id="blog" class="section-alt"><BlogPreview lang={lang} /></section>}
   <section id="contact"><Contact profile={content.profile} content={content.contact} /></section>
+  <noscript>
+    <nav class="mx-auto max-w-6xl space-y-2 px-5 pb-6 text-sm text-cyan-200" aria-label={lang === "es" ? "Secciones trasladadas" : "Moved sections"}>
+      {(["projects", "experience", "skills", "education"] as const).map((id) => <p id={id}><a href={`/${lang}/cv/${lang === "es" ? "completo" : "full"}#${id}`}>{content.nav[id]}</a></p>)}
+    </nav>
+  </noscript>
 </Layout>
+
+<script>
+  const moved = /^(projects|experience|skills|education|work-case-dialog-\d+|project-dialog-\d+)$/;
+  const redirectMovedFragment = () => {
+    const fragment = window.location.hash.slice(1);
+    if (!moved.test(fragment)) return;
+    const lang = document.documentElement.lang === "en" ? "en" : "es";
+    window.location.replace(`/${lang}/cv/${lang === "es" ? "completo" : "full"}#${fragment}`);
+  };
+  redirectMovedFragment();
+  window.addEventListener("hashchange", redirectMovedFragment);
+</script>

@@ -36,7 +36,7 @@ test("navigation uses a stable underline without a boxed hover", async () => {
       const page = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion: "reduce" });
       await page.goto(`${baseUrl}/es`, { waitUntil: "domcontentloaded" });
       if (width < 1000) await page.locator("[data-mobile-nav] summary").click();
-      const link = page.locator(width < 1000 ? "[data-mobile-nav] a" : "header nav > div a[href='#skills']").filter({ hasText: "Competencias" }).first();
+      const link = page.locator(width < 1000 ? "[data-mobile-nav] a" : "header nav a[href='/es/cv']").filter({ hasText: "CV y proyectos" }).first();
       await link.hover();
       const styles = await link.evaluate((element) => ({ shadow: getComputedStyle(element).boxShadow, transform: getComputedStyle(element).transform, line: getComputedStyle(element, "::after").transform, hovered: element.matches(":hover") }));
       assert.equal(styles.shadow, "none", `${width}px: no hover box`);
@@ -69,7 +69,7 @@ test("non-clickable cards have a quiet ambient hover", async () => {
   const browser = await chromium.launch({ headless: true, args: ["--no-proxy-server"] });
   try {
     const page = await browser.newPage({ viewport: { width: 1415, height: 900 }, reducedMotion: "reduce" });
-    await page.goto(`${baseUrl}/es`, { waitUntil: "domcontentloaded" });
+    await page.goto(`${baseUrl}/es/cv/completo`, { waitUntil: "domcontentloaded" });
     for (const selector of [".experience-entry", ".work-example", ".skill-entry", ".gallery-card"]) {
       const item = page.locator(selector).first();
       await item.scrollIntoViewIfNeeded();

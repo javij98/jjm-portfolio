@@ -29,17 +29,15 @@ const isHome = pathSuffix === "";
 const homePrefix = isHome ? "" : `/${lang}`;
 const canonical = new URL(isLlm ? `/${lang}` : normalizedPath, baseUrl).toString();
 const alternateSuffix = isLlm ? "" : pathSuffix;
-const spanishUrl = new URL(`/es${alternateSuffix}`, baseUrl).toString();
-const englishUrl = new URL(`/en${alternateSuffix}`, baseUrl).toString();
+const spanishSuffix = alternateSuffix === "/cv/full" ? "/cv/completo" : alternateSuffix;
+const englishSuffix = alternateSuffix === "/cv/completo" ? "/cv/full" : alternateSuffix;
+const spanishUrl = new URL(`/es${spanishSuffix}`, baseUrl).toString();
+const englishUrl = new URL(`/en${englishSuffix}`, baseUrl).toString();
 const navLinks = [
   { label: content.nav.home, href: `${homePrefix}#hero` },
   { label: content.nav.about, href: `${homePrefix}#about` },
-  { label: content.nav.projects, href: isHome ? "#projects" : `/${lang}/projects` },
-  { label: content.nav.experience, href: `${homePrefix}#experience` },
-  { label: content.nav.skills, href: `${homePrefix}#skills` },
-  { label: content.nav.education, href: `${homePrefix}#education` },
+  { label: lang === "es" ? "CV y proyectos" : "CV and projects", href: `/${lang}/cv` },
   ...(BLOG_ENABLED ? [{ label: content.nav.blog, href: `/${lang}/blog` }] : []),
-  { label: "CV", href: `/${lang}/cv` },
   { label: content.nav.contact, href: `${homePrefix}#contact` },
 ];
 const desktopNavLinks = navLinks.filter((link) => link.href !== `${homePrefix}#hero`);

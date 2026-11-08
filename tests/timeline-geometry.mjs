@@ -9,7 +9,7 @@ test("experience milestones align with their dates and the timeline stops at the
   try {
     for (const width of [412, 580, 1408]) {
       const page = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion: "reduce" });
-      await page.goto(`${baseUrl}/es`, { waitUntil: "domcontentloaded" });
+      await page.goto(`${baseUrl}/es/cv/completo`, { waitUntil: "domcontentloaded" });
       await page.evaluate(() => document.fonts.ready);
       const geometry = await page.locator(".experience-line").evaluate((line) => {
         const center = (rect) => ({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 });

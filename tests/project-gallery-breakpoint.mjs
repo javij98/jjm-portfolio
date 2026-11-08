@@ -9,7 +9,7 @@ test("projects switch to two columns at 560px but stay single-column on smaller 
   try {
     for (const [width, expectedColumns] of [[375, 1], [559, 1], [560, 2], [580, 2], [640, 2], [1024, 3]]) {
       const page = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion: "reduce" });
-      await page.goto(`${baseUrl}/es`, { waitUntil: "domcontentloaded" });
+      await page.goto(`${baseUrl}/es/cv/completo`, { waitUntil: "domcontentloaded" });
       const { columns, scrollWidth, clientWidth } = await page.locator(".project-gallery").evaluate((element) => ({
         columns: getComputedStyle(element).gridTemplateColumns.split(" ").length,
         scrollWidth: document.documentElement.scrollWidth,

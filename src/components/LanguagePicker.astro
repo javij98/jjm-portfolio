@@ -7,9 +7,9 @@ interface Props {
 }
 
 const { currentLang, pathname } = Astro.props;
-const suffix = pathname.replace(/^\/(es|en)(?=\/|$)/, "");
-const esHref = `/es${suffix}`;
-const enHref = `/en${suffix}`;
+const suffix = pathname.replace(/^\/(es|en)(?=\/|$)/, "").replace(/\/+$/, "");
+const esHref = `/es${suffix === "/cv/full" ? "/cv/completo" : suffix}`;
+const enHref = `/en${suffix === "/cv/completo" ? "/cv/full" : suffix}`;
 ---
 
 <div data-language-picker class="inline-flex h-9 w-20 shrink-0 items-center justify-center gap-1 rounded-md border border-white/15 bg-slate-900/60 px-2 font-mono text-xs" aria-label={currentLang === "es" ? "Idioma" : "Language"}>

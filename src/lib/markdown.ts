@@ -79,7 +79,7 @@ function blog(lang: Locale, site: URL): string[] {
   ];
 }
 
-export function portfolioMarkdown(lang: Locale, site: URL): string {
+export function portfolioMarkdown(lang: Locale, site: URL, options: { includeBlog?: boolean } = {}): string {
   const content = SITE_BY_LANG[lang];
   const text = labels[lang];
   const { profile, about, experience, skills, education, contact } = content;
@@ -91,7 +91,7 @@ export function portfolioMarkdown(lang: Locale, site: URL): string {
     field(text.direction, profile.direction),
     field(text.location, profile.location),
     field(text.language, lang === "es" ? "Español" : "English"),
-    link(text.website, `/${lang}`, site),
+    link(text.website, options.includeBlog === false ? `/${lang}/cv` : `/${lang}`, site),
     link(text.markdown, `/${lang}/index.md`, site),
     link(text.otherLanguage, `/${text.otherLocale}/index.md`, site),
     field(content.hero.focus, content.hero.focusAreas.join(", ")),
@@ -140,7 +140,7 @@ export function portfolioMarkdown(lang: Locale, site: URL): string {
     inline(`${education.institution} · ${education.period}`),
     heading(3, education.trainingTitle),
     list(education.training),
-    ...blog(lang, site),
+    ...(options.includeBlog === false ? [] : blog(lang, site)),
     heading(2, contact.title),
     inline(contact.description),
     inline(contact.statement),
@@ -151,13 +151,15 @@ export function portfolioMarkdown(lang: Locale, site: URL): string {
 export interface MarkdownRoute {
   lang: Locale;
   path: string;
-  kind: "portfolio" | "projects" | "blog" | "post";
+  kind: "portfolio" | "cv" | "projects" | "blog" | "post";
   slug?: string;
 }
 
 export function markdownRoutes(): MarkdownRoute[] {
   return LOCALES.flatMap((lang): MarkdownRoute[] => [
     { lang, path: "index.md", kind: "portfolio" },
+    { lang, path: "cv.md", kind: "cv" },
+    { lang, path: `cv/${lang === "es" ? "completo" : "full"}.md`, kind: "cv" },
     { lang, path: "projects.md", kind: "projects" },
     ...(BLOG_ENABLED ? [
       { lang, path: "blog/index.md", kind: "blog" } as const,
@@ -168,6 +170,7 @@ export function markdownRoutes(): MarkdownRoute[] {
 
 export function routeMarkdown(route: MarkdownRoute, site: URL): string {
   if (route.kind === "portfolio") return portfolioMarkdown(route.lang, site);
+  if (route.kind === "cv") return portfolioMarkdown(route.lang, site, { includeBlog: false });
   const content = SITE_BY_LANG[route.lang];
   if (route.kind === "projects") {
     return document([
@@ -205,6 +208,8 @@ export function llmsIndex(site: URL): string {
     "The links below provide the published portfolio as plain Markdown, including full project descriptions and work examples. Skill levels, case status and the distinction between estimated and documented impact are included in the content.",
     heading(2, "Complete profile"),
     `- ${link("English profile", "/en/index.md", site)}: Experience, all projects, work examples, skills, education, contact and published articles.\n- ${link("Perfil en español", "/es/index.md", site)}: The same complete portfolio in Spanish.\n- ${link("Complete English content", "/llms-full.txt", site)}: Single-file plain-text export.`,
+    heading(2, "CV"),
+    `- ${link("CV in English", "/en/cv.md", site)}: Complete professional profile without blog articles.\n- ${link("CV en español", "/es/cv.md", site)}: Perfil profesional completo sin artículos del blog.`,
     heading(2, "Projects"),
     `- ${link("Personal projects in English", "/en/projects.md", site)}: Full descriptions, highlights and technologies.\n- ${link("Proyectos personales en español", "/es/projects.md", site)}: Descripciones completas, aspectos destacados y tecnologías.`,
     ...(BLOG_ENABLED ? [

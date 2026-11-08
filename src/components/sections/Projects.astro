@@ -7,11 +7,12 @@ interface Props {
   content: SiteContent["projects"];
   lang: Locale;
   full?: boolean;
+  embedded?: boolean;
 }
 
-const { content, lang, full = false } = Astro.props;
+const { content, lang, full = false, embedded = false } = Astro.props;
 const projects = full ? content.items : content.items.slice(0, HOME_PROJECT_PREVIEW_LIMIT);
-const ProjectHeading = full ? "h2" : "h3";
+const ProjectHeading = full && !embedded ? "h2" : "h3";
 const categories: ("all" | ProjectCategory)[] = ["all", "product", "platform", "automation", "web"];
 const coverByVisual: Record<string, string> = {
   MF: "/images/projects/moneyflow.svg",
@@ -26,7 +27,7 @@ const categoryCount = (category: "all" | ProjectCategory) =>
 ---
 
 <div class:list={["mx-auto max-w-6xl px-5 sm:px-6", full ? "pb-18 pt-8 sm:pb-24 sm:pt-10" : "py-18 sm:py-24"]}>
-  <SectionHeading tag={full ? "h1" : "h2"} eyebrow={content.eyebrow} title={content.title} description={content.introduction} />
+  <SectionHeading tag={full && !embedded ? "h1" : "h2"} eyebrow={content.eyebrow} title={content.title} description={content.introduction} />
   {full && (
     <div class="gallery-filters mb-8 flex flex-wrap gap-2" data-project-filters hidden role="group" aria-label={content.filterLabel}>
       {categories.map((category) => (

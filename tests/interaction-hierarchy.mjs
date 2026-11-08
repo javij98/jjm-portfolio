@@ -38,7 +38,7 @@ test("informational articles do not imply they can be clicked", async () => {
   const browser = await chromium.launch({ headless: true, args: ["--no-proxy-server"] });
   try {
     const page = await browser.newPage({ viewport: { width: 1415, height: 900 }, reducedMotion: "reduce" });
-    await page.goto(`${baseUrl}/es`, { waitUntil: "domcontentloaded" });
+    await page.goto(`${baseUrl}/es/cv/completo`, { waitUntil: "domcontentloaded" });
     for (const selector of [".experience-entry", ".work-example", ".skill-entry", ".gallery-card"]) {
       const target = page.locator(selector).first();
       await target.scrollIntoViewIfNeeded();

@@ -1,5 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import ResumeViewPicker from "../../components/ResumeViewPicker.astro";
 import { LOCALES, SITE_BY_LANG, isLocale, type Locale } from "../../i18n/content";
 import { cvEmailHref } from "../../lib/cv-actions";
 
@@ -124,6 +125,7 @@ const copy = lang === "es"
 
 <Layout lang={lang} content={content} currentPath={Astro.url.pathname} pageTitle={copy.pageTitle} pageDescription={copy.description}>
   <article class="mx-auto max-w-5xl px-5 pb-10 pt-8 sm:px-6 sm:pb-14 sm:pt-10" aria-labelledby="cv-heading">
+    <ResumeViewPicker lang={lang} view="compact" />
     <header class="mb-7 border-b border-white/10 pb-6 sm:mb-8 sm:pb-7">
       <div class="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
         <div>
@@ -138,7 +140,7 @@ const copy = lang === "es"
       <div class="mt-4 flex flex-wrap gap-2">
         <a href={`mailto:${content.profile.email}`} class="signal-hover inline-flex min-h-10 items-center rounded-md border border-cyan-300/30 bg-cyan-300/10 px-3.5 py-2 font-mono text-xs text-cyan-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">{copy.mail}</a>
         <a href={content.profile.linkedin} target="_blank" rel="noreferrer" class="signal-hover inline-flex min-h-10 items-center rounded-md border border-white/15 px-3.5 py-2 font-mono text-xs text-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">LinkedIn</a>
-        <a href={`/${lang}/projects`} class="signal-hover inline-flex min-h-10 items-center rounded-md border border-white/15 px-3.5 py-2 font-mono text-xs text-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">{copy.portfolio}</a>
+        <a href={`/${lang}/cv/${lang === "es" ? "completo" : "full"}#projects`} class="signal-hover inline-flex min-h-10 items-center rounded-md border border-white/15 px-3.5 py-2 font-mono text-xs text-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">{copy.portfolio}</a>
         <details data-cv-download class="relative">
           <summary class="signal-hover inline-flex min-h-10 cursor-pointer list-none items-center gap-2 rounded-md border border-emerald-300/40 bg-emerald-300/10 px-3.5 py-2 font-mono text-xs text-emerald-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300 [&::-webkit-details-marker]:hidden">{copy.download}<svg aria-hidden="true" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="m6 9 6 6 6-6" /></svg></summary>
           <div role="group" aria-label={copy.download} class="absolute left-0 top-full z-30 mt-2 min-w-48 rounded-md border border-white/10 bg-slate-950 p-1 shadow-xl sm:left-auto sm:right-0">
@@ -160,7 +162,7 @@ const copy = lang === "es"
     </header>
 
     <div class="grid gap-7 md:grid-cols-[1.15fr_0.85fr] md:gap-10">
-      <section aria-labelledby="cv-experience" class="min-w-0">
+      <section id="experience" aria-labelledby="cv-experience" class="min-w-0">
         <h2 id="cv-experience" class="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{copy.experience}</h2>
         <ol class="space-y-5">
           <li class="border-l border-cyan-300/30 pl-4">
@@ -195,7 +197,7 @@ const copy = lang === "es"
 
       </section>
 
-      <section aria-labelledby="cv-skills" class="min-w-0">
+      <section id="skills" aria-labelledby="cv-skills" class="min-w-0">
         <h2 id="cv-skills" class="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{copy.skills}</h2>
         <div class="space-y-4">
           <div>
@@ -234,7 +236,7 @@ const copy = lang === "es"
       </section>
     </div>
 
-    <section aria-labelledby="cv-projects" class="mt-9 border-t border-white/10 pt-7">
+    <section id="projects" aria-labelledby="cv-projects" class="mt-9 border-t border-white/10 pt-7">
       <h2 id="cv-projects" class="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{copy.featuredProjects}</h2>
       <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {content.projects.items.map((project) => (
@@ -249,7 +251,7 @@ const copy = lang === "es"
 
     <div class="mt-9 grid gap-8 border-t border-white/10 pt-7 md:grid-cols-[0.8fr_1.2fr] md:gap-10">
       <div class="grid gap-7 sm:grid-cols-2 md:grid-cols-1">
-        <section aria-labelledby="cv-education">
+        <section id="education" aria-labelledby="cv-education">
           <h2 id="cv-education" class="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{copy.education}</h2>
           <p class="font-medium text-white">{copy.degree}</p>
           <p class="mt-1 text-sm text-slate-300">{lang === "es" ? "Tecnologías de la Información y las Comunicaciones" : "Information Technologies and Telecommunications"}</p>

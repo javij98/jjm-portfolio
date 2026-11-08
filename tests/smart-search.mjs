@@ -36,7 +36,7 @@ test("project detail results navigate to and open the matching dialog", async ()
     await page.getByRole("button", { name: "Commands" }).click();
     await page.getByRole("combobox").fill("Print Studio");
     await page.getByRole("option").filter({ hasText: "Print Studio" }).first().click();
-    await page.waitForURL("**/en/projects#project-dialog-2");
+    await page.waitForURL("**/en/cv/full#project-dialog-2");
     await page.locator("#project-dialog-2[open]").waitFor();
     assert.match(await page.locator("#project-dialog-2 h2").textContent(), /Print Studio/);
   } finally {
