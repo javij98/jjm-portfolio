@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import LanguagePicker from "../components/LanguagePicker.astro";
 import ModePicker from "../components/ModePicker.astro";
+import BackToTop from "../components/BackToTop.astro";
 import CommandMenu from "../components/CommandMenu";
 import type { Locale, SiteContent } from "../i18n/content";
 import { BLOG_ENABLED } from "../config/site";
@@ -105,7 +106,7 @@ const desktopNavLinks = navLinks.filter((link) => link.href !== `${homePrefix}#h
       </nav>
     </header>
 
-    <main id="main-content">
+    <main id="main-content" tabindex="-1">
       {!isHome && !isLlm && !isCv && (
         <nav class="mx-auto max-w-6xl px-5 pt-6 sm:px-6 sm:pt-8" aria-label={lang === "es" ? "Volver a la web principal" : "Return to main site"}>
           <a href={`/${lang}`} data-back-home class="signal-hover inline-flex min-h-11 items-center gap-2 rounded-lg border border-white/15 bg-slate-900/40 px-4 py-2 font-mono text-xs text-cyan-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">
@@ -122,6 +123,7 @@ const desktopNavLinks = navLinks.filter((link) => link.href !== `${homePrefix}#h
         {pathSuffix !== "/cv" && <span class="font-mono">{content.footer}</span>}
       </div>
     </footer>}
+    <BackToTop lang={lang} />
 
     <script>
       const revealTargets = [...document.querySelectorAll<HTMLElement>("[data-reveal]")];

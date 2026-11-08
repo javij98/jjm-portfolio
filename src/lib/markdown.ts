@@ -1,5 +1,6 @@
 import { BLOG_ENABLED } from "../config/site";
 import { BLOG_POSTS, type BlogPost } from "../data/blog";
+import { CV_PREVIEW } from "../data/cv-preview";
 import { LOCALES, SITE_BY_LANG, type Locale, type SiteContent } from "../i18n/content";
 
 const labels = {
@@ -101,6 +102,11 @@ export function portfolioMarkdown(lang: Locale, site: URL, options: { includeBlo
     heading(3, about.asideTitle),
     inline(about.asideText),
     field(about.interestsLabel, about.interests.join(", ")),
+    ...(options.includeBlog === false ? [] : [
+      heading(2, CV_PREVIEW[lang].title),
+      inline(CV_PREVIEW[lang].description),
+      `${link(CV_PREVIEW[lang].cv, `/${lang}/cv`, site)} · ${link(CV_PREVIEW[lang].projects, `/${lang}/cv#projects`, site)}`,
+    ]),
     heading(2, experience.title),
     inline(experience.introduction),
     ...experience.items.flatMap((item) => [

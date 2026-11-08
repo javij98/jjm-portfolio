@@ -64,7 +64,7 @@ const copy = lang === "es"
       featuredProjects: "Proyectos destacados",
       projectStack: "Tecnologías",
       training: "Cursos y certificaciones",
-      portfolio: "Portfolio completo",
+      portfolio: "Proyectos",
       mail: "Escríbeme",
       download: "Descargar CV",
       downloadSpanish: "Español (PDF)",
@@ -112,7 +112,7 @@ const copy = lang === "es"
       featuredProjects: "Featured projects",
       projectStack: "Stack",
       training: "Training and certifications",
-      portfolio: "Full portfolio",
+      portfolio: "Projects",
       mail: "Email me",
       download: "Download CV",
       downloadSpanish: "Spanish (PDF)",
@@ -129,13 +129,13 @@ const copy = lang === "es"
       <div class="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p class="mb-2 font-mono text-xs uppercase tracking-[0.18em] text-cyan-300">{copy.introLabel}</p>
-          <h1 id="cv-heading" class="text-3xl font-semibold tracking-tight text-white sm:text-4xl">{content.profile.name}</h1>
+          <h1 id="cv-heading" class="text-3xl font-bold tracking-tight text-white sm:text-4xl">{content.profile.name}</h1>
           <p class="mt-2 text-base font-medium text-cyan-100 sm:text-lg">{lang === "es" ? "Ingeniero DevOps" : "DevOps Engineer"}</p>
           <p class="mt-1 text-xs text-slate-500">{content.profile.location}</p>
           <p class="mt-2 max-w-2xl text-sm text-slate-400">{copy.focus}</p>
         </div>
       </div>
-      <p class="mt-5 max-w-3xl text-sm leading-6 text-slate-300">{copy.summary}</p>
+      <p class="mt-5 max-w-3xl text-base leading-relaxed text-slate-300">{copy.summary}</p>
       <div class="mt-4 flex flex-wrap gap-2">
         <a href={`mailto:${content.profile.email}`} class="signal-hover inline-flex min-h-10 items-center rounded-md border border-cyan-300/30 bg-cyan-300/10 px-3.5 py-2 font-mono text-xs text-cyan-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">{copy.mail}</a>
         <a href={content.profile.linkedin} target="_blank" rel="noreferrer" class="signal-hover inline-flex min-h-10 items-center rounded-md border border-white/15 px-3.5 py-2 font-mono text-xs text-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">LinkedIn</a>
