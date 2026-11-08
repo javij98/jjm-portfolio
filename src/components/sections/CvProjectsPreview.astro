@@ -1,10 +1,11 @@
 ---
-import type { Locale } from "../../i18n/content";
+import type { Locale, SiteContent } from "../../i18n/content";
 import SectionHeading from "./SectionHeading.astro";
 import { CV_PREVIEW } from "../../data/cv-preview";
+import { PROJECT_COVERS } from "../../data/project-covers";
 
-interface Props { lang: Locale; }
-const { lang } = Astro.props;
+interface Props { lang: Locale; projects: SiteContent["projects"]["items"]; }
+const { lang, projects } = Astro.props;
 const copy = CV_PREVIEW[lang];
 ---
 
@@ -14,6 +15,20 @@ const copy = CV_PREVIEW[lang];
     title={copy.title}
     description={copy.description}
   />
+  <div class="mb-8 grid gap-4 sm:grid-cols-2" data-reveal>
+    {projects.slice(0, 2).map((project) => (
+      <a href={`/${lang}/cv#projects`} data-home-project-card class="group overflow-hidden rounded-xl border border-white/10 bg-slate-900/70 transition-colors hover:border-emerald-300/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300">
+        <div class="h-28 overflow-hidden bg-slate-900 sm:h-36" aria-hidden="true">
+          {PROJECT_COVERS[project.visual] && <img src={PROJECT_COVERS[project.visual]} alt="" width="800" height="450" loading="lazy" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:transform-none" />}
+        </div>
+        <div class="p-4 sm:p-5">
+          <p class="font-mono text-[10px] uppercase tracking-[0.14em] text-emerald-300">{project.kind}</p>
+          <h3 class="mt-2 text-base font-semibold text-white sm:text-lg">{project.name}<span aria-hidden="true" class="ml-2 text-cyan-300">↗</span></h3>
+          <p class="mt-2 text-xs leading-5 text-slate-400">{project.stack.slice(0, 3).join(" · ")}</p>
+        </div>
+      </a>
+    ))}
+  </div>
   <div class="flex flex-wrap gap-3" data-reveal>
     <a href={`/${lang}/cv`} class="signal-hover inline-flex min-h-11 items-center justify-center rounded-lg border border-emerald-300 bg-emerald-400 px-5 py-2.5 text-sm font-semibold text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300">{copy.cv}<span aria-hidden="true" class="ml-2">↗</span></a>
     <a href={`/${lang}/cv#projects`} class="signal-hover inline-flex min-h-11 items-center justify-center rounded-lg border border-cyan-300/40 px-5 py-2.5 text-sm font-semibold text-cyan-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">{copy.projects}<span aria-hidden="true" class="ml-2">↗</span></a>

@@ -1,6 +1,7 @@
 ---
 import type { Locale, ProjectCategory, SiteContent } from "../../i18n/content";
 import { HOME_PROJECT_PREVIEW_LIMIT } from "../../config/site";
+import { PROJECT_COVERS } from "../../data/project-covers";
 import SectionHeading from "./SectionHeading.astro";
 
 interface Props {
@@ -14,14 +15,7 @@ const { content, lang, full = false, embedded = false } = Astro.props;
 const projects = full ? content.items : content.items.slice(0, HOME_PROJECT_PREVIEW_LIMIT);
 const ProjectHeading = full && !embedded ? "h2" : "h3";
 const categories: ("all" | ProjectCategory)[] = ["all", "product", "platform", "automation", "web"];
-const coverByVisual: Record<string, string> = {
-  MF: "/images/projects/moneyflow.svg",
-  KB: "/images/projects/knowledge-platform.svg",
-  PS: "/images/projects/print-studio.svg",
-  HA: "/images/projects/hermes-agent.svg",
-  JJM: "/images/projects/personal-portfolio.svg",
-  "ES/EN": "/images/projects/services-site.svg",
-};
+
 const categoryCount = (category: "all" | ProjectCategory) =>
   category === "all" ? content.items.length : content.items.filter((item) => item.category === category).length;
 ---
@@ -42,8 +36,8 @@ const categoryCount = (category: "all" | ProjectCategory) =>
       <article class="gallery-card ambient-hover" data-project-category={project.category} data-reveal>
         <div class="gallery-art" aria-hidden="true">
           <span class="gallery-art-index">{String(index + 1).padStart(2, "0")} / {String(content.items.length).padStart(2, "0")}</span>
-          {coverByVisual[project.visual] ? (
-            <img class="gallery-cover" src={coverByVisual[project.visual]} alt="" width="800" height="450" loading={full ? "lazy" : "eager"} decoding="async" />
+          {PROJECT_COVERS[project.visual] ? (
+            <img class="gallery-cover" src={PROJECT_COVERS[project.visual]} alt="" width="800" height="450" loading={full ? "lazy" : "eager"} decoding="async" />
           ) : <span class="gallery-mark">{project.visual}</span>}
           <span class="gallery-art-line"></span>
         </div>
@@ -70,7 +64,7 @@ const categoryCount = (category: "all" | ProjectCategory) =>
         </button>
       </div>
       <div class="project-dialog-cover" aria-hidden="true">
-        {coverByVisual[project.visual] ? <img src={coverByVisual[project.visual]} alt="" width="800" height="450" loading="lazy" decoding="async" /> : <span class="gallery-mark">{project.visual}</span>}
+        {PROJECT_COVERS[project.visual] ? <img src={PROJECT_COVERS[project.visual]} alt="" width="800" height="450" loading="lazy" decoding="async" /> : <span class="gallery-mark">{project.visual}</span>}
       </div>
       <div class="project-dialog-content">
         <h2 id={`project-dialog-title-${index}`} class="text-2xl font-bold tracking-tight text-white sm:text-3xl">{project.name}</h2>

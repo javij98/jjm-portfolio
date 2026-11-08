@@ -13,11 +13,12 @@ test("home introduces CV and projects with direct localized links", async () => 
       assert.equal(await preview.count(), 1);
       assert.ok((await preview.locator("p").allTextContents()).join(" ").trim().length > 30);
       assert.equal(await preview.locator(`a[href='/${lang}/cv']`).count(), 1);
-      assert.equal(await preview.locator(`a[href='/${lang}/cv#projects']`).count(), 1);
+      const projectsLink = preview.getByRole("link", { name: lang === "es" ? "Ver proyectos" : "View projects", exact: true });
+      assert.equal(await projectsLink.getAttribute("href"), `/${lang}/cv#projects`);
       const description = (await preview.locator("p").allTextContents()).map((text) => text.trim()).find((text) => text.length > 30);
       const markdown = await (await page.request.get(`${base}/${lang}/index.md`)).text();
       assert.ok(markdown.includes(description), `${lang}: LLM export must include the home introduction`);
-      await preview.locator(`a[href='/${lang}/cv#projects']`).click();
+      await projectsLink.click();
       assert.equal(new URL(page.url()).pathname.replace(/\/$/, ""), `/${lang}/cv`);
       assert.equal(new URL(page.url()).hash, "#projects");
       assert.ok(await page.locator("#projects").isVisible());

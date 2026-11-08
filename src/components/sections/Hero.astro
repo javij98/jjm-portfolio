@@ -45,7 +45,8 @@ const { lang, profile, hero } = Astro.props;
           </a>
         </div>
       </div>
-      <div class="relative z-10 overflow-hidden rounded-2xl border border-white/12 bg-slate-900/80 shadow-2xl shadow-black/20" data-reveal data-terminal>
+      <div class="terminal-stage relative z-10" data-reveal data-terminal-stage>
+      <div class="terminal-window overflow-hidden rounded-2xl border border-white/12 bg-slate-900/80 shadow-2xl shadow-black/20" data-terminal>
         <div class="flex items-center justify-between border-b border-white/10 px-5 py-3 sm:py-4">
           <div class="flex gap-1.5" aria-hidden="true">
             <span class="h-2.5 w-2.5 rounded-full bg-rose-400/75"></span>
@@ -65,17 +66,35 @@ const { lang, profile, hero } = Astro.props;
           <p class="mt-4 text-emerald-300 sm:mt-6" aria-hidden="true">❯</p>
         </div>
       </div>
+      <div class="terminal-intro" data-terminal-intro aria-hidden="true">
+        <div class="terminal-intro-icon" data-terminal-icon>
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m5 7 4 4-4 4M12 17h7" /></svg>
+        </div>
+        <svg class="terminal-intro-pointer" data-terminal-pointer width="28" height="34" viewBox="0 0 24 28" fill="none"><path d="M3 2v19l5-4 4 8 3-1.5-4-8 7-.5L3 2Z" fill="#e2e8f0" stroke="#0f172a" stroke-width="1.5" stroke-linejoin="round" /></svg>
+      </div>
+      </div>
+      <script is:inline>
+        if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          const stage = document.querySelector("[data-terminal-stage]");
+          if (stage) {
+            stage.classList.add("is-opening");
+            window.setTimeout(() => { if (!stage.dataset.initialized) stage.classList.remove("is-opening"); }, 5000);
+          }
+        }
+      </script>
     </div>
   </div>
 </div>
 
 <script>
-  const terminal = document.querySelector<HTMLElement>("[data-terminal]");
+  const stage = document.querySelector<HTMLElement>("[data-terminal-stage]");
+  const terminal = stage?.querySelector<HTMLElement>("[data-terminal]");
   const command = terminal?.querySelector<HTMLElement>("[data-typed-command]");
   const lines = [...(terminal?.querySelectorAll<HTMLElement>("[data-terminal-line]") ?? [])]
     .filter((line) => line.getClientRects().length > 0);
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (terminal && command && !reduced) {
+  if (stage && terminal && command && !reduced) {
+    stage.dataset.initialized = "true";
     const fullText = command.dataset.text ?? "";
     command.textContent = "";
     lines.forEach((line) => line.classList.add("terminal-line-pending"));
@@ -89,15 +108,23 @@ const { lang, profile, hero } = Astro.props;
         lines.forEach((line, index) => window.setTimeout(() => line.classList.remove("terminal-line-pending"), 100 + index * 190));
       }
     };
+    const start = () => {
+      if (!stage.classList.contains("is-opening")) { typeNext(); return; }
+      stage.classList.add("is-animating");
+      window.setTimeout(() => {
+        stage.classList.remove("is-opening", "is-animating");
+        window.setTimeout(typeNext, 200);
+      }, 1800);
+    };
     if ("IntersectionObserver" in window) {
       const observer = new IntersectionObserver((entries) => {
         if (!entries.some((entry) => entry.isIntersecting)) return;
         observer.disconnect();
-        window.setTimeout(typeNext, 100);
+        start();
       }, { threshold: 0.15 });
-      observer.observe(terminal);
+      observer.observe(stage);
     } else {
-      window.setTimeout(typeNext, 100);
+      start();
     }
   }
   const heroSurface = document.querySelector<HTMLElement>("[data-hero-interactive]");

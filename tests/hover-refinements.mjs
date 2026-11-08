@@ -111,8 +111,10 @@ test("mobile hero brings terminal into the initial view and starts typing only w
     const typed = shortPage.locator("#hero [data-typed-command]");
     assert.equal(await typed.textContent(), "", "typing waits while terminal is below viewport");
     await shortPage.locator("#hero [data-terminal]").scrollIntoViewIfNeeded();
-    await shortPage.waitForTimeout(350);
-    assert.ok((await typed.textContent()).length > 0, "typing starts on intersection");
+    await shortPage.locator("[data-terminal-intro]").waitFor({ state: "visible" });
+    await shortPage.locator("[data-terminal-intro]").waitFor({ state: "hidden", timeout: 5000 });
+    await shortPage.waitForFunction(() => document.querySelector("[data-typed-command]").textContent.length > 0);
+    assert.ok((await typed.textContent()).length > 0, "typing starts after the opening animation");
   } finally {
     await browser.close();
   }

@@ -27,6 +27,28 @@ section[id] { scroll-margin-top: 4rem; }
 .terminal-line-pending { opacity: 0; transform: translateY(7px); }
 [data-terminal-line] { transition: opacity 350ms ease, transform 350ms ease; }
 
+/* The stage reserves the terminal's final size, so opening it never shifts content. */
+.terminal-window { transition: opacity 420ms ease, transform 420ms ease; }
+.terminal-stage.is-opening .terminal-window { opacity: 0; transform: scale(.88) translateY(10px); }
+.terminal-intro { display: none; position: absolute; inset: 0; align-items: center; justify-content: center; pointer-events: none; }
+.terminal-stage.is-opening .terminal-intro { display: flex; }
+.terminal-intro-icon { display: grid; place-items: center; width: 78px; height: 78px; color: #6ee7b7; border: 1px solid rgba(110, 231, 183, .45); border-radius: 18px; background: #0f1f2d; box-shadow: 0 12px 40px rgba(0, 0, 0, .25), 0 0 28px rgba(52, 211, 153, .1); }
+.terminal-intro-pointer { position: absolute; left: 50%; top: 50%; opacity: 0; transform: translate(75px, 65px); }
+.is-animating .terminal-intro-pointer { animation: terminal-pointer-approach 1.8s ease both; }
+.is-animating .terminal-intro-icon { animation: terminal-icon-click 1.8s ease both; }
+@keyframes terminal-pointer-approach {
+  0% { opacity: 0; transform: translate(75px, 65px); }
+  15% { opacity: 1; }
+  55%, 70% { opacity: 1; transform: translate(8px, 7px); }
+  62% { transform: translate(8px, 7px) scale(.85); }
+  90%, 100% { opacity: 0; transform: translate(8px, 7px); }
+}
+@keyframes terminal-icon-click {
+  0%, 55% { transform: scale(1); }
+  62% { transform: scale(.91); box-shadow: 0 0 0 8px rgba(52, 211, 153, .13); }
+  75%, 100% { transform: scale(1); }
+}
+
 html.motion-ready [data-reveal]:not(.is-visible) { opacity: 0; transform: translateY(22px); }
 html.motion-ready [data-reveal] {
   transition: opacity 650ms ease, transform 650ms cubic-bezier(.2,.7,.2,1);
