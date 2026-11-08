@@ -9,7 +9,7 @@ for (const width of [1415, 412]) {
     const browser = await chromium.launch({ headless: true, args: ["--no-proxy-server"] });
     try {
       const page = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion: "reduce" });
-      for (const [path, selector] of [["/es", ".blog-card"], ["/es/cv/completo", "main a.signal-hover"], ["/es", "#hero a.signal-hover"]]) {
+      for (const [path, selector] of [["/es", ".blog-card"], ["/es/cv", "main a.signal-hover"], ["/es", "#hero a.signal-hover"]]) {
         await page.goto(`${baseUrl}${path}`, { waitUntil: "domcontentloaded" });
         const target = page.locator(selector).first();
         await target.scrollIntoViewIfNeeded();

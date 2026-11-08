@@ -36,7 +36,7 @@ test("project detail results navigate to and open the matching dialog", async ()
     await page.getByRole("button", { name: "Commands" }).click();
     await page.getByRole("combobox").fill("Print Studio");
     await page.getByRole("option").filter({ hasText: "Print Studio" }).first().click();
-    await page.waitForURL("**/en/cv/full#project-dialog-2");
+    await page.waitForURL("**/en/cv#project-dialog-2");
     await page.locator("#project-dialog-2[open]").waitFor();
     assert.match(await page.locator("#project-dialog-2 h2").textContent(), /Print Studio/);
   } finally {
@@ -69,8 +69,8 @@ test("search reports incomplete results when a page is unavailable", async () =>
     await page.route("**/es/cv", (route) => route.abort());
     await page.getByRole("button", { name: "Comandos" }).click();
     await page.getByRole("status").filter({ hasText: "resultados pueden estar incompletos" }).waitFor();
-    await page.getByRole("combobox").fill("MoneyFlow");
-    await page.getByRole("option").filter({ hasText: "MoneyFlow" }).first().waitFor();
+    await page.getByRole("combobox").fill("proxy inverso");
+    await page.getByRole("option").filter({ hasText: "Una plataforma de conocimiento autoalojada" }).first().waitFor();
   } finally {
     await browser.close();
   }
@@ -100,7 +100,7 @@ test("fuzzy search preserves word boundaries between HTML elements", async () =>
     const page = await browser.newPage({ viewport: { width: 1280, height: 900 }, reducedMotion: "reduce" });
     page.setDefaultTimeout(5000);
     await page.goto(`${baseUrl}/es`, { waitUntil: "networkidle" });
-    await page.route("**/es/cv", (route) => route.fulfill({ contentType: "text/html", body: "<main><article><p>UNIQUEBREAK</p><p>BOUNDARYTOKEN</p></article></main>" }));
+    await page.route("**/es/cv", (route) => route.fulfill({ contentType: "text/html", body: "<main><header data-cv-summary><p>UNIQUEBREAK</p><p>BOUNDARYTOKEN</p></header></main>" }));
     await page.getByRole("button", { name: "Comandos" }).click();
     await page.getByRole("combobox").fill("BOUNDARYTOKN");
     await page.getByRole("option").filter({ hasText: "CV" }).waitFor();

@@ -91,8 +91,8 @@ function extract(doc: Document, path: string, lang: Locale): SearchEntry[] {
   const home = path === `/${lang}`;
   const projects = path === `/${lang}/projects`;
   const blogPost = path.startsWith(`/${lang}/blog/`);
-  const cv = path === `/${lang}/cv`;
-  const fullCv = path === `/${lang}/cv/${lang === "es" ? "completo" : "full"}`;
+  const cv = path === `/${lang}/cv/compact`;
+  const fullCv = path === `/${lang}/cv`;
   const entries: SearchEntry[] = [];
   const add = (element: Element, title: string, source: string, href: string) => {
     const text = cleanText(element);
@@ -109,7 +109,9 @@ function extract(doc: Document, path: string, lang: Locale): SearchEntry[] {
       add(dialog, dialog.querySelector("h2")?.textContent?.trim() ?? "", lang === "es" ? "Experiencia · Caso" : "Experience · Case study", `${path}#${dialog.id}`);
     });
   } else if (fullCv) {
-    for (const section of main.querySelectorAll(":scope > section[id]")) {
+    const summary = main.querySelector("[data-cv-summary]");
+    if (summary) add(summary, "CV", lang === "es" ? "Currículum" : "Résumé", path);
+    for (const section of main.querySelectorAll("[data-cv-panel='full'] > section[id]")) {
       const copy = section.cloneNode(true) as Element;
       copy.querySelectorAll("dialog").forEach((node) => node.remove());
       const title = section.querySelector("h1, h2")?.textContent?.trim() ?? section.id;

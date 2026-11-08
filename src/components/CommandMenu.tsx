@@ -95,7 +95,7 @@ export default function CommandMenu({ lang, email, linkedin, githubHref, blogEna
 
   const navigateCvSection = (id: string) => {
     setOpen(false);
-    const path = `/${lang}/cv/${lang === "es" ? "completo" : "full"}`;
+    const path = `/${lang}/cv`;
     if (window.location.pathname.replace(/\/$/, "") === path) {
       window.location.hash = id;
       document.getElementById(id)?.scrollIntoView();
@@ -103,9 +103,7 @@ export default function CommandMenu({ lang, email, linkedin, githubHref, blogEna
   };
   const switchLanguage = (target: Locale) => {
     const suffix = window.location.pathname.replace(/^\/(es|en)/, "").replace(/\/+$/, "");
-    const localized = suffix === "/cv/completo" || suffix === "/cv/full"
-      ? `/cv/${target === "es" ? "completo" : "full"}` : suffix;
-    window.location.assign(`/${target}${localized}${window.location.hash}`);
+    window.location.assign(`/${target}${suffix}${window.location.hash}`);
   };
 
   const sections: MenuItem[] = [

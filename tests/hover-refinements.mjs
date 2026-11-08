@@ -69,7 +69,7 @@ test("non-clickable cards have a quiet ambient hover", async () => {
   const browser = await chromium.launch({ headless: true, args: ["--no-proxy-server"] });
   try {
     const page = await browser.newPage({ viewport: { width: 1415, height: 900 }, reducedMotion: "reduce" });
-    await page.goto(`${baseUrl}/es/cv/completo`, { waitUntil: "domcontentloaded" });
+    await page.goto(`${baseUrl}/es/cv`, { waitUntil: "domcontentloaded" });
     for (const selector of [".experience-entry", ".work-example", ".skill-entry", ".gallery-card"]) {
       const item = page.locator(selector).first();
       await item.scrollIntoViewIfNeeded();

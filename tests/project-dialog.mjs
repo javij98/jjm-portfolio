@@ -66,7 +66,7 @@ test("full CV project gallery opens a dialog and backdrop click closes it", asyn
   const browser = await chromium.launch({ headless: true, args: ["--no-proxy-server"] });
   try {
     const page = await browser.newPage({ viewport: { width: 1408, height: 900 }, reducedMotion: "reduce" });
-    await page.goto(`${baseUrl}/es/cv/completo`, { waitUntil: "domcontentloaded" });
+    await page.goto(`${baseUrl}/es/cv`, { waitUntil: "domcontentloaded" });
     const opener = page.locator("#projects .gallery-card [data-project-open]").first();
     await opener.click();
     assert.equal(await page.locator("[data-project-dialog][open]").count(), 1);

@@ -8,7 +8,7 @@ export const GET: APIRoute = ({ site }) => {
   const paths = ["es", "en"].flatMap((lang) => [
     `/${lang}`,
     `/${lang}/cv`,
-    `/${lang}/cv/${lang === "es" ? "completo" : "full"}`,
+    `/${lang}/cv/compact`,
     `/${lang}/projects`,
     ...(BLOG_ENABLED ? [`/${lang}/blog`, ...BLOG_POSTS.map((post) => `/${lang}/blog/${post.slug}`)] : []),
   ]);

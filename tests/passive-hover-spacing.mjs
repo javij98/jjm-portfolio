@@ -8,7 +8,7 @@ test("informational hover fades before its rounded edges", async () => {
   const browser = await chromium.launch({ headless: true, args: ["--no-proxy-server"] });
   try {
     const page = await browser.newPage({ viewport: { width: 1415, height: 900 }, reducedMotion: "reduce" });
-    await page.goto(`${baseUrl}/es/cv/completo`, { waitUntil: "domcontentloaded" });
+    await page.goto(`${baseUrl}/es/cv`, { waitUntil: "domcontentloaded" });
     for (const selector of [".experience-entry", ".work-example", ".skill-entry"]) {
       const item = page.locator(selector).first();
       await item.scrollIntoViewIfNeeded();
@@ -41,7 +41,7 @@ test("informational rows leave breathing room between copy and hover area", asyn
   try {
     for (const width of [412, 1415]) {
       const page = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion: "reduce" });
-      await page.goto(`${baseUrl}/es/cv/completo`, { waitUntil: "domcontentloaded" });
+      await page.goto(`${baseUrl}/es/cv`, { waitUntil: "domcontentloaded" });
       for (const [selector, child] of [
         [".experience-entry", "p"],
         [".work-example", "span"],
@@ -65,7 +65,7 @@ test("timeline hover ends close to its content rather than filling the row gap",
   const browser = await chromium.launch({ headless: true, args: ["--no-proxy-server"] });
   try {
     const page = await browser.newPage({ viewport: { width: 1415, height: 900 }, reducedMotion: "reduce" });
-    await page.goto(`${baseUrl}/es/cv/completo`, { waitUntil: "domcontentloaded" });
+    await page.goto(`${baseUrl}/es/cv`, { waitUntil: "domcontentloaded" });
     const gap = await page.locator(".experience-entry").first().evaluate((element) => {
       const entry = element.getBoundingClientRect();
       const content = element.querySelector(".grid").getBoundingClientRect();

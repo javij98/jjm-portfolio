@@ -26,13 +26,12 @@ const baseUrl = Astro.site ?? new URL(SITE_URL);
 const normalizedPath = currentPath.replace(/\/+$/, "") || "/";
 const pathSuffix = normalizedPath.replace(new RegExp(`^/${lang}(?=/|$)`), "") || "";
 const isHome = pathSuffix === "";
+const isCv = pathSuffix === "/cv" || pathSuffix.startsWith("/cv/");
 const homePrefix = isHome ? "" : `/${lang}`;
 const canonical = new URL(isLlm ? `/${lang}` : normalizedPath, baseUrl).toString();
 const alternateSuffix = isLlm ? "" : pathSuffix;
-const spanishSuffix = alternateSuffix === "/cv/full" ? "/cv/completo" : alternateSuffix;
-const englishSuffix = alternateSuffix === "/cv/completo" ? "/cv/full" : alternateSuffix;
-const spanishUrl = new URL(`/es${spanishSuffix}`, baseUrl).toString();
-const englishUrl = new URL(`/en${englishSuffix}`, baseUrl).toString();
+const spanishUrl = new URL(`/es${alternateSuffix}`, baseUrl).toString();
+const englishUrl = new URL(`/en${alternateSuffix}`, baseUrl).toString();
 const navLinks = [
   { label: content.nav.home, href: `${homePrefix}#hero` },
   { label: content.nav.about, href: `${homePrefix}#about` },
@@ -107,7 +106,7 @@ const desktopNavLinks = navLinks.filter((link) => link.href !== `${homePrefix}#h
     </header>
 
     <main id="main-content">
-      {!isHome && !isLlm && (
+      {!isHome && !isLlm && !isCv && (
         <nav class="mx-auto max-w-6xl px-5 pt-6 sm:px-6 sm:pt-8" aria-label={lang === "es" ? "Volver a la web principal" : "Return to main site"}>
           <a href={`/${lang}`} data-back-home class="signal-hover inline-flex min-h-11 items-center gap-2 rounded-lg border border-white/15 bg-slate-900/40 px-4 py-2 font-mono text-xs text-cyan-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">
             <span aria-hidden="true">←</span>{lang === "es" ? "Volver al inicio" : "Back to home"}

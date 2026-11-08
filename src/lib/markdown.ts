@@ -159,6 +159,7 @@ export function markdownRoutes(): MarkdownRoute[] {
   return LOCALES.flatMap((lang): MarkdownRoute[] => [
     { lang, path: "index.md", kind: "portfolio" },
     { lang, path: "cv.md", kind: "cv" },
+    { lang, path: "cv/compact.md", kind: "cv" },
     { lang, path: `cv/${lang === "es" ? "completo" : "full"}.md`, kind: "cv" },
     { lang, path: "projects.md", kind: "projects" },
     ...(BLOG_ENABLED ? [

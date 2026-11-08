@@ -9,7 +9,7 @@ test("experience milestones sit on the vertical timeline at mobile and desktop w
   try {
     for (const width of [412, 580, 1408]) {
       const page = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion: "reduce" });
-      await page.goto(`${baseUrl}/es/cv/completo`, { waitUntil: "domcontentloaded" });
+      await page.goto(`${baseUrl}/es/cv`, { waitUntil: "domcontentloaded" });
       const positions = await page.locator(".experience-line").evaluate((line) => {
         const segment = line.querySelector(".experience-segment").getBoundingClientRect();
         const track = segment.left + segment.width / 2;
