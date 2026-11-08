@@ -1,0 +1,42 @@
+---
+import type { Locale } from "../i18n/content";
+interface Props { lang: Locale; }
+const { lang } = Astro.props;
+---
+<a
+  href={`/${lang}#contact`}
+  data-floating-contact
+  hidden
+  class="fixed z-40 inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-emerald-300/50 bg-slate-900/95 px-4 py-2 text-sm font-semibold text-emerald-200 shadow-lg shadow-slate-950/40 hover:border-emerald-200 hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300"
+>
+  <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+  {lang === "es" ? "Contacto" : "Contact"}
+</a>
+
+<script>
+  const link = document.querySelector<HTMLAnchorElement>("[data-floating-contact]");
+  const hero = document.querySelector<HTMLElement>("#hero");
+  const contact = document.querySelector<HTMLElement>("#contact");
+  const actions = document.querySelector<HTMLElement>("[data-cv-actions]");
+  const footer = document.querySelector<HTMLElement>("footer");
+  const header = document.querySelector<HTMLElement>("body > header");
+  if (link && ((hero && contact) || actions)) {
+    const update = () => {
+      const headerBottom = header?.getBoundingClientRect().bottom ?? 0;
+      const showOnHome = !!hero && !!contact && hero.getBoundingClientRect().bottom <= headerBottom && contact.getBoundingClientRect().top > window.innerHeight;
+      const showOnCv = !!actions && actions.getBoundingClientRect().bottom <= headerBottom && (!footer || footer.getBoundingClientRect().top > window.innerHeight);
+      link.hidden = !(showOnHome || showOnCv);
+    };
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update, { passive: true });
+    update();
+  }
+</script>
+
+<style>
+  [data-floating-contact][hidden] { display: none; }
+  [data-floating-contact] {
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    right: calc(max(1rem, env(safe-area-inset-right)) + 3.5rem);
+  }
+</style>

@@ -136,7 +136,7 @@ const copy = lang === "es"
         </div>
       </div>
       <p class="mt-5 max-w-3xl text-base leading-relaxed text-slate-300">{copy.summary}</p>
-      <div class="mt-4 flex flex-wrap gap-2">
+      <div data-cv-actions class="mt-4 flex flex-wrap gap-2">
         <a href={`mailto:${content.profile.email}`} class="signal-hover inline-flex min-h-10 items-center rounded-md border border-cyan-300/30 bg-cyan-300/10 px-3.5 py-2 font-mono text-xs text-cyan-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">{copy.mail}</a>
         <a href={content.profile.linkedin} target="_blank" rel="noreferrer" class="signal-hover inline-flex min-h-10 items-center rounded-md border border-white/15 px-3.5 py-2 font-mono text-xs text-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">LinkedIn</a>
         <a href={`/${lang}/cv#projects`} class="signal-hover inline-flex min-h-10 items-center rounded-md border border-white/15 px-3.5 py-2 font-mono text-xs text-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">{copy.portfolio}</a>

@@ -3,6 +3,7 @@ import "../styles/global.css";
 import LanguagePicker from "../components/LanguagePicker.astro";
 import ModePicker from "../components/ModePicker.astro";
 import BackToTop from "../components/BackToTop.astro";
+import FloatingContact from "../components/FloatingContact.astro";
 import CommandMenu from "../components/CommandMenu";
 import type { Locale, SiteContent } from "../i18n/content";
 import { BLOG_ENABLED } from "../config/site";
@@ -118,12 +119,16 @@ const desktopNavLinks = navLinks.filter((link) => link.href !== `${homePrefix}#h
     </main>
 
     {!isLlm && <footer class="border-t border-white/10">
-      <div class="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-7 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+      <div class="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-7 pr-20 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between sm:pl-6 sm:pr-24">
         <span>© {new Date().getFullYear()} {content.profile.name}</span>
-        {pathSuffix !== "/cv" && <span class="font-mono">{content.footer}</span>}
+        <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
+          {pathSuffix !== "/cv" && <span class="font-mono">{content.footer}</span>}
+          <a href={`/${lang}#contact`} class="nav-link inline-flex min-h-11 items-center rounded font-medium text-cyan-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">{content.nav.contact}</a>
+        </div>
       </div>
     </footer>}
     <BackToTop lang={lang} />
+    {!isLlm && (isHome || isCv) && <FloatingContact lang={lang} />}
 
     <script>
       const revealTargets = [...document.querySelectorAll<HTMLElement>("[data-reveal]")];

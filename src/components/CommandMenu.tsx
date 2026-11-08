@@ -138,6 +138,9 @@ export default function CommandMenu({ lang, email, linkedin, githubHref, blogEna
     .map((pdfLanguage) => ({ pdfLanguage, href: cvEmailHref(lang, pdfLanguage), label: labels.emailCv[pdfLanguage === "es" ? 0 : 1] }));
 
   useEffect(() => {
+    const navigation = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
+    const sameOriginReferrer = document.referrer && new URL(document.referrer).origin === window.location.origin;
+    if (navigation?.type !== "reload" && (navigation?.type === "back_forward" || sameOriginReferrer)) return;
     setShowHint(true);
     const timer = window.setTimeout(() => setShowHint(false), 4000);
     const onFocus = (event: FocusEvent) => {

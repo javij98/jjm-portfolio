@@ -153,3 +153,38 @@ test("focusing another header control dismisses the expansion", async () => {
     await page.locator("[data-search-expansion]").waitFor({ state: "detached", timeout: 1500 });
   } finally { await browser.close(); }
 });
+
+test("search discovery replays on reload but not on internal navigation", async () => {
+  const browser = await launch();
+  try {
+    for (const lang of ["es", "en"]) {
+      const page = await browser.newPage({ viewport: { width: 1280, height: 740 }, reducedMotion: "reduce" });
+      page.setDefaultTimeout(5000);
+      await page.goto(`${baseUrl}/${lang}`, { waitUntil: "networkidle" });
+      await page.locator("[data-search-expansion]").waitFor({ state: "visible" });
+      const cvLink = page.locator(`header a[href='/${lang}/cv']`).first();
+      await cvLink.focus();
+      await cvLink.click();
+      await page.waitForURL(`**/${lang}/cv`);
+      await page.getByRole("button", { name: lang === "es" ? "Comandos" : "Commands" }).waitFor();
+      await page.waitForTimeout(250);
+      assert.equal(await page.locator("[data-search-expansion]").count(), 0, `${lang}: navigation must not replay the hint`);
+      await page.goBack({ waitUntil: "networkidle" });
+      await page.waitForTimeout(250);
+      assert.equal(await page.locator("[data-search-expansion]").count(), 0, `${lang}: back navigation must not replay the hint`);
+      await page.goForward({ waitUntil: "networkidle" });
+      await page.waitForTimeout(250);
+      assert.equal(await page.locator("[data-search-expansion]").count(), 0, `${lang}: forward navigation must not replay the hint`);
+      await page.reload({ waitUntil: "networkidle" });
+      await page.locator("[data-search-expansion]").waitFor({ state: "visible" });
+      await page.locator(`header a[href='/${lang}#contact']`).first().click();
+      await page.waitForURL(`**/${lang}#contact`);
+      await page.getByRole("button", { name: lang === "es" ? "Comandos" : "Commands" }).waitFor();
+      await page.waitForTimeout(250);
+      assert.equal(await page.locator("[data-search-expansion]").count(), 0, `${lang}: returning home must not replay the hint`);
+      await page.reload({ waitUntil: "networkidle" });
+      await page.locator("[data-search-expansion]").waitFor({ state: "visible" });
+      await page.close();
+    }
+  } finally { await browser.close(); }
+});

@@ -216,10 +216,9 @@ html.project-dialog-open { overflow: hidden; }
 
 /* Reserve expansion space on tablet and desktop so navigation stays clickable. */
 .search-trigger-slot { display: flex; flex: none; }
-@media (min-width: 560px) { .search-trigger-slot { width: 160px; } }
+@media (min-width: 560px) { .search-trigger-slot { width: 160px; justify-content: flex-end; } }
 @media (min-width: 768px) { .search-trigger-slot { width: 200px; } }
 @media (min-width: 1024px) { .search-trigger-slot { width: 96px; } }
-@media (min-width: 1280px) { .search-trigger-slot { justify-content: flex-end; } }
 
 .search-discovery-expansion {
   --search-expanded-width: 160px;
@@ -245,11 +244,10 @@ html.project-dialog-open { overflow: hidden; }
   animation: search-discovery 4s ease both;
 }
 @media (min-width: 560px) {
-  .search-discovery-expansion { --search-expanded-width: 160px; }
+  .search-discovery-expansion { --search-expanded-width: 160px; left: auto; right: -1px; }
 }
 @media (min-width: 768px) { .search-discovery-expansion { --search-expanded-width: 200px; } }
 @media (min-width: 1024px) { .search-discovery-expansion { --search-expanded-width: 96px; } }
-@media (min-width: 1280px) { .search-discovery-expansion { left: auto; right: -1px; } }
 .search-expansion-short { display: none; }
 @media (min-width: 1024px) {
   .search-expansion-long { display: none; }
