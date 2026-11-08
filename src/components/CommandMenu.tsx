@@ -63,6 +63,7 @@ export default function CommandMenu({ lang, email, linkedin, githubHref, blogEna
         emailCv: ["Enviarte el CV en español por correo", "Enviarte el CV en inglés por correo"],
         emailHint: "Abre un borrador con el enlace al PDF",
         hint: "Busca en la web",
+        shortHint: "Buscar",
         close: "Cerrar",
         sections: ["Secciones", "Enlaces", "Idioma"],
         items: ["Inicio", "Sobre mí", "Proyectos", "Experiencia", "Competencias", "Formación", "Contacto", "GitHub", "LinkedIn", "Enviar email", "Español", "English"],
@@ -79,6 +80,7 @@ export default function CommandMenu({ lang, email, linkedin, githubHref, blogEna
         emailCv: ["Email yourself the Spanish CV", "Email yourself the English CV"],
         emailHint: "Opens an email draft with the PDF link",
         hint: "Search the site",
+        shortHint: "Search",
         close: "Close",
         sections: ["Sections", "Links", "Language"],
         items: ["Home", "About", "Projects", "Experience", "Skills", "Education", "Contact", "GitHub", "LinkedIn", "Send email", "Español", "English"],
@@ -217,7 +219,7 @@ export default function CommandMenu({ lang, email, linkedin, githubHref, blogEna
         <Search className="h-4 w-4 text-cyan-300" aria-hidden="true" />
         <span className="hidden md:inline lg:hidden">{labels.trigger}</span>
         <kbd className="hidden shrink-0 whitespace-nowrap font-mono text-[10px] text-slate-400 md:inline lg:hidden">⌘/Ctrl K</kbd>
-        {showHint && <span data-search-expansion aria-hidden="true" className="search-discovery-expansion"><Search className="h-4 w-4 shrink-0 text-cyan-300" /><span>{labels.hint}</span></span>}
+        {showHint && <span data-search-expansion aria-hidden="true" className="search-discovery-expansion"><Search className="h-4 w-4 shrink-0 text-cyan-300" /><span className="search-expansion-label"><span className="search-expansion-long">{labels.hint}</span><span className="search-expansion-short">{labels.shortHint}</span></span></span>}
       </button>
 
       {open && typeof document !== "undefined" && createPortal(

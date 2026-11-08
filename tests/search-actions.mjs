@@ -136,7 +136,7 @@ test("clicking the expanded search label opens the command menu", async () => {
     for (const width of [320, 1280]) {
       const page = await browser.newPage({ viewport: { width, height: 740 }, reducedMotion: "reduce" });
       await page.goto(`${baseUrl}/es`, { waitUntil: "networkidle" });
-      await page.locator("[data-search-expansion]").getByText("Busca en la web").click();
+      await page.locator("[data-search-expansion]").getByText(width < 1024 ? "Busca en la web" : "Buscar", { exact: true }).click();
       await page.getByRole("dialog", { name: "Navegación rápida" }).waitFor();
       await page.close();
     }
