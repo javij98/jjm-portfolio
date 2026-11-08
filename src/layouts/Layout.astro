@@ -91,7 +91,7 @@ const desktopNavLinks = navLinks.filter((link) => link.href !== `${homePrefix}#h
         </div>
 
         <div class="flex shrink-0 items-center gap-1.5 sm:gap-2">
-          <div><CommandMenu client:load blogEnabled={BLOG_ENABLED} lang={lang} email={content.profile.email} linkedin={content.profile.linkedin} githubHref={content.profile.github} /></div>
+          <div class="search-trigger-slot"><CommandMenu client:load blogEnabled={BLOG_ENABLED} lang={lang} email={content.profile.email} linkedin={content.profile.linkedin} githubHref={content.profile.github} /></div>
           <ModePicker lang={lang} mode={mode} />
           <LanguagePicker currentLang={lang} pathname={currentPath} />
           <details class="relative lg:hidden" data-mobile-nav>
