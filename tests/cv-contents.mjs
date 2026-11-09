@@ -4,6 +4,32 @@ import { chromium } from "playwright";
 const base = process.env.PORTFOLIO_URL ?? "http://127.0.0.1:4321";
 const ids = ["experience", "skills", "projects", "education"];
 
+test("mobile and tablet contents stay compact without sacrificing touch targets", async () => {
+  const browser = await chromium.launch({ headless: true, args: ["--no-proxy-server"] });
+  try {
+    for (const lang of ["es", "en"]) for (const view of ["", "/compact"]) for (const width of [280, 319, 320, 375, 639, 640, 768, 1024, 1279]) {
+      const page = await browser.newPage({ viewport: { width, height: 900 }, javaScriptEnabled: false });
+      await page.goto(`${base}/${lang}/cv${view}`);
+      await page.evaluate(() => document.fonts.ready);
+      const index = page.locator("[data-cv-index]:visible");
+      const bounds = await index.boundingBox();
+      assert.ok(bounds.height <= (width < 640 ? 125 : 60), `${lang} ${view || "/full"} ${width}: index should be compact, got ${bounds.height}px`);
+      const links = await index.locator("a").all();
+      assert.equal(links.length, 4);
+      const boxes = await Promise.all(links.map((link) => link.boundingBox()));
+      for (const box of boxes) {
+        assert.ok(box.width >= 44 && box.height >= 44, `${lang} ${width}: touch target ${JSON.stringify(box)}`);
+        assert.ok(box.x >= 0 && box.x + box.width <= width, `${lang} ${width}: link fits viewport`);
+      }
+      if (width >= 640) {
+        assert.ok(boxes.every((box) => Math.abs(box.y - boxes[0].y) < 2), `${lang} ${width}: links fit on one row`);
+      }
+      assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${lang} ${width}: no horizontal overflow`);
+      await page.close();
+    }
+  } finally { await browser.close(); }
+});
+
 test("CV offers localized in-page navigation for the visible view without JavaScript", async () => {
   const browser = await chromium.launch({ headless: true, args: ["--no-proxy-server"] });
   try {
