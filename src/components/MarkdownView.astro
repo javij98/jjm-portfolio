@@ -1,0 +1,83 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { SITE_BY_LANG, type Locale } from "../i18n/content";
+import { portfolioMarkdown } from "../lib/markdown";
+import { highlightMarkdown } from "../lib/markdown-highlight";
+import { SITE_URL } from "../config/url.mjs";
+
+interface Props { lang: Locale; scope: "portfolio" | "cv"; }
+const { lang, scope } = Astro.props;
+const isCv = scope === "cv";
+const content = SITE_BY_LANG[lang];
+const markdown = portfolioMarkdown(lang, Astro.site ?? new URL(SITE_URL), { includeBlog: !isCv });
+const tokens = highlightMarkdown(markdown);
+const rawPath = `/${lang}/${isCv ? "cv" : "index"}.md`;
+const viewPath = `/${lang}/${isCv ? "cv/llm" : "llm"}`;
+const labels = lang === "es" ? {
+  description: isCv ? "El perfil profesional completo en Markdown, sin los artículos del blog. Listo para leer, copiar o compartir con una IA." : "Toda la web en un único documento Markdown. Listo para leer, copiar o compartir con una IA.",
+  copy: "Copiar Markdown", copied: "Markdown copiado", error: "No se pudo copiar. Puedes seleccionar el texto o descargar el archivo.",
+  raw: "Markdown sin formato", download: "Descargar .md", document: isCv ? "CV completo en Markdown" : "Portfolio completo en Markdown",
+} : {
+  description: isCv ? "The complete professional profile in Markdown, without blog articles. Ready to read, copy or share with an AI." : "The whole website in a single Markdown document. Ready to read, copy or share with an AI.",
+  copy: "Copy Markdown", copied: "Markdown copied", error: "Could not copy. You can select the text or download the file.",
+  raw: "Raw Markdown", download: "Download .md", document: isCv ? "Complete CV in Markdown" : "Complete Markdown portfolio",
+};
+---
+
+<Layout lang={lang} content={content} currentPath={viewPath} pageTitle="LLM mode" pageDescription={labels.description} mode="llm" noIndex={isCv}>
+  <section class="mx-auto max-w-5xl px-5 py-10 sm:px-6 sm:py-14" aria-labelledby="llm-heading">
+    <div class="mb-8 flex flex-col gap-5 border-b border-white/10 pb-7">
+      <div>
+        <h1 id="llm-heading" class="font-mono text-xl font-semibold text-cyan-100 sm:text-2xl">LLM mode <span class="font-normal text-slate-500">/ {lang}/{isCv ? "cv" : "index"}.md</span></h1>
+        <p class="mt-3 max-w-2xl text-sm leading-7 text-slate-400">{labels.description}</p>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <button type="button" hidden data-copy-markdown data-copy-label={labels.copy} data-copied-label={labels.copied} data-copy-error={labels.error} class="signal-hover inline-flex min-h-11 items-center rounded-md border border-cyan-300/25 bg-cyan-300/5 px-4 py-2 font-mono text-xs text-cyan-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">{labels.copy}</button>
+        <a href={rawPath} class="signal-hover inline-flex min-h-11 items-center rounded-md border border-white/15 px-4 py-2 font-mono text-xs text-slate-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">{labels.raw}</a>
+        <a href={rawPath} download={`javier-jimenez-molina-${isCv ? "cv-" : ""}${lang}.md`} class="signal-hover inline-flex min-h-11 items-center rounded-md border border-white/15 px-4 py-2 font-mono text-xs text-slate-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">{labels.download}</a>
+      </div>
+      <p data-copy-status role="status" class="text-xs text-slate-400 empty:hidden"></p>
+    </div>
+    <pre data-markdown-content aria-label={labels.document} class="whitespace-pre-wrap break-words font-mono text-sm leading-7 text-slate-300 sm:text-[15px]">{tokens.map((token) => token.kind === "text" ? token.text : <span data-md-heading={token.kind === "heading" ? token.level : undefined} data-md-strong={token.kind === "strong" ? "" : undefined} data-md-emphasis={token.kind === "emphasis" ? "" : undefined} data-md-link={token.kind === "link" ? "" : undefined} data-md-code={token.kind === "code" ? "" : undefined} data-md-quote={token.kind === "quote" ? "" : undefined} data-md-list={token.kind === "list" ? "" : undefined}>{token.text}</span>)}</pre>
+  </section>
+</Layout>
+
+<style>
+  [data-copy-markdown][hidden] { display: none; }
+  [data-markdown-content] { overflow-wrap: anywhere; }
+  [data-md-heading] { color: #e2e8f0; font-weight: 700; }
+  [data-md-heading="1"] { color: #a5f3fc; font-size: 1.375rem; line-height: 1.5; }
+  [data-md-heading="2"] { color: #6ee7b7; font-size: 1.125rem; line-height: 1.5; }
+  [data-md-heading="3"] { color: #cffafe; font-size: 1rem; }
+  [data-md-strong] { color: #e2e8f0; font-weight: 700; }
+  [data-md-emphasis] { color: #e2e8f0; font-style: italic; }
+  [data-md-link] { color: #a5f3fc; }
+  [data-md-code] { color: #a7f3d0; background: rgba(52, 211, 153, .08); }
+  [data-md-quote] { color: #94a3b8; font-style: italic; }
+  [data-md-list] { color: #6ee7b7; }
+</style>
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>("[data-copy-markdown]");
+  const status = document.querySelector<HTMLElement>("[data-copy-status]");
+  const markdown = document.querySelector<HTMLElement>("[data-markdown-content]");
+  if (button && status && markdown && navigator.clipboard?.writeText) {
+    button.hidden = false;
+    let reset: ReturnType<typeof setTimeout>;
+    button.addEventListener("click", async (event) => {
+      if (event.detail > 0) button.blur();
+      clearTimeout(reset);
+      try {
+        await navigator.clipboard.writeText(markdown.textContent ?? "");
+        status.textContent = button.dataset.copiedLabel ?? "";
+        button.textContent = button.dataset.copiedLabel ?? "";
+      } catch {
+        status.textContent = button.dataset.copyError ?? "";
+      }
+      reset = setTimeout(() => {
+        button.textContent = button.dataset.copyLabel ?? "";
+        status.textContent = "";
+      }, 3000);
+    });
+  }
+</script>

@@ -22,7 +22,7 @@ const content = SITE_BY_LANG[lang];
 <Layout lang={lang} content={content} currentPath={Astro.url.pathname}>
   <section id="hero"><Hero lang={lang} profile={content.profile} hero={content.hero} /></section>
   <section id="about" class="section-alt"><About content={content.about} /></section>
-  <section id="cv-projects"><CvProjectsPreview lang={lang} projects={content.projects.items} /></section>
+  <section id="cv-projects"><CvProjectsPreview lang={lang} content={content} /></section>
   {BLOG_ENABLED && <section id="blog" class="section-alt"><BlogPreview lang={lang} /></section>}
   <section id="contact"><Contact profile={content.profile} content={content.contact} /></section>
   <noscript>

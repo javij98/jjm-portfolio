@@ -39,7 +39,8 @@ const links = [
       document.querySelector<HTMLMetaElement>('meta[property="og:url"]')?.setAttribute("content", canonical.href);
     }
     const markdown = document.querySelector<HTMLLinkElement>('link[rel="alternate"][type="text/markdown"]');
-    if (markdown) markdown.href = new URL(`/${lang}${suffix}.md`, markdown.href).href;
+    if (markdown) markdown.href = new URL(`/${lang}/cv.md`, markdown.href).href;
+    window.dispatchEvent(new Event("cv:view-changed"));
   };
   links.forEach((link) => link.addEventListener("click", (event) => {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;

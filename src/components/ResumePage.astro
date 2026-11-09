@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import ResumeViewPicker from "./ResumeViewPicker.astro";
+import CvContents from "./CvContents.astro";
 import Experience from "./sections/Experience.astro";
 import Projects from "./sections/Projects.astro";
 import Skills from "./sections/Skills.astro";
@@ -8,49 +9,26 @@ import Education from "./sections/Education.astro";
 import TechnologyMarquee from "./sections/TechnologyMarquee.astro";
 import { SITE_BY_LANG, type Locale } from "../i18n/content";
 import { cvEmailHref } from "../lib/cv-actions";
+import { CV_DETAILS, CV_SKILL_LINES, CV_TRAINING } from "../data/cv-details";
 
 interface Props { lang: Locale; view: "full" | "compact"; }
 const { lang, view } = Astro.props;
 const content = SITE_BY_LANG[lang];
-const training = [
-  { name: "Agile Software Development", provider: "University of Minnesota" },
-  { name: "Confluence: Getting Started", provider: "Pluralsight" },
-  { name: "Continuous Delivery & DevOps", provider: "University of Minnesota" },
-  { name: "DevOps: The Big Picture", provider: "Pluralsight" },
-  { name: "Docker Advanced", provider: "Pluralsight" },
-  { name: "Oracle PL/SQL Advanced", provider: "Oracle" },
-  { name: "IT Service Management Specific Practices", provider: "Pluralsight" },
-  { name: "Linux Advanced", provider: "Pluralsight" },
-];
+const training = CV_TRAINING;
 
 const copy = lang === "es"
   ? {
+      ...CV_DETAILS.es,
       pageTitle: "CV",
       description: "Experiencia, competencias y proyectos de Javier Jiménez Molina, Ingeniero DevOps.",
       focus: "Kubernetes · CI/CD · Contenedores · Linux · Automatización",
-      summary: "Ingeniero DevOps con más de cuatro años de experiencia técnica, especializado en automatización de infraestructura, orquestación de contenedores y optimización de CI/CD. Mi trayectoria en desarrollo full-stack ayuda a conectar las necesidades de desarrollo y operaciones. Trabajo con observabilidad, eficiencia operativa e integraciones con APIs, agentes de IA, flujos n8n y webhooks.",
       introLabel: "Perfil profesional",
       experience: "Experiencia profesional",
       krimda: "Ingeniero DevOps",
-      krimdaOne: "Diseño y mantengo pipelines modulares de Jenkins con Shared Libraries (Groovy) y Pipelines as Code para estandarizar despliegues y reducir duplicación.",
-      krimdaTwo: "Integré JFrog Artifactory con Bitbucket para la gestión centralizada de binarios y dependencias.",
-      krimdaThree: "Administro clústeres Kubernetes para microservicios escalables y desarrollé herramientas para auditar el uso de recursos por servicio y optimizar la capacidad.",
-      krimdaFour: "Configuré dashboards en Grafana y centralización de logs con Graylog para mejorar la visibilidad y respuesta a incidencias.",
-      krimdaFive: "Automatizo procesos e integraciones mediante APIs, flujos n8n y webhooks.",
-      krimdaDates: "jul. 2025–actualidad",
       capgemini: "Ingeniero de Software / DevOps",
-      capgeminiSummary: "Evolucioné desde el desarrollo de software hacia operaciones, automatización e ingeniería de CI/CD.",
-      capgeminiOne: "Desarrollé microservicios backend con Java y Spring Boot, aplicaciones frontend con React y APIs REST con Node.js.",
-      capgeminiTwo: "Gestioné cargas con Docker, Kubernetes y Helm; supervisé entornos productivos con Rancher y Lens.",
-      capgeminiThree: "Desplegué y gestioné recursos cloud en OVHcloud para entornos productivos.",
-      capgeminiFour: "Creé pipelines de integración continua con Jenkins y GitHub Actions.",
-      capgeminiLocation: "Valencia, España · Híbrido",
-      impact: "Mejora documentada: reducción superior al 80% en tiempos de despliegue.",
-      capgeminiDates: "feb. 2021–jul. 2025",
       skills: "Competencias técnicas",
       strong: "Dominio sólido",
       aiAutomation: "Automatización con IA",
-      aiAutomationSkills: "LLMs · MCP · Harness Engineering · APIs · Webhooks · contexto, validación y seguridad · Hermes Agent",
       operations: "Sistemas y contenedores",
       delivery: "Plataforma y entrega",
       observability: "Observabilidad",
@@ -60,7 +38,6 @@ const copy = lang === "es"
       education: "Formación",
       degree: "Grado en Ingeniería Telemática",
       languages: "Idiomas",
-      languageLevels: "Español nativo · Inglés B2",
       featuredProjects: "Proyectos destacados",
       projectStack: "Tecnologías",
       training: "Cursos y certificaciones",
@@ -73,32 +50,17 @@ const copy = lang === "es"
       emailAction: "Enviártelo por correo",
     }
   : {
+      ...CV_DETAILS.en,
       pageTitle: "CV",
       description: "Experience, skills and projects of Javier Jiménez Molina, DevOps Engineer.",
       focus: "Kubernetes · CI/CD · Containers · Linux · Automation",
-      summary: "DevOps Engineer with more than four years of technical experience, focused on infrastructure automation, container orchestration and CI/CD optimisation. My full-stack development background helps me connect development and operations needs. I work with observability, operational efficiency, and integrations through APIs, AI agents, n8n workflows and webhooks.",
       introLabel: "Professional profile",
       experience: "Professional experience",
       krimda: "DevOps Engineer",
-      krimdaOne: "Design and maintain modular Jenkins pipelines with Shared Libraries (Groovy) and Pipelines as Code to standardise deployments and reduce duplication.",
-      krimdaTwo: "Integrated JFrog Artifactory with Bitbucket for centralised binary and dependency management.",
-      krimdaThree: "Administer Kubernetes clusters for scalable microservices and developed tools to audit per-service resource usage and optimise capacity.",
-      krimdaFour: "Set up Grafana dashboards and centralised logging with Graylog to improve visibility and incident response.",
-      krimdaFive: "Automate processes and integrations through APIs, n8n workflows and webhooks.",
-      krimdaDates: "Jul 2025–present",
       capgemini: "Software / DevOps Engineer",
-      capgeminiSummary: "Progressed from software development into operations, automation and CI/CD engineering.",
-      capgeminiOne: "Built backend microservices with Java and Spring Boot, frontend applications with React and REST APIs with Node.js.",
-      capgeminiTwo: "Managed workloads with Docker, Kubernetes and Helm; monitored production environments with Rancher and Lens.",
-      capgeminiThree: "Deployed and managed cloud resources on OVHcloud for production environments.",
-      capgeminiFour: "Created continuous integration pipelines with Jenkins and GitHub Actions.",
-      capgeminiLocation: "Valencia, Spain · Hybrid",
-      impact: "Documented improvement: deployment times reduced by more than 80%.",
-      capgeminiDates: "Feb 2021–Jul 2025",
       skills: "Technical skills",
       strong: "Strong",
       aiAutomation: "AI automation",
-      aiAutomationSkills: "LLMs · MCP · Harness Engineering · APIs · Webhooks · context, validation and safety · Hermes Agent",
       operations: "Systems and containers",
       delivery: "Platform and delivery",
       observability: "Observability",
@@ -108,7 +70,6 @@ const copy = lang === "es"
       education: "Education",
       degree: "BSc in Telematics Engineering",
       languages: "Languages",
-      languageLevels: "Spanish native · English B2",
       featuredProjects: "Featured projects",
       projectStack: "Stack",
       training: "Training and certifications",
@@ -123,7 +84,8 @@ const copy = lang === "es"
 ---
 
 <Layout lang={lang} content={content} currentPath={Astro.url.pathname} pageTitle={copy.pageTitle} pageDescription={copy.description}>
-  <div class="mx-auto max-w-6xl px-5 pt-8 sm:px-6 sm:pt-10">
+  <div class="mx-auto max-w-7xl xl:grid xl:grid-cols-[minmax(0,1fr)_12rem] xl:gap-x-7 xl:px-6">
+  <div class="mx-auto w-full max-w-6xl px-5 pt-8 sm:px-6 sm:pt-10 xl:col-start-1 xl:row-start-1">
     <ResumeViewPicker lang={lang} view={view} />
     <header data-cv-summary class="mb-7 border-b border-white/10 pb-6 sm:mb-8 sm:pb-7">
       <div class="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
@@ -159,7 +121,14 @@ const copy = lang === "es"
         </details>
       </div>
     </header>
+    <CvContents lang={lang} view={view} content={content.nav} placement="inline" />
   </div>
+  <aside class="hidden xl:col-start-2 xl:row-span-2 xl:row-start-1 xl:block">
+    <div data-cv-index-sticky class="sticky top-24 pt-10">
+      <CvContents lang={lang} view={view} content={content.nav} placement="sidebar" />
+    </div>
+  </aside>
+  <div class="min-w-0 xl:col-start-1 xl:row-start-2">
   <div data-cv-panel="full" hidden={view !== "full"}>
     <section id="experience"><Experience content={content.experience} /></section>
     <div class="border-y border-white/10 bg-slate-900/40"><TechnologyMarquee content={content.skills} /></div>
@@ -209,31 +178,31 @@ const copy = lang === "es"
         <div class="space-y-4">
           <div>
             <h3 class="text-sm font-semibold text-white">{copy.strong}</h3>
-            <p class="mt-1 text-sm leading-5 text-slate-300">Docker · Bash / Shell · Git / Bitbucket · Linux</p>
+            <p class="mt-1 text-sm leading-5 text-slate-300">{CV_SKILL_LINES.strong}</p>
           </div>
           <div>
             <h3 class="text-sm font-semibold text-white">{copy.delivery}</h3>
-            <p class="mt-1 text-sm leading-5 text-slate-300">Jenkins Shared Libraries · Groovy · Pipelines as Code · GitHub Actions · GitLab CI · Kubernetes · Helm · Rancher · Lens · REST APIs · Webhooks</p>
+            <p class="mt-1 text-sm leading-5 text-slate-300">{CV_SKILL_LINES.delivery}</p>
           </div>
           <div>
             <h3 class="text-sm font-semibold text-white">{copy.observability}</h3>
-            <p class="mt-1 text-sm leading-5 text-slate-300">Prometheus · Grafana · Graylog</p>
+            <p class="mt-1 text-sm leading-5 text-slate-300">{CV_SKILL_LINES.observability}</p>
           </div>
           <div>
             <h3 class="text-sm font-semibold text-white">{copy.development}</h3>
-            <p class="mt-1 text-sm leading-5 text-slate-300">Java · Spring Boot · Node.js · React · JavaScript / TypeScript</p>
+            <p class="mt-1 text-sm leading-5 text-slate-300">{CV_SKILL_LINES.development}</p>
           </div>
           <div>
             <h3 class="text-sm font-semibold text-white">{copy.artifacts}</h3>
-            <p class="mt-1 text-sm leading-5 text-slate-300">JFrog Artifactory</p>
+            <p class="mt-1 text-sm leading-5 text-slate-300">{CV_SKILL_LINES.artifacts}</p>
           </div>
           <div>
             <h3 class="text-sm font-semibold text-white">{copy.automation}</h3>
-            <p class="mt-1 text-sm leading-5 text-slate-300">Python · n8n</p>
+            <p class="mt-1 text-sm leading-5 text-slate-300">{CV_SKILL_LINES.automation}</p>
           </div>
           <div>
             <h3 class="text-sm font-semibold text-white">{lang === "es" ? "Cloud" : "Cloud"}</h3>
-            <p class="mt-1 text-sm leading-5 text-slate-300">{lang === "es" ? "OVHcloud · AWS (en desarrollo) · Terraform (en desarrollo)" : "OVHcloud · AWS (developing) · Terraform (developing)"}</p>
+            <p class="mt-1 text-sm leading-5 text-slate-300">{copy.cloudSkills}</p>
           </div>
           <div>
             <h3 class="text-sm font-semibold text-white">{copy.aiAutomation}</h3>
@@ -288,6 +257,8 @@ const copy = lang === "es"
       <a href={content.profile.github} target="_blank" rel="noreferrer" class="rounded-sm text-slate-300 underline decoration-white/20 underline-offset-4 hover:text-white focus-visible:outline-2 focus-visible:outline-cyan-300">GitHub</a>
     </div>
   </article>
+  </div>
+  </div>
 </Layout>
 
 <script>

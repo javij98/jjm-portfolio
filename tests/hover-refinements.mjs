@@ -35,7 +35,7 @@ test("navigation uses a stable underline without a boxed hover", async () => {
     for (const width of [597, 1923]) {
       const page = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion: "reduce" });
       await page.goto(`${baseUrl}/es`, { waitUntil: "domcontentloaded" });
-      if (width < 1000) await page.locator("[data-mobile-nav] summary").click();
+      if (width < 1000) await page.locator("[data-mobile-nav] > summary").click();
       const link = page.locator(width < 1000 ? "[data-mobile-nav] a" : "header nav a[href='/es/cv']").filter({ hasText: "CV y proyectos" }).first();
       await link.hover();
       const styles = await link.evaluate((element) => ({ shadow: getComputedStyle(element).boxShadow, transform: getComputedStyle(element).transform, line: getComputedStyle(element, "::after").transform, hovered: element.matches(":hover") }));

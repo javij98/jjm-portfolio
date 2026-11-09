@@ -10,6 +10,7 @@ test("home previews real projects with visual cards linking to the CV gallery", 
       for (const width of [320, 768, 1440]) {
         const page = await browser.newPage({ viewport: { width, height: 900 }, javaScriptEnabled: false });
         await page.goto(`${base}/${lang}`);
+        await page.evaluate(() => document.fonts.ready);
         const cards = page.locator("[data-home-project-card]");
         assert.equal(await cards.count(), 2);
         assert.match(await cards.nth(0).innerText(), /MoneyFlow/);

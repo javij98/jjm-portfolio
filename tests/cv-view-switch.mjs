@@ -22,7 +22,7 @@ test("CV starts complete and switches views without replacing the shared header"
       assert.ok(await page.locator("[data-cv-panel='compact']").isVisible());
       assert.equal(await page.locator("[data-back-home]").count(), 0);
       assert.equal(new URL(await page.locator('link[rel="canonical"]').getAttribute("href")).pathname, `/${lang}/cv/compact`);
-      assert.equal(new URL(await page.locator('link[rel="alternate"][type="text/markdown"]').getAttribute("href")).pathname, `/${lang}/cv/compact.md`);
+      assert.equal(new URL(await page.locator('link[rel="alternate"][type="text/markdown"]').getAttribute("href")).pathname, `/${lang}/cv.md`);
       assert.equal(new URL(await page.locator(`header a[lang='${lang === "es" ? "en" : "es"}']`).getAttribute("href"), base).pathname, `/${lang === "es" ? "en" : "es"}/cv/compact`);
       await page.goBack();
       assert.equal(new URL(page.url()).pathname, `/${lang}/cv`);
@@ -58,8 +58,8 @@ test("both CV URLs work without JavaScript and retain language and Markdown link
         assert.ok(await page.locator(`[data-cv-panel='${view}']`).isVisible());
         assert.equal(await page.locator("[data-back-home]").count(), 0);
         assert.equal(await page.locator(`header a[lang='${other}']`).getAttribute("href"), `/${other}${suffix}`);
-        assert.equal(new URL(await page.locator('link[rel="alternate"][type="text/markdown"]').getAttribute("href")).pathname, `/${lang}${suffix}.md`);
-        assert.equal((await page.request.get(`${base}/${lang}${suffix}.md`)).status(), 200);
+        assert.equal(new URL(await page.locator('link[rel="alternate"][type="text/markdown"]').getAttribute("href")).pathname, `/${lang}/cv.md`);
+        assert.equal((await page.request.get(`${base}/${lang}/cv.md`)).status(), 200);
       }
       await page.close();
     }

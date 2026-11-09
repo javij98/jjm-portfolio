@@ -34,7 +34,7 @@ test("CV Markdown and PDF links resolve in both languages and full views", async
       for (const suffix of ["/cv", "/cv/compact"]) {
         await page.goto(`${base}/${lang}${suffix}`);
         const href = await page.locator('link[rel="alternate"][type="text/markdown"]').getAttribute("href");
-        assert.equal(new URL(href).pathname, `/${lang}${suffix}.md`);
+        assert.equal(new URL(href).pathname, `/${lang}/cv.md`);
         const markdown = await page.request.get(`${base}${new URL(href).pathname}`);
         assert.equal(markdown.status(), 200, href);
         assert.match(markdown.headers()["content-type"], /^text\/markdown/);
@@ -55,8 +55,8 @@ test("CV Markdown and PDF links resolve in both languages and full views", async
       for (const pdfLang of ["es", "en"]) assert.equal(await page.locator(`[data-cv-language="${pdfLang}"] a[download]`).getAttribute("href"), `/${pdfLang}/cv.pdf`);
       await page.goto(`${base}/${lang}/cv/compact`);
       await page.locator('[data-view-mode="llm"]').click();
-      assert.equal(new URL(page.url()).pathname.replace(/\/$/, ""), `/${lang}/llm`);
-      assert.equal(await page.locator("[data-markdown-content]").textContent(), await (await page.request.get(`${base}/${lang}/index.md`)).text());
+      assert.equal(new URL(page.url()).pathname.replace(/\/$/, ""), `/${lang}/cv/llm`);
+      assert.equal(await page.locator("[data-markdown-content]").textContent(), await (await page.request.get(`${base}/${lang}/cv.md`)).text());
     }
   } finally { await browser.close(); }
 });

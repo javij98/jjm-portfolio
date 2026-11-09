@@ -18,9 +18,10 @@ interface Props {
   pageDescription?: string;
   article?: boolean;
   mode?: "human" | "llm";
+  noIndex?: boolean;
 }
 
-const { lang, content, currentPath, pageTitle, pageDescription, article = false, mode = "human" } = Astro.props;
+const { lang, content, currentPath, pageTitle, pageDescription, article = false, mode = "human", noIndex = false } = Astro.props;
 const isLlm = mode === "llm";
 const title = pageTitle ? `${pageTitle} | ${content.profile.name}` : `${content.profile.name} | ${content.profile.role}`;
 const description = pageDescription ?? content.profile.introduction;
@@ -30,8 +31,8 @@ const pathSuffix = normalizedPath.replace(new RegExp(`^/${lang}(?=/|$)`), "") ||
 const isHome = pathSuffix === "";
 const isCv = pathSuffix === "/cv" || pathSuffix.startsWith("/cv/");
 const homePrefix = isHome ? "" : `/${lang}`;
-const canonical = new URL(isLlm ? `/${lang}` : normalizedPath, baseUrl).toString();
-const alternateSuffix = isLlm ? "" : pathSuffix;
+const canonical = new URL(isLlm && !isCv ? `/${lang}` : normalizedPath, baseUrl).toString();
+const alternateSuffix = isLlm && !isCv ? "" : pathSuffix;
 const spanishUrl = new URL(`/es${alternateSuffix}`, baseUrl).toString();
 const englishUrl = new URL(`/en${alternateSuffix}`, baseUrl).toString();
 const navLinks = [
@@ -53,6 +54,7 @@ const desktopNavLinks = navLinks.filter((link) => link.href !== `${homePrefix}#h
     <meta name="theme-color" content="#080f1c" />
     <meta name="description" content={description} />
     <meta name="author" content={content.profile.name} />
+    {noIndex && <meta name="robots" content="noindex,follow" />}
     <link rel="canonical" href={canonical} />
     <link rel="alternate" hreflang="es" href={spanishUrl} />
     <link rel="alternate" hreflang="en" href={englishUrl} />
@@ -76,8 +78,8 @@ const desktopNavLinks = navLinks.filter((link) => link.href !== `${homePrefix}#h
   <body class="min-h-screen bg-slate-950 text-slate-100">
     <a href="#main-content" class="sr-only rounded-md bg-emerald-300 px-4 py-2 text-slate-950 focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[100]">{lang === "es" ? "Saltar al contenido" : "Skip to content"}</a>
     <header class="sticky top-0 z-50 border-b border-white/10 bg-slate-950/90 backdrop-blur-xl">
-      <nav class="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-2 px-2.5 min-[375px]:px-3 sm:gap-3 sm:px-6" aria-label={lang === "es" ? "Navegación principal" : "Main navigation"}>
-        <a href={`${homePrefix}#hero`} aria-label={content.profile.name} class="hidden min-[375px]:flex shrink-0 items-center gap-2.5 rounded-md font-mono text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">
+      <nav data-main-nav class="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-2 px-2 min-[375px]:px-3 sm:gap-3 sm:px-6" aria-label={lang === "es" ? "Navegación principal" : "Main navigation"}>
+        <a href={`${homePrefix}#hero`} aria-label={content.profile.name} class="flex shrink-0 items-center gap-2.5 rounded-md font-mono text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">
           <img src="/favicon.svg" alt="" width="36" height="36" class="h-9 w-9" aria-hidden="true" />
           <span class="hidden 2xl:inline">Javier Jiménez Molina</span>
           <span class="hidden sm:inline 2xl:hidden">Javier J.</span>
@@ -85,19 +87,19 @@ const desktopNavLinks = navLinks.filter((link) => link.href !== `${homePrefix}#h
 
         <div class="hidden shrink-0 items-center gap-0 lg:flex 2xl:gap-1">
           {desktopNavLinks.map((link) => (
-            <a href={link.href} class="nav-link whitespace-nowrap rounded-md px-1.5 py-2 text-[11px] font-medium text-slate-300 focus-visible:outline-2 focus-visible:outline-cyan-300 2xl:px-2.5 2xl:text-xs">{link.label}</a>
+            <a href={link.href} class="nav-link whitespace-nowrap rounded-md px-1.5 py-2 text-sm font-medium text-slate-300 focus-visible:outline-2 focus-visible:outline-cyan-300 2xl:px-2.5">{link.label}</a>
           ))}
         </div>
 
-        <div class="flex shrink-0 items-center gap-1.5 sm:gap-2">
+        <div class="flex shrink-0 items-center gap-1 min-[375px]:gap-1.5 sm:gap-2">
           <div class="search-trigger-slot"><CommandMenu client:load blogEnabled={BLOG_ENABLED} lang={lang} email={content.profile.email} linkedin={content.profile.linkedin} githubHref={content.profile.github} /></div>
-          <ModePicker lang={lang} mode={mode} />
+          <ModePicker lang={lang} mode={mode} isCv={isCv} />
           <LanguagePicker currentLang={lang} pathname={currentPath} />
           <details class="relative lg:hidden" data-mobile-nav>
             <summary class="flex h-9 w-9 cursor-pointer list-none items-center justify-center rounded-md border border-white/15 text-slate-200 marker:hidden hover:bg-white/5 focus-visible:outline-2 focus-visible:outline-cyan-300" aria-label={content.nav.menu}>
               <span aria-hidden="true" class="font-mono text-lg leading-none">☰</span>
             </summary>
-            <div class="absolute right-0 top-12 w-52 rounded-xl border border-white/15 bg-slate-900 p-2 shadow-2xl shadow-black/40">
+            <div class="absolute right-0 top-12 max-h-[calc(100dvh-5rem)] w-52 overflow-y-auto rounded-xl border border-white/15 bg-slate-900 p-2 shadow-2xl shadow-black/40">
               {navLinks.map((link) => (
                 <a href={link.href} class="nav-link block rounded-md px-3 py-2.5 text-sm text-slate-200 focus-visible:outline-2 focus-visible:outline-cyan-300">{link.label}</a>
               ))}

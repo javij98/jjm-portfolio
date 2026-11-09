@@ -16,6 +16,19 @@ body {
   background-image: radial-gradient(ellipse 70% 26% at 55% 0%, rgba(6, 182, 212, 0.08), transparent);
 }
 section[id] { scroll-margin-top: 4rem; }
+
+.cv-index-heading { margin-bottom: .75rem; color: #94a3b8; font-size: .875rem; font-weight: 600; }
+.cv-index ul { list-style: none; margin: 0; padding: 0; }
+.cv-index a { display: block; color: #cbd5e1; font-size: .875rem; line-height: 1.5; border-radius: .25rem; }
+.cv-index a:hover, .cv-index a[aria-current="location"] { color: #6ee7b7; }
+.cv-index a:focus-visible { outline: 2px solid #67e8f9; outline-offset: 2px; }
+.cv-index-inline { margin-bottom: 1.5rem; padding: 1rem; border: 1px solid rgba(255,255,255,.1); border-radius: .75rem; background: rgba(15,23,42,.5); }
+.cv-index-inline ul { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: .25rem .75rem; }
+.cv-index-inline a { padding: .4rem 0; }
+.cv-index-sidebar ul { border-left: 1px solid rgba(255,255,255,.15); }
+.cv-index-sidebar a { margin-left: -1px; padding: .5rem 0 .5rem 1rem; border-left: 2px solid transparent; }
+.cv-index-sidebar a[aria-current="location"] { border-left-color: #6ee7b7; }
+@media (max-height: 480px) { [data-cv-index-sticky] { position: static; } }
 .section-alt {
   border-block: 1px solid rgba(255, 255, 255, 0.055);
   background: rgba(15, 23, 42, 0.34);
@@ -162,6 +175,10 @@ html.project-dialog-open { overflow: hidden; }
 }
 .project-dialog::-webkit-scrollbar-thumb:hover { background: rgba(103, 232, 249, .8); }
 .project-dialog::backdrop { background: rgba(3,8,18,.78); backdrop-filter: blur(6px); }
+@media (prefers-reduced-motion: no-preference) {
+  .project-dialog[open]::backdrop { animation: detail-backdrop-in 200ms ease-out both; }
+}
+@keyframes detail-backdrop-in { from { opacity: 0; } to { opacity: 1; } }
 .project-dialog-header {
   position: sticky;
   top: 0;
@@ -235,6 +252,14 @@ html.project-dialog-open { overflow: hidden; }
   .project-gallery { grid-template-columns: repeat(3, minmax(0,1fr)); }
 }
 
+
+/* Keep every header control usable even on exceptionally narrow screens. */
+@media (max-width: 319px) {
+  [data-main-nav] { display: grid; grid-template-columns: 1fr; gap: .25rem; padding-block: .5rem; }
+  [data-main-nav] > div:last-child { justify-self: end; }
+  section[id] { scroll-margin-top: 6rem; }
+  #hero h1 { font-size: clamp(1.25rem, 7.5vw, 1.625rem); }
+}
 
 /* Reserve expansion space on tablet and desktop so navigation stays clickable. */
 .search-trigger-slot { display: flex; flex: none; }
