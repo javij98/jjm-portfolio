@@ -31,6 +31,8 @@ supported by these documents or the repository.
 
 ## Working rules
 
+- Work in a `feature/*` branch created from `main` or `preview`; the user merges
+  branches unless they explicitly request otherwise.
 - Preserve Spanish and English versions.
 - Keep the current Astro + React architecture unless there is a clear reason to change it.
 - Maintain responsive behaviour.
