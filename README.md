@@ -12,14 +12,14 @@ npm ci
 npm run dev
 ```
 
-La web está disponible en `/es` y `/en`, con catálogos completos en `/es/projects` y `/en/projects` y blog estático en `/es/blog` y `/en/blog`. La raíz dirige al idioma del navegador, con español como alternativa.
+La web está disponible en `/es` y `/en`. El CV completo está en `/{lang}/cv` y la vista compacta en `/{lang}/cv/compact`; ambas comparten resumen, selector e índice de secciones. También hay catálogos en `/{lang}/projects` y blog estático en `/{lang}/blog`. La raíz dirige al idioma del navegador, con español como alternativa.
 
 ```sh
 npm run build
 npm run preview
 ```
 
-Para comprobar el contorno de hover en escritorio y móvil, instala Chromium para Playwright una vez con `npx playwright install chromium`, arranca `npm run dev` y ejecuta `npm run test:ui` en otra terminal.
+Para las pruebas de interfaz, instala Chromium con `npx playwright install chromium`, arranca el servidor y, en otra terminal, ejecuta `PORTFOLIO_URL=http://127.0.0.1:4321 node --test --test-concurrency=2 tests/*.mjs`, usando el puerto real del servidor. Para verificar la versión compilada, usa `npm run build` y `npm run preview` antes de las pruebas.
 
 ## Estructura
 
@@ -31,7 +31,8 @@ Para comprobar el contorno de hover en escritorio y móvil, instala Chromium par
 - `src/components/CommandMenu.tsx`: navegación rápida interactiva con React.
 - `src/layouts/Layout.astro`: navegación, pie y metadatos SEO compartidos.
 - `src/components/ModePicker.astro`: selector Human / LLM junto al selector de idioma.
-- `src/lib/markdown.ts`: exportación de los datos públicos de la web a Markdown, sin duplicar contenido.
+- `src/data/cv-details.ts` y `src/lib/markdown.ts`: datos compartidos del CV y exportación Markdown.
+- `src/components/CvContents.astro` y `src/components/MarkdownView.astro`: índice del CV y vista de lectura Markdown.
 - `docs/PROFILE_CONTEXT.md` y `docs/WEBSITE_GOALS.md`: fuentes para la trayectoria y el posicionamiento profesional.
 - `AGENTS.md`: criterios de trabajo para futuras actualizaciones.
 
@@ -41,14 +42,16 @@ No se deben añadir métricas, enlaces a proyectos o afirmaciones profesionales 
 
 ## Modo LLM
 
-El selector de la cabecera abre `/es/llm` o `/en/llm`: un documento Markdown con
-todo el contenido publicado, incluidos los seis proyectos, los nueve casos de
-trabajo y los artículos completos. Mantiene las distinciones entre niveles de
-experiencia, estados de los casos y métricas documentadas o estimadas.
+El selector de la cabecera es contextual: desde la portada abre `/{lang}/llm`,
+con el portfolio completo; desde el CV abre `/{lang}/cv/llm`, con el perfil
+profesional sin artículos. Ambas vistas muestran los marcadores Markdown y
+permiten copiar o descargar el texto original. Mantienen las distinciones entre
+niveles de experiencia, estados de los casos y métricas documentadas o estimadas.
 
 También se generan archivos estáticos accesibles sin JavaScript:
 
 - `/es/index.md` y `/en/index.md`: portfolio completo por idioma.
+- `/{lang}/cv.md`: perfil profesional sin blog, compartido por las dos vistas del CV.
 - `/{lang}/projects.md`: proyectos completos.
 - `/{lang}/blog/index.md` y `/{lang}/blog/{slug}.md`: artículos, cuando el blog está habilitado.
 - `/llms.txt`: índice de lectura siguiendo la propuesta [llms.txt](https://llmstxt.org/).

@@ -38,6 +38,8 @@ Projects should have more visibility. Show all documented personal projects in a
 filterable, non-scrolling gallery: MoneyFlow, Self-hosted Knowledge Platform,
 Print Studio, Hermes Agent, Personal Portfolio and Services Site. Work examples
 remain separate under experience, anonymized and with their actual status.
+The home page offers a concise preview of real experience and selected projects,
+with clear links to continue reading in the CV; it is not a second content source.
 
 Work examples use a compact list: title, a short description and a Details
 action. Full context, status, technologies and qualified impact figures appear
@@ -45,6 +47,8 @@ in dialogs using the same style as personal project dialogs. Show four cases
 initially and expand the others in place, with the expansion control below the
 entire visible list. Pointer clicks should release the control's focus, while
 keyboard interaction keeps a visible focus indicator.
+Project and work-case dialogs open from the selected item's position and shape;
+respect reduced motion, focus restoration and direct links from search.
 
 Prioritize:
 
@@ -109,14 +113,18 @@ Offer a Human / LLM selector next to ES / EN using the same restrained style.
 Both labels and the surrounding header controls retain their size and position
 across modes and languages. Reserve the scrollbar gutter to avoid shifts on
 pages of different lengths.
-The LLM view presents the entire published portfolio as plain Markdown in both
+The global LLM view presents the published portfolio as Markdown in both
 languages, including all projects, complete work examples, skill levels and
-articles. Preserve case status and all qualifications on impact figures.
+articles. The contextual CV LLM view presents the professional profile without
+blog articles. Preserve case status and all qualifications on impact figures.
 
 Generate the exports from the same public content as the visual site. Provide
 static Markdown files and a public llms.txt index that work without JavaScript.
 Keep the language when switching modes, and allow copying or downloading the
 complete document. Avoid claims that these formats guarantee AI discovery.
+Keep Markdown markers visible in the styled reading views and preserve the exact
+raw source in the page text, copy and download. Both CV views share one raw CV
+document per language; the formatted CV reader is marked `noindex,follow`.
 
 The canonical public domain is https://javierjimenez.dev. Share its configuration
 across metadata, sitemap, robots.txt and Markdown exports.
