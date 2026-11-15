@@ -1,0 +1,20 @@
+---
+import ResumePage from "../../../components/ResumePage.astro";
+import { LOCALES } from "../../../i18n/content";
+export function getStaticPaths() { return LOCALES.flatMap((lang) => ["compact", "full", "completo"].map((view) => ({ params: { lang, view }, props: { lang, view } }))); }
+const { lang, view } = Astro.props;
+const target = `/${lang}/cv`;
+---
+{view === "compact" ? <ResumePage lang={lang} view="compact" /> : (
+  <html lang={lang}>
+    <head>
+      <link rel="canonical" href={new URL(target, Astro.site).href} />
+      <noscript><meta http-equiv="refresh" content={`0;url=${target}`} /></noscript>
+      <title>{lang === "es" ? "CV · Vista completa" : "CV · Full view"}</title>
+    </head>
+    <body>
+      <a href={target}>{lang === "es" ? "Ir al CV completo" : "Go to the full CV"}</a>
+      <script is:inline define:vars={{ target }}>window.location.replace(target + window.location.search + window.location.hash);</script>
+    </body>
+  </html>
+)}

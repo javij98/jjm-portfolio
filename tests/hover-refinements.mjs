@@ -35,8 +35,8 @@ test("navigation uses a stable underline without a boxed hover", async () => {
     for (const width of [597, 1923]) {
       const page = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion: "reduce" });
       await page.goto(`${baseUrl}/es`, { waitUntil: "domcontentloaded" });
-      if (width < 1000) await page.locator("[data-mobile-nav] summary").click();
-      const link = page.locator(width < 1000 ? "[data-mobile-nav] a" : "header nav > div a[href='#skills']").filter({ hasText: "Competencias" }).first();
+      if (width < 1000) await page.locator("[data-mobile-nav] > summary").click();
+      const link = page.locator(width < 1000 ? "[data-mobile-nav] a" : "header nav a[href='/es/cv']").filter({ hasText: "CV y proyectos" }).first();
       await link.hover();
       const styles = await link.evaluate((element) => ({ shadow: getComputedStyle(element).boxShadow, transform: getComputedStyle(element).transform, line: getComputedStyle(element, "::after").transform, hovered: element.matches(":hover") }));
       assert.equal(styles.shadow, "none", `${width}px: no hover box`);
@@ -69,7 +69,7 @@ test("non-clickable cards have a quiet ambient hover", async () => {
   const browser = await chromium.launch({ headless: true, args: ["--no-proxy-server"] });
   try {
     const page = await browser.newPage({ viewport: { width: 1415, height: 900 }, reducedMotion: "reduce" });
-    await page.goto(`${baseUrl}/es`, { waitUntil: "domcontentloaded" });
+    await page.goto(`${baseUrl}/es/cv`, { waitUntil: "domcontentloaded" });
     for (const selector of [".experience-entry", ".work-example", ".skill-entry", ".gallery-card"]) {
       const item = page.locator(selector).first();
       await item.scrollIntoViewIfNeeded();
@@ -111,8 +111,10 @@ test("mobile hero brings terminal into the initial view and starts typing only w
     const typed = shortPage.locator("#hero [data-typed-command]");
     assert.equal(await typed.textContent(), "", "typing waits while terminal is below viewport");
     await shortPage.locator("#hero [data-terminal]").scrollIntoViewIfNeeded();
-    await shortPage.waitForTimeout(350);
-    assert.ok((await typed.textContent()).length > 0, "typing starts on intersection");
+    await shortPage.locator("[data-terminal-intro]").waitFor({ state: "visible" });
+    await shortPage.locator("[data-terminal-intro]").waitFor({ state: "hidden", timeout: 5000 });
+    await shortPage.waitForFunction(() => document.querySelector("[data-typed-command]").textContent.length > 0);
+    assert.ok((await typed.textContent()).length > 0, "typing starts after the opening animation");
   } finally {
     await browser.close();
   }

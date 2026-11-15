@@ -93,13 +93,26 @@ export default function CommandMenu({ lang, email, linkedin, githubHref, blogEna
     else window.location.assign(`${homePath}#${id}`);
   };
 
+  const navigateCvSection = (id: string) => {
+    setOpen(false);
+    const path = `/${lang}/cv`;
+    if (window.location.pathname.replace(/\/$/, "") === path) {
+      window.location.hash = id;
+      document.getElementById(id)?.scrollIntoView();
+    } else window.location.assign(`${path}#${id}`);
+  };
+  const switchLanguage = (target: Locale) => {
+    const suffix = window.location.pathname.replace(/^\/(es|en)/, "").replace(/\/+$/, "");
+    window.location.assign(`/${target}${suffix}${window.location.hash}`);
+  };
+
   const sections: MenuItem[] = [
     { label: labels.items[0], keywords: "home inicio", icon: Home, action: () => navigate("hero") },
     { label: labels.items[1], keywords: "about sobre mi", icon: UserRound, action: () => navigate("about") },
-    { label: labels.items[2], keywords: "projects proyectos portfolio", icon: FolderKanban, action: () => navigate("projects") },
-    { label: labels.items[3], keywords: "experience experiencia career", icon: Briefcase, action: () => navigate("experience") },
-    { label: labels.items[4], keywords: "skills competencias stack", icon: Layers3, action: () => navigate("skills") },
-    { label: labels.items[5], keywords: "education formacion", icon: GraduationCap, action: () => navigate("education") },
+    { label: labels.items[2], keywords: "projects proyectos portfolio", icon: FolderKanban, action: () => navigateCvSection("projects") },
+    { label: labels.items[3], keywords: "experience experiencia career", icon: Briefcase, action: () => navigateCvSection("experience") },
+    { label: labels.items[4], keywords: "skills competencias stack", icon: Layers3, action: () => navigateCvSection("skills") },
+    { label: labels.items[5], keywords: "education formacion", icon: GraduationCap, action: () => navigateCvSection("education") },
     ...(blogEnabled ? [{ label: "Blog", keywords: "blog articles notas posts", icon: BookOpen, action: () => window.location.assign(`/${lang}/blog`) }] : []),
     { label: "CV", keywords: "cv curriculum resume", icon: FileText, action: () => window.location.assign(`/${lang}/cv`) },
     { label: labels.items[6], keywords: "contact contacto", icon: Mail, action: () => navigate("contact") },
@@ -110,8 +123,8 @@ export default function CommandMenu({ lang, email, linkedin, githubHref, blogEna
     { label: labels.items[9], keywords: "email mail", icon: Mail, action: () => window.location.assign(`mailto:${email}`) },
   ];
   const languages: MenuItem[] = [
-    { label: labels.items[10], keywords: "spanish espanol es", icon: Languages, action: () => window.location.assign(`/es${window.location.pathname.replace(/^\/(es|en)/, "")}${window.location.hash}`) },
-    { label: labels.items[11], keywords: "english en", icon: Languages, action: () => window.location.assign(`/en${window.location.pathname.replace(/^\/(es|en)/, "")}${window.location.hash}`) },
+    { label: labels.items[10], keywords: "spanish espanol es", icon: Languages, action: () => switchLanguage("es") },
+    { label: labels.items[11], keywords: "english en", icon: Languages, action: () => switchLanguage("en") },
   ];
 
   const normalizedQuery = normalize(query);
@@ -125,6 +138,9 @@ export default function CommandMenu({ lang, email, linkedin, githubHref, blogEna
     .map((pdfLanguage) => ({ pdfLanguage, href: cvEmailHref(lang, pdfLanguage), label: labels.emailCv[pdfLanguage === "es" ? 0 : 1] }));
 
   useEffect(() => {
+    const navigation = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
+    const sameOriginReferrer = document.referrer && new URL(document.referrer).origin === window.location.origin;
+    if (navigation?.type !== "reload" && (navigation?.type === "back_forward" || sameOriginReferrer)) return;
     setShowHint(true);
     const timer = window.setTimeout(() => setShowHint(false), 4000);
     const onFocus = (event: FocusEvent) => {

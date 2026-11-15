@@ -1,5 +1,7 @@
 import { BLOG_ENABLED } from "../config/site";
 import { BLOG_POSTS, type BlogPost } from "../data/blog";
+import { CV_PREVIEW } from "../data/cv-preview";
+import { CV_DETAILS, CV_SKILL_LINES, CV_TRAINING } from "../data/cv-details";
 import { LOCALES, SITE_BY_LANG, type Locale, type SiteContent } from "../i18n/content";
 
 const labels = {
@@ -79,21 +81,28 @@ function blog(lang: Locale, site: URL): string[] {
   ];
 }
 
-export function portfolioMarkdown(lang: Locale, site: URL): string {
+export function portfolioMarkdown(lang: Locale, site: URL, options: { includeBlog?: boolean } = {}): string {
   const content = SITE_BY_LANG[lang];
   const text = labels[lang];
+  const cv = CV_DETAILS[lang];
+  const cvExperience: Record<string, string[]> = {
+    Krimda: [cv.krimdaDates, cv.krimdaOne, cv.krimdaTwo, cv.krimdaThree, cv.krimdaFour, cv.krimdaFive],
+    Capgemini: [cv.capgeminiDates, cv.capgeminiLocation, cv.capgeminiSummary, cv.capgeminiOne, cv.capgeminiTwo, cv.capgeminiThree, cv.capgeminiFour, cv.impact],
+  };
   const { profile, about, experience, skills, education, contact } = content;
   return document([
     heading(1, profile.name),
     `> ${inline(profile.role)}`,
-    inline(profile.introduction),
+    ...(options.includeBlog === false ? [] : [inline(profile.introduction)]),
+    heading(2, lang === "es" ? "Perfil profesional del CV" : "CV professional profile"),
+    inline(cv.summary),
     field(text.role, profile.role),
     field(text.direction, profile.direction),
     field(text.location, profile.location),
     field(text.language, lang === "es" ? "Español" : "English"),
-    link(text.website, `/${lang}`, site),
+    link(text.website, options.includeBlog === false ? `/${lang}/cv` : `/${lang}`, site),
     link(text.markdown, `/${lang}/index.md`, site),
-    link(text.otherLanguage, `/${text.otherLocale}/index.md`, site),
+    link(text.otherLanguage, `/${text.otherLocale}/${options.includeBlog === false ? "cv" : "index"}.md`, site),
     field(content.hero.focus, content.hero.focusAreas.join(", ")),
     ...content.hero.terminalLines.map(inline),
     heading(2, about.title),
@@ -101,6 +110,11 @@ export function portfolioMarkdown(lang: Locale, site: URL): string {
     heading(3, about.asideTitle),
     inline(about.asideText),
     field(about.interestsLabel, about.interests.join(", ")),
+    ...(options.includeBlog === false ? [] : [
+      heading(2, CV_PREVIEW[lang].title),
+      inline(CV_PREVIEW[lang].description),
+      `${link(CV_PREVIEW[lang].cv, `/${lang}/cv`, site)} · ${link(CV_PREVIEW[lang].experienceMore, `/${lang}/cv#experience`, site)} · ${link(CV_PREVIEW[lang].projects, `/${lang}/cv#projects`, site)}`,
+    ]),
     heading(2, experience.title),
     inline(experience.introduction),
     ...experience.items.flatMap((item) => [
@@ -109,7 +123,7 @@ export function portfolioMarkdown(lang: Locale, site: URL): string {
       ...(item.current ? [inline(experience.currentLabel)] : []),
       inline(item.summary),
       ...(item.evolution ? [field(experience.evolutionLabel, item.evolution.join(" → "))] : []),
-      list(item.achievements),
+      list([...new Set([...item.achievements, ...(cvExperience[item.company] ?? [])])]),
     ]),
     heading(2, experience.examplesTitle),
     inline(experience.examplesIntroduction),
@@ -135,12 +149,16 @@ export function portfolioMarkdown(lang: Locale, site: URL): string {
       inline(category.description),
       list(category.skills.map((skill) => `${skill.name} — ${skills.levels[skill.level]}`)),
     ]),
+    heading(3, lang === "es" ? "Resumen de competencias del CV" : "CV skills overview"),
+    list([...Object.values(CV_SKILL_LINES), cv.cloudSkills, `${lang === "es" ? "Automatización con IA (en desarrollo)" : "AI automation (developing)"}: ${cv.aiAutomationSkills}`]),
     heading(2, education.title),
     heading(3, education.degree),
     inline(`${education.institution} · ${education.period}`),
     heading(3, education.trainingTitle),
-    list(education.training),
-    ...blog(lang, site),
+    list([...new Set([...education.training, ...CV_TRAINING.map((item) => `${item.name} · ${item.provider}`)])]),
+    heading(3, lang === "es" ? "Idiomas" : "Languages"),
+    inline(cv.languageLevels),
+    ...(options.includeBlog === false ? [] : blog(lang, site)),
     heading(2, contact.title),
     inline(contact.description),
     inline(contact.statement),
@@ -151,13 +169,14 @@ export function portfolioMarkdown(lang: Locale, site: URL): string {
 export interface MarkdownRoute {
   lang: Locale;
   path: string;
-  kind: "portfolio" | "projects" | "blog" | "post";
+  kind: "portfolio" | "cv" | "projects" | "blog" | "post";
   slug?: string;
 }
 
 export function markdownRoutes(): MarkdownRoute[] {
   return LOCALES.flatMap((lang): MarkdownRoute[] => [
     { lang, path: "index.md", kind: "portfolio" },
+    { lang, path: "cv.md", kind: "cv" },
     { lang, path: "projects.md", kind: "projects" },
     ...(BLOG_ENABLED ? [
       { lang, path: "blog/index.md", kind: "blog" } as const,
@@ -168,6 +187,7 @@ export function markdownRoutes(): MarkdownRoute[] {
 
 export function routeMarkdown(route: MarkdownRoute, site: URL): string {
   if (route.kind === "portfolio") return portfolioMarkdown(route.lang, site);
+  if (route.kind === "cv") return portfolioMarkdown(route.lang, site, { includeBlog: false });
   const content = SITE_BY_LANG[route.lang];
   if (route.kind === "projects") {
     return document([
@@ -192,6 +212,7 @@ export function routeMarkdown(route: MarkdownRoute, site: URL): string {
 export function markdownPath(currentPath: string, lang: Locale): string {
   const suffix = currentPath.replace(/^\/(es|en)(?=\/|$)/, "").replace(/\/$/, "");
   if (!suffix || suffix === "/llm") return `/${lang}/index.md`;
+  if (suffix === "/cv" || suffix.startsWith("/cv/")) return `/${lang}/cv.md`;
   if (suffix === "/blog") return `/${lang}/blog/index.md`;
   return `/${lang}${suffix}.md`;
 }
@@ -205,6 +226,8 @@ export function llmsIndex(site: URL): string {
     "The links below provide the published portfolio as plain Markdown, including full project descriptions and work examples. Skill levels, case status and the distinction between estimated and documented impact are included in the content.",
     heading(2, "Complete profile"),
     `- ${link("English profile", "/en/index.md", site)}: Experience, all projects, work examples, skills, education, contact and published articles.\n- ${link("Perfil en español", "/es/index.md", site)}: The same complete portfolio in Spanish.\n- ${link("Complete English content", "/llms-full.txt", site)}: Single-file plain-text export.`,
+    heading(2, "CV"),
+    `- ${link("CV in English", "/en/cv.md", site)}: Complete professional profile without blog articles.\n- ${link("CV en español", "/es/cv.md", site)}: Perfil profesional completo sin artículos del blog.`,
     heading(2, "Projects"),
     `- ${link("Personal projects in English", "/en/projects.md", site)}: Full descriptions, highlights and technologies.\n- ${link("Proyectos personales en español", "/es/projects.md", site)}: Descripciones completas, aspectos destacados y tecnologías.`,
     ...(BLOG_ENABLED ? [

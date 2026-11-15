@@ -103,7 +103,7 @@ test("both reading modes fit mobile and desktop screens in ES and EN", async () 
           await page.waitForFunction(({ padding, gap }) => {
             const style = getComputedStyle(document.querySelector("header nav"));
             return Number.parseFloat(style.paddingLeft) === padding && Number.parseFloat(style.columnGap) === gap;
-          }, { padding: width < 375 ? 10 : width < 640 ? 12 : 24, gap: width < 640 ? 8 : 12 });
+          }, { padding: width < 375 ? 8 : width < 640 ? 12 : 24, gap: width < 640 ? 8 : 12 });
           await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
           const size = await page.evaluate(() => {
             const header = document.querySelector("header nav");

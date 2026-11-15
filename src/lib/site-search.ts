@@ -91,7 +91,8 @@ function extract(doc: Document, path: string, lang: Locale): SearchEntry[] {
   const home = path === `/${lang}`;
   const projects = path === `/${lang}/projects`;
   const blogPost = path.startsWith(`/${lang}/blog/`);
-  const cv = path === `/${lang}/cv`;
+  const cv = path === `/${lang}/cv/compact`;
+  const fullCv = path === `/${lang}/cv`;
   const entries: SearchEntry[] = [];
   const add = (element: Element, title: string, source: string, href: string) => {
     const text = cleanText(element);
@@ -106,6 +107,21 @@ function extract(doc: Document, path: string, lang: Locale): SearchEntry[] {
     }
     main.querySelectorAll<HTMLDialogElement>("dialog[id^='work-case-dialog-']").forEach((dialog) => {
       add(dialog, dialog.querySelector("h2")?.textContent?.trim() ?? "", lang === "es" ? "Experiencia · Caso" : "Experience · Case study", `${path}#${dialog.id}`);
+    });
+  } else if (fullCv) {
+    const summary = main.querySelector("[data-cv-summary]");
+    if (summary) add(summary, "CV", lang === "es" ? "Currículum" : "Résumé", path);
+    for (const section of main.querySelectorAll("[data-cv-panel='full'] > section[id]")) {
+      const copy = section.cloneNode(true) as Element;
+      copy.querySelectorAll("dialog").forEach((node) => node.remove());
+      const title = section.querySelector("h1, h2")?.textContent?.trim() ?? section.id;
+      add(copy, title, lang === "es" ? "CV · Sección" : "CV · Section", `${path}#${section.id}`);
+    }
+    main.querySelectorAll<HTMLDialogElement>("dialog[id^='work-case-dialog-']").forEach((dialog) => {
+      add(dialog, dialog.querySelector("h2")?.textContent?.trim() ?? "", lang === "es" ? "Experiencia · Caso" : "Experience · Case study", `${path}#${dialog.id}`);
+    });
+    main.querySelectorAll<HTMLDialogElement>("dialog[id^='project-dialog-']").forEach((dialog) => {
+      add(dialog, dialog.querySelector("h2")?.textContent?.trim() ?? "", lang === "es" ? "Proyecto" : "Project", `${path}#${dialog.id}`);
     });
   } else if (projects) {
     main.querySelectorAll<HTMLDialogElement>("dialog[id^='project-dialog-']").forEach((dialog) => {

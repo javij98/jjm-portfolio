@@ -1,0 +1,67 @@
+---
+import type { Locale, SiteContent } from "../i18n/content";
+interface Props {
+  lang: Locale;
+  view: "full" | "compact";
+  content: SiteContent["nav"];
+  placement: "inline" | "sidebar";
+}
+const { lang, view, content, placement } = Astro.props;
+const sections = (["experience", "skills", "projects", "education"] as const).map((id) => ({ id, label: content[id] }));
+const label = lang === "es" ? "En esta página" : "On this page";
+---
+
+<nav data-cv-index class:list={["cv-index", placement === "inline" ? "cv-index-inline xl:hidden" : "cv-index-sidebar"]} aria-label={label}>
+  <p class="cv-index-heading">{label}</p>
+  <ul>
+    {sections.map(({ id, label: sectionLabel }) => (
+      <li><a data-cv-index-section={id} href={`#${view === "compact" ? "compact-" : ""}${id}`}>{sectionLabel}</a></li>
+    ))}
+  </ul>
+</nav>
+
+<script>
+  const indexes = [...document.querySelectorAll<HTMLElement>("[data-cv-index]")];
+  const sections = ["experience", "skills", "projects", "education"];
+  let scheduled = false;
+  let preferred = window.location.hash.slice(1).replace(/^compact-/, "");
+  const update = () => {
+    scheduled = false;
+    const compact = !document.querySelector<HTMLElement>("[data-cv-panel='compact']")?.hidden;
+    const prefix = compact ? "compact-" : "";
+    const header = document.querySelector("body > header")?.getBoundingClientRect().height ?? 64;
+    const boundary = header + 28;
+    const locations = sections.flatMap((id) => {
+      const element = document.getElementById(`${prefix}${id}`);
+      if (!element) return [];
+      const rect = element.getBoundingClientRect();
+      return [{ id, top: rect.top, bottom: rect.bottom }];
+    });
+    const passed = locations.filter(({ top }) => top <= boundary);
+    const intersecting = passed.filter(({ bottom }) => bottom > boundary);
+    const candidates = intersecting.length ? intersecting : passed;
+    const nearestTop = Math.max(...candidates.map(({ top }) => top));
+    const nearest = candidates.filter(({ top }) => Math.abs(top - nearestTop) < 2);
+    let current = nearest.find(({ id }) => id === preferred)?.id ?? nearest[0]?.id;
+    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
+      current = locations.filter(({ top }) => top < window.innerHeight).at(-1)?.id ?? current;
+    }
+    indexes.forEach((index) => index.querySelectorAll<HTMLAnchorElement>("[data-cv-index-section]").forEach((link) => {
+      const id = link.dataset.cvIndexSection ?? "";
+      link.setAttribute("href", `#${prefix}${id}`);
+      if (current === id) link.setAttribute("aria-current", "location");
+      else link.removeAttribute("aria-current");
+    }));
+  };
+  const schedule = () => {
+    if (!scheduled) { scheduled = true; window.requestAnimationFrame(update); }
+  };
+  window.addEventListener("scroll", schedule, { passive: true });
+  window.addEventListener("resize", schedule, { passive: true });
+  window.addEventListener("cv:view-changed", update);
+  window.addEventListener("hashchange", () => { preferred = window.location.hash.slice(1).replace(/^compact-/, ""); schedule(); });
+  indexes.forEach((index) => index.querySelectorAll<HTMLAnchorElement>("[data-cv-index-section]").forEach((link) => {
+    link.addEventListener("click", () => { preferred = link.dataset.cvIndexSection ?? ""; schedule(); });
+  }));
+  update();
+</script>

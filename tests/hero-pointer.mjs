@@ -10,6 +10,7 @@ test("full mobile name fits on one line and terminal starts in the first view", 
     for (const width of [320, 375, 412, 597]) {
       const page = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion: "reduce" });
       await page.goto(`${baseUrl}/es`, { waitUntil: "domcontentloaded" });
+      await page.evaluate(() => document.fonts.ready);
       const result = await page.locator("#hero h1").evaluate((heading) => {
         const range = document.createRange();
         range.selectNodeContents(heading);

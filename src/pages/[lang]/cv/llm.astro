@@ -1,0 +1,8 @@
+---
+import MarkdownView from "../../../components/MarkdownView.astro";
+import { LOCALES, isLocale } from "../../../i18n/content";
+export function getStaticPaths() { return LOCALES.map((lang) => ({ params: { lang } })); }
+const lang = Astro.params.lang ?? "es";
+if (!isLocale(lang)) throw new Error(`Unsupported locale: ${lang}`);
+---
+<MarkdownView lang={lang} scope="cv" />
